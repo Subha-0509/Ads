@@ -85,12 +85,14 @@
         #signUpModal .modal-content,
         #myInvestmentsModal .modal-content,
         #termsAndConditionsModal .modal-content,
-        #investmentDetailsModal .modal-content { /* Added new detail modal */
+        #investmentDetailsModal .modal-content,
+        #whereMoneyWorksModal .modal-content { /* Added new detail modal and Where Your Money Works modal */
             width: 600px;
         }
         /* Specifically ensuring myInvestmentsModal content is plain white */
         #myInvestmentsModal .modal-content,
-        #investmentDetailsModal .modal-content { /* Ensure plain white for detail modal too */
+        #investmentDetailsModal .modal-content,
+        #whereMoneyWorksModal .modal-content { /* Ensure plain white for detail modal too */
             background-color: white;
             background-image: none;
         }
@@ -651,7 +653,7 @@
                     <li><a href="#plans" class="hover:text-blue-200 transition duration-300">Investment Plans</a></li>
                     <li><a href="#how-it-works" class="hover:text-blue-200 transition duration-300">How It Works</a></li>
                     <li><a href="#why-choose-us" class="hover:text-blue-200 transition duration-300">Why Choose Us</a></li>
-                    <li><a href="#where-money-works" class="hover:text-blue-200 transition duration-300">Where Your Money Works</a></li> <!-- New Menu Item -->
+                    <li><a href="#" class="hover:text-blue-200 transition duration-300" id="whereMoneyWorksDesktopLink">Where Your Money Works</a></li> <!-- Updated href -->
                     <li><a href="#limited-time-offer" class="hover:text-blue-200 transition duration-300">Special Offer</a></li>
                     <li><a href="#ai-calculator" class="hover:text-blue-200 transition duration-300">AI Calculator</a></li>
                     <!-- Conditional Navigation based on Auth status -->
@@ -675,7 +677,7 @@
                 <li><a href="#plans" class="hover:text-yellow-300 transition duration-300" data-close-menu>Investment Plans</a></li>
                 <li><a href="#how-it-works" class="hover:text-yellow-300 transition duration-300" data-close-menu>How It Works</a></li>
                 <li><a href="#why-choose-us" class="hover:text-yellow-300 transition duration-300" data-close-menu>Why Choose Us</a></li>
-                <li><a href="#where-money-works" class="hover:text-yellow-300 transition duration-300" data-close-menu>Where Your Money Works</a></li> <!-- New Mobile Menu Item -->
+                <li><a href="#" class="hover:text-yellow-300 transition duration-300" data-close-menu id="whereMoneyWorksMobileLink">Where Your Money Works</a></li> <!-- Updated href, new ID -->
                 <li><a href="#limited-time-offer" class="hover:text-yellow-300 transition duration-300" data-close-menu>Special Offer</a></li>
                 <li><a href="#ai-calculator" class="hover:text-yellow-300 transition duration-300" data-close-menu>AI Calculator</a></li>
                 <!-- Conditional Mobile Nav Links -->
@@ -687,16 +689,14 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="relative text-white flex items-center justify-center min-h-screen pt-24"> <!-- Changed pt-20 to pt-24 -->
+    <section class="relative text-white flex items-center justify-center min-h-screen pt-24">
         <!-- New: Background image -->
         <div class="hero-background-image"></div>
-        <!-- Money Animation Container - REMOVED -->
-
         <div class="container mx-auto px-6 py-20 text-center relative z-10">
             <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-6 hero-text-stroke">
                 Welcome to <span class="text-yellow-300">ADS FUND</span>
             </h1>
-            <p class="text-3xl md:text-4xl font-semibold mb-4 text-white hero-text-stroke">Aspire. Develop. Secure.</p> <!-- Added tagline -->
+            <p class="text-3xl md:text-4xl font-semibold mb-4 text-white hero-text-stroke">Aspire. Develop. Secure.</p>
             <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto hero-text-stroke">
                 Where your investments fuel growth and secure a prosperous financial future.
                 We're dedicated to delivering consistent returns, fostering trust, and building long-term success together.
@@ -716,19 +716,19 @@
                 <!-- Standard Plan Card -->
                 <div class="plan-card standard-plan bg-white rounded-3xl shadow-xl transform transition duration-300 hover:scale-105 flex flex-col cursor-pointer card-hover-effect"
                     data-plan-name="Standard Plan"
-                    data-monthly-return="5.75%"
+                    data-monthly-return="6%"
                     data-min-investment="500"
                     data-payout-frequency="Monthly"
                     data-lock-in="2 months minimum"
-                    data-benefits='["Stable 5.75% return on investment every month.", "Flexible withdrawal option after the lock-in period."]'
-                    data-total-return="11.5% over 2 months">
+                    data-benefits='["Stable 6% return on investment every month.", "Flexible withdrawal option after the lock-in period."]'
+                    data-total-return="12% over 2 months">
                     <span class="plan-tag">NEW</span>
                     <div class="plan-icon-wrapper mx-auto mb-4">
                         <span class="plan-icon text-blue-600">🛡️</span>
                     </div>
                     <h3 class="text-3xl font-bold text-blue-700 mb-3 text-center">Standard Plan</h3>
                     <p class="text-lg mb-3 text-center">
-                        <span class="block text-2xl font-semibold text-green-600 mb-1">5.75% Monthly Return</span>
+                        <span class="block text-2xl font-semibold text-green-600 mb-1">6% Monthly Return</span>
                         Minimum Investment: <span class="font-bold">₹500</span><br>
                         Payout Frequency: Monthly<br>
                         Lock-in Period: 2 months minimum
@@ -736,7 +736,7 @@
                     <div class="border-t border-gray-200 pt-3 mt-auto">
                         <h4 class="text-xl font-semibold text-gray-700 mb-2">Benefits:</h4>
                         <ul class="list-disc list-inside text-gray-600 space-y-1">
-                            <li>Stable 5.75% return on investment every month.</li>
+                            <li>Stable 6% return on investment every month.</li>
                             <li>Flexible withdrawal option after the lock-in period.</li>
                         </ul>
                     </div>
@@ -749,8 +749,8 @@
                     data-min-investment="500"
                     data-payout-frequency="Monthly"
                     data-lock-in="6 months"
-                    data-benefits='["Bonus: Receive an additional 5% return at the end of the 6-month period.", "Total Return: 45.5% over 6 months (40.5% from monthly returns + 5% bonus).", "Perk: Priority Support.", "Referral Bonus: Refer another investor and earn an extra 1% on your referrals investment."]'
-                    data-total-return="45.5% over 6 months">
+                    data-benefits='["Bonus: Receive an additional 4.5% return at the end of the 6-month period.", "Total Return: 45% over 6 months (40.5% from monthly returns + 4.5% bonus).", "Perk: Priority Support.", "Referral Bonus: Refer another investor and earn an extra 1% on your referrals investment."]'
+                    data-total-return="45% over 6 months">
                      <div class="plan-icon-wrapper mx-auto mb-4">
                         <span class="plan-icon text-purple-600">⭐</span>
                     </div>
@@ -764,8 +764,8 @@
                     <div class="border-t border-gray-200 pt-3 mt-auto">
                         <h4 class="text-xl font-semibold text-gray-700 mb-2">SPECIAL OFFER:</h4>
                         <ul class="list-disc list-inside text-gray-600 space-y-1">
-                            <li>Bonus: Receive an additional <span class="font-bold">5% return</span> at the end of the 6-month period.</li>
-                            <li>Total Return: <span class="font-bold">45.5% over 6 months</span> (40.5% from monthly returns + 5% bonus).</li>
+                            <li>Bonus: Receive an additional <span class="font-bold">4.5% return</span> at the end of the 6-month period.</li>
+                            <li>Total Return: <span class="font-bold">45% over 6 months</span> (40.5% from monthly returns + 4.5% bonus).</li>
                         </ul>
                         <h4 class="text-xl font-semibold text-gray-700 mb-2 mt-4">Exclusive Perks:</h4>
                         <ul class="list-disc list-inside text-gray-600 space-y-1">
@@ -820,7 +820,7 @@
                 <div class="bg-blue-600 rounded-2xl p-8 shadow-lg transform transition duration-300 hover:scale-105 hover:bg-blue-500">
                     <div class="text-5xl mb-4 float-animation">💰</div>
                     <h3 class="text-2xl font-bold mb-3">Consistent Monthly Payments</h3>
-                    <p class="text-lg">Investors receive a <span class="font-bold">7.5% return</span> on their principal investment every month, <span class="font-bold text-yellow-200">disbursed at the end of each calendar month,</span> reliably and on time.</p>
+                    <p class="text-lg">Investors receive <span class="font-bold">competitive returns as per their chosen plan</span> on their principal investment every month, <span class="font-bold text-yellow-200">disbursed at the end of each calendar month,</span> reliably and on time.</p>
                 </div>
                 <div class="bg-blue-600 rounded-2xl p-8 shadow-lg transform transition duration-300 hover:scale-105 hover:bg-blue-500">
                     <div class="text-5xl mb-4 float-animation">🎁</div>
@@ -860,25 +860,6 @@
             <p class="text-center text-xl text-gray-700 mt-12 max-w-3xl mx-auto">
                 This structure encourages longer-term investments by offering additional bonuses, while also giving flexibility to those interested in shorter-term gains.
             </p>
-        </div>
-    </section>
-
-    <!-- New Section: Where Your Money Works -->
-    <section id="where-money-works" class="py-20 bg-gradient-to-br from-indigo-700 to-purple-800 text-white section-hidden">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-4xl font-extrabold mb-12">Where Your Money Works: Building Your Future, Bit by Bit</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
-                <div class="bg-indigo-600 rounded-2xl p-8 shadow-lg transform transition duration-300 hover:scale-105 hover:bg-indigo-500">
-                    <div class="text-5xl mb-4 float-animation">📈</div>
-                    <h3 class="text-2xl font-bold mb-3">Strategic Investments in Share Market</h3>
-                    <p class="text-lg">A significant portion of your capital is expertly managed in the share market, focusing on diversified portfolios with high-growth potential. We employ rigorous analysis and smart trading strategies to secure substantial returns.</p>
-                </div>
-                <div class="bg-indigo-600 rounded-2xl p-8 shadow-lg transform transition duration-300 hover:scale-105 hover:bg-indigo-500">
-                    <div class="text-5xl mb-4 float-animation">🤝</div>
-                    <h3 class="text-2xl font-bold mb-3">Secure Lending on Trusted Platforms</h3>
-                    <p class="text-lg">To ensure stable and consistent returns, a portion of your investment is allocated to lending on verified and trusted platforms. This diversifies risk and provides a reliable income stream, ensuring your money is always working for you.</p>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -935,7 +916,7 @@
     <footer class="bg-gray-800 text-white py-8">
         <div class="container mx-auto px-6 text-center text-gray-400">
             <p>&copy; 2024 ADS FUND. All rights reserved.</p>
-            <p class="mt-2">For inquiries, please contact us at <a href="mailto:info@adsfund.com" class="text-blue-400 hover:underline">info@adsfund.com</a></p>
+            <p class="mt-2">For inquiries, please contact us at <a href="mailto:itsads2k23@gmail.com" class="text-blue-400 hover:underline">itsads2k23@gmail.com</a></p>
         </div>
     </footer  >
 
@@ -991,7 +972,7 @@
 
                 <label for="inv_amount" class="w-full">Investment Amount (₹):</label>
                 <input type="number" id="inv_amount" placeholder="Investment Amount (₹)" min="500" step="100" required class="w-full">
-                <p class="text-sm text-gray-700 text-left w-full mt-1" id="invAmountValidationMessage">Minimum ₹500, in multiples of ₹100.</p>
+                <p class="text-sm text-gray-700 text-left w-full mt-1" id="invAmountValidationMessage">Minimum ₹500, in multiples of ₹100. Maximum ₹10,000.</p>
 
                 <label for="paidUpiId" class="w-full">Which UPI ID did you pay to?</label>
                 <select id="paidUpiId" required class="w-full">
@@ -1027,7 +1008,7 @@
 
 
                 <div class="flex justify-center space-x-4 mt-6 w-full">
-                    <button type="submit" class="w-1/2">Submit Investment</button>
+                    <button type="submit" class="w-1/2" id="submitInvestmentBtn">Submit Investment</button>
                     <button type="button" class="w-1/2 cancel-btn" id="cancelInvestFormBtn">Cancel</button>
                 </div>
             </form>
@@ -1048,7 +1029,7 @@
                 <input type="password" id="signInPassword" placeholder="Your Password" required class="w-full">
 
                 <div class="flex justify-center space-x-4 mt-6 w-full">
-                    <button type="submit" class="w-1/2">Sign In</button>
+                    <button type="submit" class="w-1/2" id="signInSubmitBtn">Sign In</button>
                     <button type="button" class="w-1/2 cancel-btn" id="cancelSignInBtn">Cancel</button>
                 </div>
                 <p class="text-center text-sm text-gray-600 mt-4">
@@ -1075,7 +1056,7 @@
                 <input type="password" id="signUpConfirmPassword" placeholder="Confirm Password" required class="w-full">
 
                 <div class="flex justify-center space-x-4 mt-6 w-full">
-                    <button type="submit" class="w-1/2">Sign Up</button>
+                    <button type="submit" class="w-1/2" id="signUpSubmitBtn">Sign Up</button>
                     <button type="button" class="w-1/2 cancel-btn" id="cancelSignUpBtn">Cancel</button>
                 </div>
                 <p class="text-center text-sm text-gray-600 mt-4">
@@ -1147,6 +1128,26 @@
         </div>
     </div>
 
+    <!-- New: Where Your Money Works Modal -->
+    <div id="whereMoneyWorksModal" class="modal-overlay">
+        <div class="modal-content text-gray-800">
+            <button class="modal-close-btn" id="closeWhereMoneyWorksModalBtn">&times;</button>
+            <h2 class="text-3xl font-bold text-blue-700 mb-6 text-center">Where Your Money Works: Building Your Future, Bit by Bit</h2>
+            <div class="grid grid-cols-1 gap-10">
+                <div class="bg-indigo-100 rounded-2xl p-8 shadow-md">
+                    <div class="text-5xl mb-4 text-center">📈</div>
+                    <h3 class="text-2xl font-bold text-blue-700 mb-3 text-center">Strategic Investments in Share Market</h3>
+                    <p class="text-lg text-gray-700 text-center">A significant portion of your capital is expertly managed in the share market, focusing on diversified portfolios with high-growth potential. We employ rigorous analysis and smart trading strategies to secure substantial returns.</p>
+                </div>
+                <div class="bg-indigo-100 rounded-2xl p-8 shadow-md">
+                    <div class="text-5xl mb-4 text-center">🤝</div>
+                    <h3 class="text-2xl font-bold text-blue-700 mb-3 text-center">Secure Lending on Trusted Platforms</h3>
+                    <p class="text-lg text-gray-700 text-center">To ensure stable and consistent returns, a portion of your investment is allocated to lending on verified and trusted platforms. This diversifies risk and provides a reliable income stream, ensuring your money is always working for you.</p>
+                </div>
+            </div>
+        </div>
+    </div >
+
 
     <!-- Terms and Conditions Modal -->
     <div id="termsAndConditionsModal" class="modal-overlay">
@@ -1204,7 +1205,7 @@
                 <p>ADS FUND reserves the right to amend or update these Terms & Conditions at any time without prior notice. It is your responsibility to review these terms periodically for any changes. Your continued use of the service or continued investment after any amendments constitutes your acceptance of the revised terms.</p>
 
                 <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">12. Contact Information</h3>
-                <p>For any questions regarding these Terms & Conditions, please contact us at <a href="mailto:info@adsfund.com" class="terms-link">itsads2k23@gmail.com</a>.</p>
+                <p>For any questions regarding these Terms & Conditions, please contact us at <a href="mailto:itsads2k23@gmail.com" class="terms-link">itsads2k23@gmail.com</a>.</p>
             </div>
             <button id="closeTermsContentBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full shadow-md mt-8">
                 Close
@@ -1347,6 +1348,7 @@
             const planCards = document.querySelectorAll('.plan-card');
 
             const investModal = document.getElementById('investModal');
+            // FIX: Corrected the assignment of closeInvestModalBtn
             const closeInvestModalBtn = document.getElementById('closeInvestModalBtn');
             const investmentForm = document.getElementById('investmentForm');
             const invNameInput = document.getElementById('inv_name');
@@ -1363,6 +1365,7 @@
             const invPlanHiddenInput = document.getElementById('inv_plan_hidden');
             const investFormPlanName = document.getElementById('investFormPlanName');
             const cancelInvestFormBtn = document.getElementById('cancelInvestFormBtn');
+            const submitInvestmentBtn = document.getElementById('submitInvestmentBtn'); // Added for loading state
 
             const explorePlansBtn = document.getElementById('explorePlansBtn');
 
@@ -1388,6 +1391,9 @@
             const switchToSignInBtn = document.getElementById('switchToSignIn');
             const cancelSignInBtn = document.getElementById('cancelSignInBtn');
             const cancelSignUpBtn = document.getElementById('cancelSignUpBtn');
+            const signInSubmitBtn = document.getElementById('signInSubmitBtn'); // Added for loading state
+            const signUpSubmitBtn = document.getElementById('signUpSubmitBtn'); // Added for loading state
+
 
             // New Terms & Conditions elements
             const termsAndConditionsModal = document.getElementById('termsAndConditionsModal');
@@ -1413,6 +1419,12 @@
             const detailIfscCode = document.getElementById('detailIfscCode');
             const detailUpiIdOptional = document.getElementById('detailUpiIdOptional');
             const detailOptionalUpiRow = document.getElementById('detailOptionalUpiRow');
+
+            // Where Your Money Works specific elements (now for the modal)
+            const whereMoneyWorksModal = document.getElementById('whereMoneyWorksModal');
+            const closeWhereMoneyWorksModalBtn = document.getElementById('closeWhereMoneyWorksModalBtn'); // Corrected assignment
+            const whereMoneyWorksDesktopLink = document.getElementById('whereMoneyWorksDesktopLink');
+            const whereMoneyWorksMobileLink = document.getElementById('whereMoneyWorksMobileLink');
 
 
             // --- Firebase Initialization and Initial Auth Attempt ---
@@ -1568,25 +1580,71 @@
                 });
             }
 
+            // New: Where Your Money Works Modal event listeners
+            if (whereMoneyWorksDesktopLink && whereMoneyWorksModal) {
+                whereMoneyWorksDesktopLink.addEventListener('click', (event) => {
+                    event.preventDefault(); // Prevent default anchor jump
+                    openModal(whereMoneyWorksModal);
+                });
+            }
+            if (whereMoneyWorksMobileLink && whereMoneyWorksModal) {
+                whereMoneyWorksMobileLink.addEventListener('click', (event) => {
+                    event.preventDefault(); // Prevent default anchor jump
+                    openModal(whereMoneyWorksModal);
+                    closeMobileMenu(); // Close mobile menu after clicking the link
+                });
+            }
+
+            // FIX: Add event listeners for the close button and overlay of the "Where Your Money Works" modal
+            if (closeWhereMoneyWorksModalBtn) {
+                closeWhereMoneyWorksModalBtn.addEventListener('click', () => closeModal(whereMoneyWorksModal));
+            }
+            if (whereMoneyWorksModal) {
+                whereMoneyWorksModal.addEventListener('click', (e) => {
+                    if (e.target === whereMoneyWorksModal) { // Only close if clicking on the overlay itself
+                        closeModal(whereMoneyWorksModal);
+                    }
+                });
+            }
+
 
             // Sign Up Form Submission
             signUpForm?.addEventListener('submit', async (e) => {
                 e.preventDefault();
+
+                // Disable button and show loading state
+                if (signUpSubmitBtn) {
+                    signUpSubmitBtn.disabled = true;
+                    signUpSubmitBtn.textContent = 'Processing...';
+                }
+
                 const email = signUpEmailInput.value;
                 const password = signUpPasswordInput.value;
                 const confirmPassword = signUpConfirmPasswordInput.value;
 
                 if (password !== confirmPassword) {
                     showMessage('Sign Up Failed', 'Passwords do not match.', false);
+                    if (signUpSubmitBtn) {
+                        signUpSubmitBtn.disabled = false;
+                        signUpSubmitBtn.textContent = 'Sign Up';
+                    }
                     return;
                 }
                 if (password.length < 6) {
                     showMessage('Sign Up Failed', 'Password should be at least 6 characters.', false);
+                    if (signUpSubmitBtn) {
+                        signUpSubmitBtn.disabled = false;
+                        signUpSubmitBtn.textContent = 'Sign Up';
+                    }
                     return;
                 }
 
                 if (!auth) {
                     showMessage('Sign Up Failed', 'Firebase Authentication is not ready. Please try again.', false);
+                    if (signUpSubmitBtn) {
+                        signUpSubmitBtn.disabled = false;
+                        signUpSubmitBtn.textContent = 'Sign Up';
+                    }
                     return;
                 }
 
@@ -1606,17 +1664,33 @@
                         errorMessage = 'The email address is not valid.';
                     }
                     showMessage('Sign Up Failed', errorMessage, false);
+                } finally {
+                    if (signUpSubmitBtn) {
+                        signUpSubmitBtn.disabled = false;
+                        signUpSubmitBtn.textContent = 'Sign Up';
+                    }
                 }
             });
 
             // Sign In Form Submission
             signInForm?.addEventListener('submit', async (e) => {
                 e.preventDefault();
+
+                // Disable button and show loading state
+                if (signInSubmitBtn) {
+                    signInSubmitBtn.disabled = true;
+                    signInSubmitBtn.textContent = 'Processing...';
+                }
+
                 const email = signInEmailInput.value;
                 const password = signInPasswordInput.value;
 
                 if (!auth) {
                     showMessage('Sign In Failed', 'Firebase Authentication is not ready. Please try again.', false);
+                    if (signInSubmitBtn) {
+                        signInSubmitBtn.disabled = false;
+                        signInSubmitBtn.textContent = 'Sign In';
+                    }
                     return;
                 }
 
@@ -1628,12 +1702,19 @@
                 } catch (error) {
                     console.error("Sign In Error:", error);
                     let errorMessage = error.message;
-                    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                        errorMessage = 'Invalid email or password.';
+                    if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                        errorMessage = 'Invalid email or password.'; // Catch both for a generic "invalid" message
+                    } else if (error.code === 'auth/wrong-password') {
+                        errorMessage = 'Wrong password.'; // Specific message for wrong password
                     } else if (error.code === 'auth/invalid-email') {
                         errorMessage = 'The email address is not valid.';
                     }
                     showMessage('Sign In Failed', errorMessage, false);
+                } finally {
+                    if (signInSubmitBtn) {
+                        signInSubmitBtn.disabled = false;
+                        signInSubmitBtn.textContent = 'Sign In';
+                    }
                 }
             });
 
@@ -1795,25 +1876,73 @@
                     return;
                 }
 
-                // Parse the monthly return rate from the investment data
-                const monthlyReturnRate = parseFloat(investment.monthlyReturn.replace('%', '')) / 100;
+                console.log("Investment object from Firestore:", investment);
+                console.log("investment.monthlyReturn (raw):", investment.monthlyReturn);
+
+                let monthlyReturnRate;
+                let monthlyReturnStrFromFirestore = typeof investment.monthlyReturn === 'string' ? investment.monthlyReturn : '';
+
+                if (monthlyReturnStrFromFirestore) {
+                    monthlyReturnRate = parseFloat(monthlyReturnStrFromFirestore.replace('%', '')) / 100;
+                }
+
+                // Fallback: If monthlyReturn is missing or parsed to 0 from Firestore,
+                // try to get it from the planCards data attributes using the planName
+                if (isNaN(monthlyReturnRate) || monthlyReturnRate === 0) {
+                    const correspondingPlanCard = Array.from(planCards).find(card =>
+                        card.dataset.planName === investment.planName
+                    );
+                    if (correspondingPlanCard) {
+                        const rateFromCard = parseFloat(correspondingPlanCard.dataset.monthlyReturn.replace('%', '')) / 100;
+                        if (!isNaN(rateFromCard) && rateFromCard > 0) {
+                            monthlyReturnRate = rateFromCard;
+                            console.log(`Monthly return rate fallback: Used value from plan card (${monthlyReturnRate}) for plan ${investment.planName}`);
+                        } else {
+                            // If even fallback fails, default to 0 to prevent NaN calculations
+                            monthlyReturnRate = 0;
+                            console.warn(`Fallback for monthly return rate failed for plan ${investment.planName}. Defaulting to 0.`);
+                        }
+                    } else {
+                        monthlyReturnRate = 0;
+                        console.warn(`No corresponding plan card found for ${investment.planName}. Monthly payout will be 0.`);
+                    }
+                }
+
+                console.log("monthlyReturnRate (after fallback check):", monthlyReturnRate);
+                console.log("Type of monthlyReturnRate:", typeof monthlyReturnRate);
 
                 let lockInMonths = 0;
                 let totalProjectedReturn = 0;
-                let monthlyPayout = investment.amount * monthlyReturnRate; // Use the plan-specific monthly return
+                // Ensure investment.amount is treated as a number for calculation
+                let monthlyPayout = parseFloat(investment.amount) * monthlyReturnRate;
+                console.log("investment.amount:", investment.amount);
+                console.log("Type of investment.amount:", typeof investment.amount);
+                console.log("monthlyPayout (calculated):", monthlyPayout);
+
 
                 if (investment.planName === "Standard Plan") {
                     lockInMonths = 2;
-                    totalProjectedReturn = investment.amount * (1 + (monthlyReturnRate * lockInMonths));
                 } else if (investment.planName === "Premium 6-Month Plan") {
                     lockInMonths = 6;
-                    const premiumBonus = 0.05; // Standard bonus for calculation
-                    totalProjectedReturn = investment.amount * (1 + (monthlyReturnRate * lockInMonths) + premiumBonus);
-                } else if (investment.planName === "Elite 12-Month Plan") {
-                    lockInMonths = 12;
-                    const eliteBonus = 0.10; // Standard bonus for calculation
-                    totalProjectedReturn = investment.amount * (1 + (monthlyReturnRate * lockInMonths) + eliteBonus);
                 }
+                // Removed redundant "else if (investment.planName === "Elite 12-Month Plan")" for clarity, as lockInMonths is 12 by default for Elite
+                else if (investment.planName === "Elite 12-Month Plan") {
+                    lockInMonths = 12;
+                }
+
+
+                // Re-calculate total projected return based on the (potentially corrected) monthlyReturnRate
+                // and the bonus applicable for the plan.
+                if (investment.planName === "Standard Plan") {
+                    totalProjectedReturn = parseFloat(investment.amount) * (1 + (monthlyReturnRate * lockInMonths));
+                } else if (investment.planName === "Premium 6-Month Plan") {
+                    const premiumBonus = 0.045; // Base 4.5% bonus for Premium plan
+                    totalProjectedReturn = parseFloat(investment.amount) * (1 + (monthlyReturnRate * lockInMonths) + premiumBonus);
+                } else if (investment.planName === "Elite 12-Month Plan") {
+                    const eliteBonus = 0.10; // Base 10% bonus for Elite plan
+                    totalProjectedReturn = parseFloat(investment.amount) * (1 + (monthlyReturnRate * lockInMonths) + eliteBonus);
+                }
+
 
                 const investDate = investment.timestamp && investment.timestamp.toDate ? new Date(investment.timestamp.toDate()) : new Date();
                 const formattedInvestDate = investDate.toLocaleDateString();
@@ -1827,7 +1956,7 @@
 
                 // Populate the new modal
                 detailModalPlanName.textContent = investment.planName;
-                detailInvestedAmount.textContent = `₹${investment.amount.toFixed(2)}`;
+                detailInvestedAmount.textContent = `₹${parseFloat(investment.amount).toFixed(2)}`;
                 detailMonthlyPayout.textContent = `₹${monthlyPayout.toFixed(2)}`;
                 detailProjectedTotalReturn.textContent = `₹${totalProjectedReturn.toFixed(2)}`;
                 detailInvestDate.textContent = formattedInvestDate;
@@ -1853,7 +1982,8 @@
 
 
             // --- Section Reveal Animation Logic ---
-            const sectionsToAnimate = document.querySelectorAll('section:not(#hero):not(.modal-overlay)');
+            // Filter out 'where-money-works' from sections to be animated by scroll, as it's now a modal
+            const sectionsToAnimate = document.querySelectorAll('section:not(#hero):not(.modal-overlay):not(#where-money-works)');
 
             const isInViewport = (element) => {
                 const rect = element.getBoundingClientRect();
@@ -1878,6 +2008,21 @@
 
             revealSections();
             window.addEventListener('scroll', revealSections);
+
+            // --- Where Your Money Works - Click to Reveal Logic (now opens a modal) ---
+            if (whereMoneyWorksDesktopLink && whereMoneyWorksModal) {
+                whereMoneyWorksDesktopLink.addEventListener('click', (event) => {
+                    event.preventDefault(); // Prevent default anchor jump
+                    openModal(whereMoneyWorksModal);
+                });
+            }
+            if (whereMoneyWorksMobileLink && whereMoneyWorksModal) {
+                whereMoneyWorksMobileLink.addEventListener('click', (event) => {
+                    event.preventDefault(); // Prevent default anchor jump
+                    openModal(whereMoneyWorksModal);
+                    closeMobileMenu(); // Close mobile menu after clicking the link
+                });
+            }
 
 
             // --- Countdown Timer Logic (1st day of next month) ---
@@ -1949,6 +2094,18 @@
                     return;
                 }
 
+                // Add max investment validation for calculator as well
+                const MAX_INVESTMENT_AMOUNT_CALCULATOR = 10000;
+                if (amount > MAX_INVESTMENT_AMOUNT_CALCULATOR) {
+                    if (resultsDiv) resultsDiv.classList.remove('hidden');
+                    if (displayInitialInvestment) displayInitialInvestment.textContent = `₹${amount.toFixed(2)}`;
+                    if (displayTotalReturn) displayTotalReturn.textContent = 'N/A';
+                    if (displayPercentageReturn) displayPercentageReturn.textContent = 'N/A';
+                    showMessage('Investment Limit', `Investment amount cannot exceed ₹${MAX_INVESTMENT_AMOUNT_CALCULATOR}.`, false);
+                    return;
+                }
+
+
                 let calculatedTotalReturn = 0;
                 if (plan === 'standard') {
                     lockInMonths = 2;
@@ -1967,11 +2124,11 @@
 
                     // Note: The problem description implies a fixed monthly rate for premium/elite,
                     // and then a bonus. I'll re-calculate total return based on monthlyRate * months + bonus.
-                    // The bonus here is an additional percentage ON TOP of the monthly accumulated return.
+                    // The bonus here is an an additional percentage ON TOP of the monthly accumulated return.
                     if (now < offerEndDate) {
-                        bonusPercentage = 0.07; // 5% + 2% special offer
+                        bonusPercentage = 0.07; // 4.5% + 2.5% special offer
                     } else {
-                        bonusPercentage = 0.05; // Base 5% bonus
+                        bonusPercentage = 0.045; // Base 4.5% bonus
                     }
                     calculatedTotalReturn = amount * (1 + (monthlyReturnRate * lockInMonths) + bonusPercentage);
                     planName = "Premium 6-Month Plan";
@@ -2114,8 +2271,9 @@
                     if (invAmountInput) {
                         invAmountInput.value = selectedPlanDetails.minInvestment;
                         invAmountInput.min = selectedPlanDetails.minInvestment;
+                        // Update validation message for max limit too
                         if (invAmountValidationMessage) {
-                             invAmountValidationMessage.textContent = `Minimum ₹${selectedPlanDetails.minInvestment}, in multiples of ₹100.`;
+                             invAmountValidationMessage.textContent = `Minimum ₹${selectedPlanDetails.minInvestment}, in multiples of ₹100. Maximum ₹10,000.`;
                         }
                     }
                     if (invEmailInput && currentUserEmail) invEmailInput.value = currentUserEmail;
@@ -2154,6 +2312,12 @@
                     return;
                 }
 
+                // Disable button and show loading state
+                if (submitInvestmentBtn) {
+                    submitInvestmentBtn.disabled = true;
+                    submitInvestmentBtn.textContent = 'Processing...';
+                }
+
                 const name = invNameInput.value.trim();
                 const email = invEmailInput.value.trim();
                 const mobile = invMobileInput.value.trim();
@@ -2168,16 +2332,50 @@
 
                 if (!name || !email || !mobile || !utrNumber || !bankAccountName || !bankAccount || !ifscCode || !planName || isNaN(amount) || !paidUpiId) {
                     showMessage('Missing Information', 'Please fill in all required fields and ensure investment amount is valid.', false);
+                    if (submitInvestmentBtn) {
+                        submitInvestmentBtn.disabled = false;
+                        submitInvestmentBtn.textContent = 'Submit Investment';
+                    }
                     return;
                 }
 
+                // New UTR validation (12 digits)
+                if (!/^\d{12}$/.test(utrNumber)) {
+                    showMessage('Invalid UTR Number', 'UTR Number must be exactly 12 digits.', false);
+                    if (submitInvestmentBtn) {
+                        submitInvestmentBtn.disabled = false;
+                        submitInvestmentBtn.textContent = 'Submit Investment';
+                    }
+                    return;
+                }
+
+                // Minimum investment validation based on selected plan
                 if (amount < selectedPlanDetails.minInvestment || (amount % 100 !== 0)) {
                     showMessage('Invalid Amount', `Investment amount must be at least ₹${selectedPlanDetails.minInvestment} and in multiples of ₹100.`, false);
+                    if (submitInvestmentBtn) {
+                        submitInvestmentBtn.disabled = false;
+                        submitInvestmentBtn.textContent = 'Submit Investment';
+                    }
+                    return;
+                }
+
+                // New: Maximum investment validation
+                const MAX_INVESTMENT_AMOUNT = 10000;
+                if (amount > MAX_INVESTMENT_AMOUNT) {
+                    showMessage('Investment Limit Exceeded', `Investment amount cannot exceed ₹${MAX_INVESTMENT_AMOUNT}.`, false);
+                    if (submitInvestmentBtn) {
+                        submitInvestmentBtn.disabled = false;
+                        submitInvestmentBtn.textContent = 'Submit Investment';
+                    }
                     return;
                 }
 
                 if (!currentUserId || (auth && auth.currentUser && auth.currentUser.isAnonymous)) {
                      showMessage('Authentication Error', 'You must be signed in with a registered account to submit an investment, and Firebase services must be ready.', false);
+                     if (submitInvestmentBtn) {
+                        submitInvestmentBtn.disabled = false;
+                        submitInvestmentBtn.textContent = 'Submit Investment';
+                    }
                      return;
                 }
 
@@ -2205,9 +2403,15 @@
                     investmentForm.reset();
                     // Uncheck terms after successful submission
                     if (acceptTermsCheckbox) acceptTermsCheckbox.checked = false;
-                } catch (error) {
+                }
+                catch (error) {
                     console.error("Error submitting investment:", error);
                     showMessage('Submission Failed', `An error occurred: ${error.message}`, false);
+                } finally {
+                    if (submitInvestmentBtn) {
+                        submitInvestmentBtn.disabled = false;
+                        submitInvestmentBtn.textContent = 'Submit Investment';
+                    }
                 }
             });
 
