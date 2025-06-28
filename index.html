@@ -8,6 +8,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Ensure html and body take at least full viewport height and allow scrolling */
+        html, body {
+            min-height: 100vh; /* Ensure it's at least the height of the viewport */
+            height: auto; /* Allow content to push height beyond viewport if needed */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
         body {
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth; /* Ensures smooth scrolling for anchor links */
@@ -39,7 +45,7 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        /* Modal specific styles (for planDetailModal, messageModal, signInModal, signUpModal, investModal, termsAndConditionsModal) */
+        /* Modal specific styles (for planDetailModal, messageModal, signInModal, signUpModal, investModal, termsAndConditionsModal, investmentDetailsModal) */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -78,9 +84,17 @@
         #signInModal .modal-content,
         #signUpModal .modal-content,
         #myInvestmentsModal .modal-content,
-        #termsAndConditionsModal .modal-content { /* Added terms modal */
+        #termsAndConditionsModal .modal-content,
+        #investmentDetailsModal .modal-content { /* Added new detail modal */
             width: 600px;
         }
+        /* Specifically ensuring myInvestmentsModal content is plain white */
+        #myInvestmentsModal .modal-content,
+        #investmentDetailsModal .modal-content { /* Ensure plain white for detail modal too */
+            background-color: white;
+            background-image: none;
+        }
+
 
         .modal-overlay.active .modal-content {
             transform: translateY(0); /* Slide down to original position */
@@ -305,10 +319,12 @@
 
         .form-label {
             display: block;
-            font-size: 0.875rem; /* sm */
-            font-weight: 600; /* semibold */
-            color: #2d3748; /* gray-800 */
-            margin-bottom: 0.5rem;
+            text-align: left;
+            width: calc(100% - 20px);
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #2d3748;
         }
 
         .form-submit-btn {
@@ -468,72 +484,71 @@
             animation: card-initial-pop 0.8s ease-out forwards; /* Run once, then stay */
         }
 
-        /* Styles for "My Investments" section (within modal) */
-        .investment-card {
-            background-color: #ffffff; /* Default white background, gradient added by specific classes */
-            border-left: 8px solid; /* Border color set by specific plan classes below */
+        /* Styles for "My Investments" summary cards within modal */
+        .investment-summary-card {
+            background-color: white;
+            border-left: 8px solid; /* Color set dynamically */
             border-radius: 0.75rem;
             padding: 1.5rem;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Slightly deeper shadow */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            cursor: pointer;
             display: flex;
-            flex-direction: column;
-            color: #2d3748; /* Default text color for the card */
-        }
-
-        .investment-card:hover {
-            transform: translateY(-8px); /* Lift more on hover */
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Even deeper shadow */
-        }
-
-        /* Specific border and background colors for investment cards based on plan */
-        .investment-card.standard-plan-item {
-            border-color: #3b82f6; /* blue-500 */
-            background-image: linear-gradient(to bottom right, #e0f7fa, #bbdefb); /* Light blue gradient */
-        }
-
-        .investment-card.premium-plan-item {
-            border-color: #8b5cf6; /* purple-500 */
-            background-image: linear-gradient(to bottom right, #ede7f6, #d1c4e9); /* Light purple gradient */
-        }
-
-        .investment-card.elite-plan-item {
-            border-color: #f59e0b; /* yellow-500 */
-            background-image: linear-gradient(to bottom right, #fffde7, #fff59d); /* Light yellow gradient */
-        }
-
-        /* Heading within investment card */
-        .investment-card h3 {
-            font-size: 1.75rem; /* text-2xl */
-            font-weight: 700; /* bold */
-            color: #1e3a8a; /* Dark blue */
-            margin-bottom: 1rem; /* Increased margin for separation */
-            display: flex;
-            align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid rgba(0,0,0,0.1); /* Subtle separator line below heading */
-            padding-bottom: 0.75rem;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
         }
 
-        /* Styling for individual detail lines */
+        .investment-summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .investment-summary-card .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .investment-summary-card .invest-date {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #6b7280;
+            text-align: right;
+        }
+        .investment-summary-card .arrow-icon {
+            font-size: 1.8rem;
+            color: #3b82f6; /* blue-500 */
+            margin-left: 1rem;
+        }
+
+        /* Specific border colors for investment summary cards */
+        .investment-summary-card.standard-plan-item { border-color: #3b82f6; } /* blue-500 */
+        .investment-summary-card.premium-plan-item { border-color: #8b5cf6; } /* purple-500 */
+        .investment-summary-card.elite-plan-item { border-color: #f59e0b; } /* yellow-500 */
+
+
+        /* Styles for Investment Details Modal content */
         .investment-details-group,
         .financial-details-group {
             margin-bottom: 1rem; /* Space between groups of details */
             padding: 0.75rem 1rem; /* Padding for the entire group */
             border-radius: 0.5rem;
-            background-color: rgba(255, 255, 255, 0.7); /* Light, semi-transparent background */
+            background-color: white; /* Changed to solid white */
+            background-image: none; /* Ensure no gradient */
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Subtle shadow for the group */
         }
 
         .investment-details-group p,
         .financial-details-group p {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; /* Keep flex for icon + text */
+            align-items: center; /* Align items vertically in the center */
             padding: 0.25rem 0; /* Vertical padding for each line */
             border-bottom: 1px dashed rgba(0,0,0,0.1); /* Subtle dashed separator */
             font-size: 1.05rem; /* Slightly larger font for details */
             color: #374151; /* Default text color for details */
+            flex-wrap: wrap; /* Allow content to wrap */
         }
 
         .investment-details-group p:last-child,
@@ -544,12 +559,16 @@
         .investment-details-group p span:first-child,
         .financial-details-group p span:first-child {
             font-weight: 500; /* Medium weight for labels */
+            margin-right: 0.5rem; /* Small gap between label and value */
         }
 
         .investment-details-group p strong,
         .financial-details-group p strong {
             font-weight: 600; /* Semibold for values */
             color: #1a202c; /* Darker color for values for emphasis */
+            word-break: break-word; /* Ensure long words break and wrap within the element */
+            flex-basis: auto; /* Allow content to determine its width */
+            flex-shrink: 0; /* Prevent shrinking too much */
         }
 
         /* Specific colors for financial values for quick identification */
@@ -632,6 +651,7 @@
                     <li><a href="#plans" class="hover:text-blue-200 transition duration-300">Investment Plans</a></li>
                     <li><a href="#how-it-works" class="hover:text-blue-200 transition duration-300">How It Works</a></li>
                     <li><a href="#why-choose-us" class="hover:text-blue-200 transition duration-300">Why Choose Us</a></li>
+                    <li><a href="#where-money-works" class="hover:text-blue-200 transition duration-300">Where Your Money Works</a></li> <!-- New Menu Item -->
                     <li><a href="#limited-time-offer" class="hover:text-blue-200 transition duration-300">Special Offer</a></li>
                     <li><a href="#ai-calculator" class="hover:text-blue-200 transition duration-300">AI Calculator</a></li>
                     <!-- Conditional Navigation based on Auth status -->
@@ -655,6 +675,7 @@
                 <li><a href="#plans" class="hover:text-yellow-300 transition duration-300" data-close-menu>Investment Plans</a></li>
                 <li><a href="#how-it-works" class="hover:text-yellow-300 transition duration-300" data-close-menu>How It Works</a></li>
                 <li><a href="#why-choose-us" class="hover:text-yellow-300 transition duration-300" data-close-menu>Why Choose Us</a></li>
+                <li><a href="#where-money-works" class="hover:text-yellow-300 transition duration-300" data-close-menu>Where Your Money Works</a></li> <!-- New Mobile Menu Item -->
                 <li><a href="#limited-time-offer" class="hover:text-yellow-300 transition duration-300" data-close-menu>Special Offer</a></li>
                 <li><a href="#ai-calculator" class="hover:text-yellow-300 transition duration-300" data-close-menu>AI Calculator</a></li>
                 <!-- Conditional Mobile Nav Links -->
@@ -666,7 +687,7 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="relative text-white flex items-center justify-center min-h-screen pt-20">
+    <section class="relative text-white flex items-center justify-center min-h-screen pt-24"> <!-- Changed pt-20 to pt-24 -->
         <!-- New: Background image -->
         <div class="hero-background-image"></div>
         <!-- Money Animation Container - REMOVED -->
@@ -695,19 +716,19 @@
                 <!-- Standard Plan Card -->
                 <div class="plan-card standard-plan bg-white rounded-3xl shadow-xl transform transition duration-300 hover:scale-105 flex flex-col cursor-pointer card-hover-effect"
                     data-plan-name="Standard Plan"
-                    data-monthly-return="7.5%"
+                    data-monthly-return="5.75%"
                     data-min-investment="500"
                     data-payout-frequency="Monthly"
                     data-lock-in="2 months minimum"
-                    data-benefits='["Stable 7.5% return on investment every month.", "Flexible withdrawal option after the lock-in period."]'
-                    data-total-return="15% over 2 months">
+                    data-benefits='["Stable 5.75% return on investment every month.", "Flexible withdrawal option after the lock-in period."]'
+                    data-total-return="11.5% over 2 months">
                     <span class="plan-tag">NEW</span>
                     <div class="plan-icon-wrapper mx-auto mb-4">
                         <span class="plan-icon text-blue-600">🛡️</span>
                     </div>
                     <h3 class="text-3xl font-bold text-blue-700 mb-3 text-center">Standard Plan</h3>
                     <p class="text-lg mb-3 text-center">
-                        <span class="block text-2xl font-semibold text-green-600 mb-1">7.5% Monthly Return</span>
+                        <span class="block text-2xl font-semibold text-green-600 mb-1">5.75% Monthly Return</span>
                         Minimum Investment: <span class="font-bold">₹500</span><br>
                         Payout Frequency: Monthly<br>
                         Lock-in Period: 2 months minimum
@@ -715,7 +736,7 @@
                     <div class="border-t border-gray-200 pt-3 mt-auto">
                         <h4 class="text-xl font-semibold text-gray-700 mb-2">Benefits:</h4>
                         <ul class="list-disc list-inside text-gray-600 space-y-1">
-                            <li>Stable 7.5% return on investment every month.</li>
+                            <li>Stable 5.75% return on investment every month.</li>
                             <li>Flexible withdrawal option after the lock-in period.</li>
                         </ul>
                     </div>
@@ -724,18 +745,18 @@
                 <!-- Premium 6-Month Plan Card -->
                 <div class="plan-card premium-plan bg-white rounded-3xl shadow-xl transform transition duration-300 hover:scale-105 flex flex-col cursor-pointer card-hover-effect"
                     data-plan-name="Premium 6-Month Plan"
-                    data-monthly-return="7.5%"
+                    data-monthly-return="6.75%"
                     data-min-investment="500"
                     data-payout-frequency="Monthly"
                     data-lock-in="6 months"
-                    data-benefits='["Bonus: Receive an additional 5% return at the end of the 6-month period.", "Total Return: 50% over 6 months (45% from monthly returns + 5% bonus).", "Perk: Priority Support.", "Referral Bonus: Refer another investor and earn an extra 1% on your referrals investment."]'
-                    data-total-return="50% over 6 months">
+                    data-benefits='["Bonus: Receive an additional 5% return at the end of the 6-month period.", "Total Return: 45.5% over 6 months (40.5% from monthly returns + 5% bonus).", "Perk: Priority Support.", "Referral Bonus: Refer another investor and earn an extra 1% on your referrals investment."]'
+                    data-total-return="45.5% over 6 months">
                      <div class="plan-icon-wrapper mx-auto mb-4">
                         <span class="plan-icon text-purple-600">⭐</span>
                     </div>
                     <h3 class="text-3xl font-bold text-purple-700 mb-3 text-center">Premium 6-Month Plan</h3>
                     <p class="text-lg mb-3 text-center">
-                        <span class="block text-2xl font-semibold text-green-600 mb-1">7.5% Monthly Return</span>
+                        <span class="block text-2xl font-semibold text-green-600 mb-1">6.75% Monthly Return</span>
                         Minimum Investment: <span class="font-bold">₹500</span><br>
                         Payout Frequency: Monthly<br>
                         Lock-in Period: 6 months
@@ -744,7 +765,7 @@
                         <h4 class="text-xl font-semibold text-gray-700 mb-2">SPECIAL OFFER:</h4>
                         <ul class="list-disc list-inside text-gray-600 space-y-1">
                             <li>Bonus: Receive an additional <span class="font-bold">5% return</span> at the end of the 6-month period.</li>
-                            <li>Total Return: <span class="font-bold">50% over 6 months</span> (45% from monthly returns + 5% bonus).</li>
+                            <li>Total Return: <span class="font-bold">45.5% over 6 months</span> (40.5% from monthly returns + 5% bonus).</li>
                         </ul>
                         <h4 class="text-xl font-semibold text-gray-700 mb-2 mt-4">Exclusive Perks:</h4>
                         <ul class="list-disc list-inside text-gray-600 space-y-1">
@@ -839,6 +860,25 @@
             <p class="text-center text-xl text-gray-700 mt-12 max-w-3xl mx-auto">
                 This structure encourages longer-term investments by offering additional bonuses, while also giving flexibility to those interested in shorter-term gains.
             </p>
+        </div>
+    </section>
+
+    <!-- New Section: Where Your Money Works -->
+    <section id="where-money-works" class="py-20 bg-gradient-to-br from-indigo-700 to-purple-800 text-white section-hidden">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-extrabold mb-12">Where Your Money Works: Building Your Future, Bit by Bit</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+                <div class="bg-indigo-600 rounded-2xl p-8 shadow-lg transform transition duration-300 hover:scale-105 hover:bg-indigo-500">
+                    <div class="text-5xl mb-4 float-animation">📈</div>
+                    <h3 class="text-2xl font-bold mb-3">Strategic Investments in Share Market</h3>
+                    <p class="text-lg">A significant portion of your capital is expertly managed in the share market, focusing on diversified portfolios with high-growth potential. We employ rigorous analysis and smart trading strategies to secure substantial returns.</p>
+                </div>
+                <div class="bg-indigo-600 rounded-2xl p-8 shadow-lg transform transition duration-300 hover:scale-105 hover:bg-indigo-500">
+                    <div class="text-5xl mb-4 float-animation">🤝</div>
+                    <h3 class="text-2xl font-bold mb-3">Secure Lending on Trusted Platforms</h3>
+                    <p class="text-lg">To ensure stable and consistent returns, a portion of your investment is allocated to lending on verified and trusted platforms. This diversifies risk and provides a reliable income stream, ensuring your money is always working for you.</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1061,8 +1101,8 @@
         <div class="modal-content text-gray-800">
             <button class="modal-close-btn" id="closeMyInvestmentsModalBtn">&times;</button>
             <h2 class="text-3xl font-bold text-blue-700 mb-6 text-center">My Investments</h2>
-            <div id="investments-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Investment cards will be dynamically loaded here -->
+            <div id="investments-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Investment summary cards will be dynamically loaded here -->
                 <p id="no-investments-message" class="text-center text-lg text-gray-600 col-span-full">
                     You have no investments yet. Start investing today!
                 </p>
@@ -1070,6 +1110,43 @@
             <p id="current-user-id" class="text-center text-sm text-gray-500 mt-8"></p>
         </div>
     </div>
+
+    <!-- Investment Details Modal (New) -->
+    <div id="investmentDetailsModal" class="modal-overlay">
+        <div class="modal-content text-gray-800">
+            <button class="modal-close-btn" id="closeInvestmentDetailsModalBtn">&times;</button>
+            <h2 id="detailModalPlanName" class="text-3xl font-bold text-blue-700 mb-6 text-center"></h2>
+            <div class="investment-details-group space-y-1 mb-6">
+                <p>
+                    <span class="flex items-center"><span class="mr-2 text-blue-600">💰</span>Invested Amount:</span> <strong id="detailInvestedAmount" class="text-blue-700"></strong>
+                </p>
+                <p>
+                    <span class="flex items-center"><span class="mr-2 text-green-600">📈</span>Monthly Payout:</span> <strong id="detailMonthlyPayout" class="text-green-700"></strong>
+                </p>
+                <p>
+                    <span class="flex items-center"><span class="mr-2 text-green-600">💸</span>Projected Total Return:</span> <strong id="detailProjectedTotalReturn" class="text-green-700"></strong>
+                </p>
+                <p>
+                    <span class="flex items-center"><span class="mr-2 text-red-500">🗓️</span>Invest Date:</span> <strong id="detailInvestDate" class="text-gray-800"></strong>
+                </p>
+                <p>
+                    <span class="flex items-center"><span class="mr-2 text-red-500">🗓️</span>Your Plan End date:</span> <strong id="detailPlanEndDate" class="text-gray-800"></strong>
+                </p>
+                <p>
+                    <span class="flex items-center"><span class="mr-2 text-red-500">🗓️</span>You will get your investment back:</span> <strong id="detailPayoutReturnDate" class="text-gray-800"></strong>
+                </p>
+            </div>
+            <div class="financial-details-group mt-4 pt-4 text-sm space-y-1">
+                <p><span>UTR Number:</span> <strong id="detailUtrNumber" class="text-gray-800"></strong></p>
+                <p><span>Paid To UPI ID:</span> <strong id="detailPaidUpiId" class="text-gray-800"></strong></p>
+                <p><span>Bank Account Name:</span> <strong id="detailBankAccountName" class="text-gray-800"></strong></p>
+                <p><span>Bank A/C:</span> <strong id="detailBankAccount" class="text-gray-800"></strong></p>
+                <p><span>IFSC:</span> <strong id="detailIfscCode" class="text-gray-800"></strong></p>
+                <p id="detailOptionalUpiRow" class="hidden"><span>Your UPI ID:</span> <strong id="detailUpiIdOptional" class="text-gray-800"></strong></p>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Terms and Conditions Modal -->
     <div id="termsAndConditionsModal" class="modal-overlay">
@@ -1127,7 +1204,7 @@
                 <p>ADS FUND reserves the right to amend or update these Terms & Conditions at any time without prior notice. It is your responsibility to review these terms periodically for any changes. Your continued use of the service or continued investment after any amendments constitutes your acceptance of the revised terms.</p>
 
                 <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">12. Contact Information</h3>
-                <p>For any questions regarding these Terms & Conditions, please contact us at <a href="mailto:info@adsfund.com" class="terms-link">info@adsfund.com</a>.</p>
+                <p>For any questions regarding these Terms & Conditions, please contact us at <a href="mailto:info@adsfund.com" class="terms-link">itsads2k23@gmail.com</a>.</p>
             </div>
             <button id="closeTermsContentBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full shadow-md mt-8">
                 Close
@@ -1167,6 +1244,7 @@
         let currentUserEmail = null; // To store the authenticated user's email
         let selectedPlanDetails = {}; // To store details of the plan chosen by the user
         let appId; // Declare appId globally for Firestore paths
+        let userInvestmentsData = []; // Store fetched investments here
 
         // --- Custom Message Modal Functions ---
         const messageModal = document.getElementById('messageModal');
@@ -1318,6 +1396,24 @@
             const acceptTermsCheckbox = document.getElementById('acceptTerms');
             const closeTermsContentBtn = document.getElementById('closeTermsContentBtn');
 
+            // New Investment Details Modal elements
+            const investmentDetailsModal = document.getElementById('investmentDetailsModal');
+            const closeInvestmentDetailsModalBtn = document.getElementById('closeInvestmentDetailsModalBtn');
+            const detailModalPlanName = document.getElementById('detailModalPlanName');
+            const detailInvestedAmount = document.getElementById('detailInvestedAmount');
+            const detailMonthlyPayout = document.getElementById('detailMonthlyPayout');
+            const detailProjectedTotalReturn = document.getElementById('detailProjectedTotalReturn');
+            const detailInvestDate = document.getElementById('detailInvestDate');
+            const detailPlanEndDate = document.getElementById('detailPlanEndDate');
+            const detailPayoutReturnDate = document.getElementById('detailPayoutReturnDate');
+            const detailUtrNumber = document.getElementById('detailUtrNumber');
+            const detailPaidUpiId = document.getElementById('detailPaidUpiId');
+            const detailBankAccountName = document.getElementById('detailBankAccountName');
+            const detailBankAccount = document.getElementById('detailBankAccount');
+            const detailIfscCode = document.getElementById('detailIfscCode');
+            const detailUpiIdOptional = document.getElementById('detailUpiIdOptional');
+            const detailOptionalUpiRow = document.getElementById('detailOptionalUpiRow');
+
 
             // --- Firebase Initialization and Initial Auth Attempt ---
             try {
@@ -1438,6 +1534,17 @@
             closeMyInvestmentsModalBtn?.addEventListener('click', () => {
                 closeModal(myInvestmentsModal);
             });
+            // New: Close Investment Details Modal
+            closeInvestmentDetailsModalBtn?.addEventListener('click', () => {
+                closeModal(investmentDetailsModal);
+            });
+            if (investmentDetailsModal) {
+                investmentDetailsModal.addEventListener('click', (e) => {
+                    if (e.target === investmentDetailsModal) {
+                        closeModal(investmentDetailsModal);
+                    }
+                });
+            }
 
             // New: Terms and Conditions Modal event listeners
             if (viewTermsLink) {
@@ -1636,6 +1743,7 @@
                 const q = query(userInvestmentsRef, orderBy("timestamp", "desc"));
 
                 onSnapshot(q, (snapshot) => {
+                    userInvestmentsData = []; // Clear previous data
                     if (snapshot.empty) {
                         if (investmentsContainer) {
                             investmentsContainer.innerHTML = '<p class="text-center text-lg text-gray-600 col-span-full">You have no investments yet. Start investing today!</p>';
@@ -1644,66 +1752,32 @@
                         if (investmentsContainer) investmentsContainer.innerHTML = '';
                         snapshot.forEach((doc) => {
                             const investment = doc.data();
+                            const docId = doc.id; // Get the Firestore document ID
+                            investment.id = docId; // Add ID to the investment object
+                            userInvestmentsData.push(investment); // Store the full investment data
+
                             const investDate = investment.timestamp && investment.timestamp.toDate ? new Date(investment.timestamp.toDate()) : new Date();
                             const formattedInvestDate = investDate.toLocaleDateString();
 
-                            const MONTHLY_RETURN_RATE = 0.075;
-                            let lockInMonths = 0;
-                            let totalProjectedReturn = 0;
-                            let monthlyPayout = investment.amount * MONTHLY_RETURN_RATE;
-
-                            if (investment.planName === "Standard Plan") {
-                                lockInMonths = 2;
-                                totalProjectedReturn = investment.amount * (1 + (MONTHLY_RETURN_RATE * lockInMonths));
-                            } else if (investment.planName === "Premium 6-Month Plan") {
-                                lockInMonths = 6;
-                                // Assuming the 5% bonus for Premium Plan for calculation in My Investments
-                                // If special offer 2% bonus was applied, that would need to be stored in Firestore on investment
-                                const premiumBonus = 0.05;
-                                totalProjectedReturn = investment.amount * (1 + (MONTHLY_RETURN_RATE * lockInMonths) + premiumBonus);
-                            } else if (investment.planName === "Elite 12-Month Plan") {
-                                lockInMonths = 12;
-                                const eliteBonus = 0.10;
-                                totalProjectedReturn = investment.amount * (1 + (MONTHLY_RETURN_RATE * lockInMonths) + eliteBonus);
-                            }
-
-                            const returnDate = new Date(investDate);
-                            returnDate.setMonth(returnDate.getMonth() + lockInMonths);
-                            const formattedReturnDate = returnDate.toLocaleDateString();
-
                             const card = `
-                                <div class="investment-card ${investment.planName === 'Standard Plan' ? 'standard-plan-item' :
+                                <div class="investment-summary-card ${investment.planName === 'Standard Plan' ? 'standard-plan-item' :
                                                                            investment.planName === 'Premium 6-Month Plan' ? 'premium-plan-item' :
-                                                                           'elite-plan-item'} rounded-lg shadow-md transition-all duration-300 transform hover:scale-105">
-                                    <h3>
-                                        <span>${investment.planName}</span>
-                                        <span class="text-sm font-normal text-gray-500">Invest Date: ${formattedInvestDate}</span>
-                                    </h3>
-                                    <div class="investment-details-group space-y-1">
-                                        <p>
-                                            <span class="flex items-center"><span class="mr-2 text-blue-600">💰</span>Invested Amount:</span> <strong class="text-blue-700">₹${investment.amount.toFixed(2)}</strong>
-                                        </p>
-                                        <p>
-                                            <span class="flex items-center"><span class="mr-2 text-green-600">📈</span>Monthly Payout:</span> <strong class="text-green-700">₹${monthlyPayout.toFixed(2)}</strong>
-                                        </p>
-                                        <p>
-                                            <span class="flex items-center"><span class="mr-2 text-green-600">💸</span>Projected Total Return:</span> <strong class="text-green-700">₹${totalProjectedReturn.toFixed(2)}</strong>
-                                        </p>
-                                        <p>
-                                            <span class="flex items-center"><span class="mr-2 text-red-500">🗓️</span>Expected Return Date:</span> <strong class="text-gray-800">${formattedReturnDate}</strong>
-                                        </p>
+                                                                           'elite-plan-item'} clickable-investment-summary" data-id="${docId}">
+                                    <div>
+                                        <div class="plan-name">${investment.planName}</div>
+                                        <div class="invest-date">Invested on: ${formattedInvestDate}</div>
                                     </div>
-                                    <div class="financial-details-group mt-4 pt-4 text-sm space-y-1">
-                                        <p><span>UTR Number:</span> <strong class="text-gray-800">${investment.utrNumber}</strong></p>
-                                        <p><span>Paid To UPI ID:</span> <strong class="text-gray-800">${investment.paidUpiId || 'N/A'}</strong></p>
-                                        <p><span>Bank Account Name:</span> <strong class="text-gray-800">${investment.bankAccountName}</strong></p>
-                                        <p><span>Bank A/C:</span> <strong class="text-gray-800">${investment.bankAccount}</strong></p>
-                                        <p><span>IFSC:</span> <strong class="text-gray-800">${investment.ifscCode}</strong></p>
-                                        ${investment.upiIdOptional ? `<p><span>Your UPI ID:</span> <strong class="text-gray-800">${investment.upiIdOptional}</strong></p>` : ''}
-                                    </div>
+                                    <div class="arrow-icon">▶</div>
                                 </div>
                             `;
                             if (investmentsContainer) investmentsContainer.insertAdjacentHTML('beforeend', card);
+                        });
+                        // Attach click listeners to the newly created summary cards
+                        document.querySelectorAll('.clickable-investment-summary').forEach(card => {
+                            card.addEventListener('click', (event) => {
+                                const id = event.currentTarget.dataset.id;
+                                showInvestmentDetail(id);
+                            });
                         });
                     }
                 }, (error) => {
@@ -1712,7 +1786,71 @@
                 });
             }
 
-            const MONTHLY_RETURN_RATE = 0.075;
+            // --- Function to display individual investment details ---
+            function showInvestmentDetail(id) {
+                const investment = userInvestmentsData.find(inv => inv.id === id);
+
+                if (!investment) {
+                    showMessage('Error', 'Investment details not found.', false);
+                    return;
+                }
+
+                // Parse the monthly return rate from the investment data
+                const monthlyReturnRate = parseFloat(investment.monthlyReturn.replace('%', '')) / 100;
+
+                let lockInMonths = 0;
+                let totalProjectedReturn = 0;
+                let monthlyPayout = investment.amount * monthlyReturnRate; // Use the plan-specific monthly return
+
+                if (investment.planName === "Standard Plan") {
+                    lockInMonths = 2;
+                    totalProjectedReturn = investment.amount * (1 + (monthlyReturnRate * lockInMonths));
+                } else if (investment.planName === "Premium 6-Month Plan") {
+                    lockInMonths = 6;
+                    const premiumBonus = 0.05; // Standard bonus for calculation
+                    totalProjectedReturn = investment.amount * (1 + (monthlyReturnRate * lockInMonths) + premiumBonus);
+                } else if (investment.planName === "Elite 12-Month Plan") {
+                    lockInMonths = 12;
+                    const eliteBonus = 0.10; // Standard bonus for calculation
+                    totalProjectedReturn = investment.amount * (1 + (monthlyReturnRate * lockInMonths) + eliteBonus);
+                }
+
+                const investDate = investment.timestamp && investment.timestamp.toDate ? new Date(investment.timestamp.toDate()) : new Date();
+                const formattedInvestDate = investDate.toLocaleDateString();
+
+                const planEndDate = new Date(investDate);
+                planEndDate.setMonth(planEndDate.getMonth() + lockInMonths);
+                const formattedPlanEndDate = planEndDate.toLocaleDateString();
+
+                const payoutReturnDate = new Date(planEndDate.getFullYear(), planEndDate.getMonth() + 1, 0); // Last day of the plan end month
+                const formattedPayoutReturnDate = payoutReturnDate.toLocaleDateString();
+
+                // Populate the new modal
+                detailModalPlanName.textContent = investment.planName;
+                detailInvestedAmount.textContent = `₹${investment.amount.toFixed(2)}`;
+                detailMonthlyPayout.textContent = `₹${monthlyPayout.toFixed(2)}`;
+                detailProjectedTotalReturn.textContent = `₹${totalProjectedReturn.toFixed(2)}`;
+                detailInvestDate.textContent = formattedInvestDate;
+                detailPlanEndDate.textContent = formattedPlanEndDate;
+                detailPayoutReturnDate.textContent = formattedPayoutReturnDate;
+                detailUtrNumber.textContent = investment.utrNumber;
+                detailPaidUpiId.textContent = investment.paidUpiId || 'N/A';
+                detailBankAccountName.textContent = investment.bankAccountName;
+                detailBankAccount.textContent = investment.bankAccount;
+                detailIfscCode.textContent = investment.ifscCode;
+
+                if (investment.upiIdOptional) {
+                    detailUpiIdOptional.textContent = investment.upiIdOptional;
+                    detailOptionalUpiRow.classList.remove('hidden');
+                } else {
+                    detailUpiIdOptional.textContent = '';
+                    detailOptionalUpiRow.classList.add('hidden');
+                }
+
+                closeModal(myInvestmentsModal); // Close the summary modal
+                openModal(investmentDetailsModal); // Open the details modal
+            }
+
 
             // --- Section Reveal Animation Logic ---
             const sectionsToAnimate = document.querySelectorAll('section:not(#hero):not(.modal-overlay)');
@@ -1772,14 +1910,36 @@
             updateCountdown();
 
 
-            // --- Investment Calculator Logic (AI Insight part removed) ---
+            // --- Investment Calculator Logic ---
             calculateBtn.addEventListener('click', async () => {
                 const amount = parseFloat(investmentAmountInput.value);
                 const plan = investmentPlanSelect.value;
-                let totalReturn = 0;
+                let monthlyReturnRate = 0;
                 let lockInMonths = 0;
                 let planName = "";
                 let bonusPercentage = 0;
+                let currentPlanTotalReturnDisplayed = 0; // To store the original total-return from the card
+
+                // Find the selected plan card to get its data-attributes
+                let selectedPlanCard = null;
+                for (let i = 0; i < planCards.length; i++) {
+                    if (planCards[i].dataset.planName.toLowerCase().includes(plan)) {
+                        selectedPlanCard = planCards[i];
+                        break;
+                    }
+                }
+
+                if (!selectedPlanCard) {
+                    console.error("Selected plan card not found for calculation.");
+                    showMessage('Calculation Error', 'Could not find details for the selected plan.', false);
+                    return;
+                }
+
+                monthlyReturnRate = parseFloat(selectedPlanCard.dataset.monthlyReturn.replace('%', '')) / 100;
+                currentPlanTotalReturnDisplayed = parseFloat(selectedPlanCard.dataset.totalReturn.replace('%', '')); // For display purposes
+                // The dataset.totalReturn from HTML is a percentage, convert it
+                currentPlanTotalReturnDisplayed = amount * (currentPlanTotalReturnDisplayed / 100);
+
 
                 if (isNaN(amount) || amount <= 0) {
                     if (resultsDiv) resultsDiv.classList.remove('hidden');
@@ -1789,9 +1949,10 @@
                     return;
                 }
 
+                let calculatedTotalReturn = 0;
                 if (plan === 'standard') {
                     lockInMonths = 2;
-                    totalReturn = amount * (1 + (MONTHLY_RETURN_RATE * lockInMonths));
+                    calculatedTotalReturn = amount * (1 + (monthlyReturnRate * lockInMonths));
                     planName = "Standard Plan";
                 } else if (plan === 'premium') {
                     lockInMonths = 6;
@@ -1804,17 +1965,20 @@
                     }
                     const offerEndDate = new Date(year, nextMonth, 1);
 
+                    // Note: The problem description implies a fixed monthly rate for premium/elite,
+                    // and then a bonus. I'll re-calculate total return based on monthlyRate * months + bonus.
+                    // The bonus here is an additional percentage ON TOP of the monthly accumulated return.
                     if (now < offerEndDate) {
-                        bonusPercentage = 0.07;
+                        bonusPercentage = 0.07; // 5% + 2% special offer
                     } else {
-                        bonusPercentage = 0.05;
+                        bonusPercentage = 0.05; // Base 5% bonus
                     }
-                    totalReturn = amount * (1 + (MONTHLY_RETURN_RATE * lockInMonths) + bonusPercentage);
+                    calculatedTotalReturn = amount * (1 + (monthlyReturnRate * lockInMonths) + bonusPercentage);
                     planName = "Premium 6-Month Plan";
                 } else if (plan === 'elite') {
                     lockInMonths = 12;
-                    bonusPercentage = 0.10;
-                    totalReturn = amount * (1 + (MONTHLY_RETURN_RATE * lockInMonths) + bonusPercentage);
+                    bonusPercentage = 0.10; // Elite 10% bonus
+                    calculatedTotalReturn = amount * (1 + (monthlyReturnRate * lockInMonths) + bonusPercentage);
                     planName = "Elite 12-Month Plan";
                     if (amount < 1000) {
                          if (resultsDiv) resultsDiv.classList.remove('hidden');
@@ -1826,10 +1990,13 @@
                     }
                 }
 
-                const percentageReturn = ((totalReturn - amount) / amount) * 100;
+                // If the HTML data-total-return is meant to be the final projected return, use that for display
+                // Otherwise, use the calculated totalReturn. For consistency, let's recalculate fully.
+                const percentageReturn = ((calculatedTotalReturn - amount) / amount) * 100;
+
 
                 if (displayInitialInvestment) displayInitialInvestment.textContent = `₹${amount.toFixed(2)}`;
-                if (displayTotalReturn) displayTotalReturn.textContent = `₹${totalReturn.toFixed(2)}`;
+                if (displayTotalReturn) displayTotalReturn.textContent = `₹${calculatedTotalReturn.toFixed(2)}`;
                 if (displayPercentageReturn) displayPercentageReturn.textContent = `${percentageReturn.toFixed(2)}%`;
                 if (resultsDiv) resultsDiv.classList.remove('hidden');
             });
@@ -1843,16 +2010,16 @@
                     const payoutFrequency = card.dataset.payoutFrequency;
                     const lockIn = card.dataset.lockIn;
                     const benefitsRaw = card.dataset.benefits;
-                    const totalReturn = card.dataset.totalReturn;
+                    const totalReturn = card.dataset.totalReturn; // Correctly accessing camelCase
 
                     selectedPlanDetails = {
                         planName: planName,
-                        monthlyReturn: monthlyReturn,
+                        monthlyReturn: monthlyReturn, // Store as string "X.X%"
                         minInvestment: minInvestment,
                         payoutFrequency: payoutFrequency,
                         lockIn: lockIn,
                         benefits: benefitsRaw,
-                        totalReturn: totalReturn
+                        totalReturn: totalReturn // Store as string "X.X% over Y months"
                     };
 
                     if (document.getElementById('modalPlanName')) document.getElementById('modalPlanName').textContent = planName;
@@ -2023,6 +2190,7 @@
                         mobile: mobile,
                         amount: amount,
                         planName: planName,
+                        monthlyReturn: selectedPlanDetails.monthlyReturn, // Save the actual monthly return %
                         paidUpiId: paidUpiId, // Store the selected UPI ID
                         utrNumber: utrNumber,
                         bankAccountName: bankAccountName,
