@@ -10,7 +10,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            scroll-behavior: smooth;
+            scroll-behavior: smooth; /* Ensures smooth scrolling for anchor links */
             /* Subtle radial gradient background for the entire page */
             background-image: radial-gradient(circle at top left, #f0f8ff, #ffffff); /* Very light blue (aliceblue) to white */
             background-attachment: fixed;
@@ -31,19 +31,6 @@
             background: #555;
         }
 
-        /* AI Loading Spinner */
-        .ai-loading-spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #3b82f6; /* Blue-500 */
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         /* Countdown Timer */
         .countdown-timer {
             font-size: 2.5rem;
@@ -52,7 +39,7 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        /* Modal specific styles */
+        /* Modal specific styles (for planDetailModal, messageModal, signInModal, signUpModal, investModal, termsAndConditionsModal) */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -66,7 +53,7 @@
             z-index: 1000;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            transition: opacity 0.4s ease-out, visibility 0.4s ease-out; /* Smoother transition */
         }
         .modal-overlay.active {
             opacity: 1;
@@ -78,32 +65,26 @@
             border-radius: 1.5rem; /* rounded-3xl */
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
             max-width: 90%;
-            width: 500px;
+            width: 500px; /* Default width for most modals */
             position: relative;
-            transform: translateY(-20px);
-            transition: transform 0.3s ease;
-            overflow: hidden; /* Hide overflowing gradient animation */
+            transform: translateY(-50px); /* Start further up */
+            opacity: 0; /* Start invisible */
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease-out; /* Smoother easing */
+            overflow-y: auto; /* Allow scrolling for taller modals */
+            max-height: 90vh; /* Max height to fit within viewport */
         }
-        /* Increased width for investor form modal */
-        #investorFormModal .modal-content {
-            max-width: 90%;
-            width: 700px; /* Wider for the form */
-            padding: 3rem; /* More padding */
-            /* Animated background gradient for the form modal */
-            background: linear-gradient(135deg, #e0f2fe, #e3f2fd, #bbdefb, #90caf9); /* Light blue shades */
-            background-size: 400% 400%;
-            animation: dynamic-gradient-light 15s ease-in-out infinite alternate;
-        }
-
-        /* Keyframes for the light dynamic gradient */
-        @keyframes dynamic-gradient-light {
-            0% { background-position: 0% 0%; }
-            50% { background-position: 100% 100%; }
-            100% { background-position: 0% 0%; }
+        /* Wider modal for investment form and terms */
+        #investModal .modal-content,
+        #signInModal .modal-content,
+        #signUpModal .modal-content,
+        #myInvestmentsModal .modal-content,
+        #termsAndConditionsModal .modal-content { /* Added terms modal */
+            width: 600px;
         }
 
         .modal-overlay.active .modal-content {
-            transform: translateY(0);
+            transform: translateY(0); /* Slide down to original position */
+            opacity: 1; /* Fade in */
         }
         .modal-close-btn {
             position: absolute;
@@ -114,11 +95,96 @@
             font-size: 2rem;
             cursor: pointer;
             color: #4a5568; /* gray-700 */
-            transition: color 0.2s;
+            transition: color 0.2s ease-in-out;
         }
         .modal-close-btn:hover {
             color: #ef4444; /* red-500 */
+            transform: rotate(90deg); /* Subtle rotate on close */
         }
+
+        /* Common form styling within modals */
+        .modal-content input[type="text"],
+        .modal-content input[type="email"],
+        .modal-content input[type="password"],
+        .modal-content input[type="number"],
+        .modal-content input[type="tel"],
+        .modal-content select { /* Added select for consistent styling */
+            width: calc(100% - 20px); /* Adjust for padding within the input */
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 1rem;
+            border: 1px solid #cbd5e0; /* gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smoother transition */
+            color: #2d3748;
+        }
+
+        .modal-content input:focus,
+        .modal-content select:focus { /* Added select focus */
+            border-color: #3b82f6; /* blue-500 */
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); /* blue-500 with alpha */
+        }
+
+        .modal-content label {
+            display: block;
+            text-align: left;
+            width: calc(100% - 20px);
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .modal-content button {
+            padding: 0.875rem 2rem; /* py-3 px-6 */
+            margin-top: 1.5rem; /* Spacing from inputs */
+            font-size: 1rem;
+            font-weight: 600; /* semibold */
+            border-radius: 9999px; /* rounded-full */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out; /* Consistent button transition */
+            cursor: pointer;
+            width: auto; /* Allow buttons to size naturally */
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content button[type="submit"] {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+        }
+
+        .modal-content button[type="submit"]:hover {
+            background-color: #2563eb; /* blue-600 */
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content button[type="submit"]:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-content .cancel-btn { /* Specific class for cancel buttons */
+            background-color: #ef4444; /* red-500 */
+            color: white;
+            margin-left: 1rem; /* Spacing between buttons */
+        }
+
+        .modal-content .cancel-btn:hover {
+            background-color: #dc2626; /* red-600 */
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content .cancel-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
 
         /* Hero background image */
         .hero-background-image {
@@ -134,8 +200,8 @@
         /* Section reveal animation */
         .section-hidden {
             opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 1s ease-out, transform 1s ease-out;
+            transform: translateY(80px); /* Increased initial offset */
+            transition: opacity 1.2s ease-out, transform 1.2s ease-out; /* Longer, smoother transition */
         }
         .section-visible {
             opacity: 1;
@@ -165,7 +231,7 @@
         .card-hover-effect:hover {
             transform: translateY(-8px) scale(1.02); /* Lift and slight scale */
             box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2), 0 10px 10px -5px rgba(0,0,0,0.04); /* Deeper shadow */
-            border-color: #6d28d9; /* Example: A slightly darker shade for purple */
+            border-color: var(--hover-border-color); /* Example: A slightly darker shade for purple */
         }
 
         /* Button hover/focus effects */
@@ -178,7 +244,7 @@
         }
         .button-effect:active {
             transform: translateY(0);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         /* Floating animation for icons/emojis */
@@ -201,75 +267,15 @@
             position: absolute;
             inset: 0;
             background-color: rgba(255, 255, 255, 0);
-            animation: hero-glow 15s ease-in-out infinite alternate;
+            animation: hero-glow 18s ease-in-out infinite alternate; /* Longer duration for subtler glow */
             z-index: 2; /* Ensure it's above the dynamic background */
         }
-
-        /* Money Animation Container */
-        .money-animation-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 5; /* Below text, above background */
-            pointer-events: none; /* Allows clicks to pass through to elements below */
-        }
-
-        .money-particle {
-            position: absolute;
-            background-image: url('uploaded:money.jpg-aef342fc-1e0a-4b43-a686-04e9e5ae4bfe'); /* Use the uploaded money image */
-            background-size: cover; /* Cover the particle area */
-            background-position: center; /* Center the image within the particle */
-            background-repeat: no-repeat;
-            opacity: 0;
-            transform: translateZ(0); /* Hardware acceleration */
-            border-radius: 3px; /* Slightly rounded corners for notes */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Add subtle shadow for depth */
-            animation: floatAndFadeMoney linear infinite; /* Apply the animation */
-            /* Responsive sizing for money particles */
-            width: clamp(30px, 6vw, 80px); /* Min 30px, max 80px, fluid with viewport width */
-            height: clamp(15px, 3vw, 40px); /* Min 15px, max 40px, fluid with viewport width */
-        }
-
-        /* Keyframes for the money animation */
-        @keyframes floatAndFadeMoney {
-            0% {
-                transform: translateY(100vh) translateX(var(--initial-x, 0px)) rotate(var(--initial-rotation, 0deg)) scale(var(--initial-scale, 0.8));
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.8;
-            }
-            80% {
-                opacity: 0.8;
-            }
-            100% {
-                transform: translateY(-20vh) translateX(var(--final-x, 0px)) rotate(var(--final-rotation, 360deg)) scale(var(--final-scale, 1.2));
-                opacity: 0;
-            }
-        }
-
-        /* Variables for money particles (assigned via JS for more variety) */
-        /* These will be overridden by JS for a more random distribution */
-        .money-particle:nth-child(1) { left: 10%; animation-delay: 0s; --initial-rotation: 15deg; --final-rotation: 375deg; --initial-x: 0px; --final-x: 20px; }
-        .money-particle:nth-child(2) { left: 25%; animation-delay: 2s; --initial-rotation: -10deg; --final-rotation: 350deg; --initial-x: 0px; --final-x: -30px; }
-        .money-particle:nth-child(3) { left: 40%; animation-delay: 4s; --initial-rotation: 5deg; --final-rotation: 365deg; --initial-x: 0px; --final-x: 10px; }
-        .money-particle:nth-child(4) { left: 55%; animation-delay: 1s; --initial-rotation: 20deg; --final-rotation: 380deg; --initial-x: 0px; --final-x: -15px; }
-        .money-particle:nth-child(5) { left: 70%; animation-delay: 3s; --initial-rotation: -25deg; --final-rotation: 335deg; --initial-x: 0px; --final-x: 25px; }
-        .money-particle:nth-child(6) { left: 85%; animation-delay: 5s; --initial-rotation: 10deg; --final-rotation: 370deg; --initial-x: 0px; --final-x: -5px; }
-        .money-particle:nth-child(7) { left: 15%; animation-delay: 0.5s; --initial-rotation: -18deg; --final-rotation: 342deg; --initial-x: 0px; --final-x: 18px; }
-        .money-particle:nth-child(8) { left: 35%; animation-delay: 2.5s; --initial-rotation: 22deg; --final-rotation: 382deg; --initial-x: 0px; --final-x: -22px; }
-        .money-particle:nth-child(9) { left: 65%; animation-delay: 4.5s; --initial-rotation: -7deg; --final-rotation: 353deg; --initial-x: 0px; --final-x: 12px; }
-        .money-particle:nth-child(10) { left: 5%; animation-delay: 6s; --initial-rotation: 30deg; --final-rotation: 390deg; --initial-x: 0px; --final-x: -28px; }
 
         /* Text stroke for Hero Section */
         .hero-text-stroke {
             text-shadow: 2px 2px 8px rgba(0,0,0,0.9), 0 0 10px rgba(0,0,0,0.5); /* Stronger black stroke/shadow */
         }
 
-        /* New form styling */
         .form-group {
             margin-bottom: 1.5rem; /* Increased spacing between form groups */
         }
@@ -286,7 +292,7 @@
             border: 1px solid #e2e8f0; /* gray-200 */
             border-radius: 0.75rem; /* rounded-lg */
             box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05); /* subtle inset shadow */
-            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smoother transition */
         }
 
         .form-input-field:focus, .form-textarea-field:focus {
@@ -462,6 +468,144 @@
             animation: card-initial-pop 0.8s ease-out forwards; /* Run once, then stay */
         }
 
+        /* Styles for "My Investments" section (within modal) */
+        .investment-card {
+            background-color: #ffffff; /* Default white background, gradient added by specific classes */
+            border-left: 8px solid; /* Border color set by specific plan classes below */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Slightly deeper shadow */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            color: #2d3748; /* Default text color for the card */
+        }
+
+        .investment-card:hover {
+            transform: translateY(-8px); /* Lift more on hover */
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Even deeper shadow */
+        }
+
+        /* Specific border and background colors for investment cards based on plan */
+        .investment-card.standard-plan-item {
+            border-color: #3b82f6; /* blue-500 */
+            background-image: linear-gradient(to bottom right, #e0f7fa, #bbdefb); /* Light blue gradient */
+        }
+
+        .investment-card.premium-plan-item {
+            border-color: #8b5cf6; /* purple-500 */
+            background-image: linear-gradient(to bottom right, #ede7f6, #d1c4e9); /* Light purple gradient */
+        }
+
+        .investment-card.elite-plan-item {
+            border-color: #f59e0b; /* yellow-500 */
+            background-image: linear-gradient(to bottom right, #fffde7, #fff59d); /* Light yellow gradient */
+        }
+
+        /* Heading within investment card */
+        .investment-card h3 {
+            font-size: 1.75rem; /* text-2xl */
+            font-weight: 700; /* bold */
+            color: #1e3a8a; /* Dark blue */
+            margin-bottom: 1rem; /* Increased margin for separation */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(0,0,0,0.1); /* Subtle separator line below heading */
+            padding-bottom: 0.75rem;
+        }
+
+        /* Styling for individual detail lines */
+        .investment-details-group,
+        .financial-details-group {
+            margin-bottom: 1rem; /* Space between groups of details */
+            padding: 0.75rem 1rem; /* Padding for the entire group */
+            border-radius: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.7); /* Light, semi-transparent background */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Subtle shadow for the group */
+        }
+
+        .investment-details-group p,
+        .financial-details-group p {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.25rem 0; /* Vertical padding for each line */
+            border-bottom: 1px dashed rgba(0,0,0,0.1); /* Subtle dashed separator */
+            font-size: 1.05rem; /* Slightly larger font for details */
+            color: #374151; /* Default text color for details */
+        }
+
+        .investment-details-group p:last-child,
+        .financial-details-group p:last-child {
+            border-bottom: none; /* No border for the last item in a group */
+        }
+
+        .investment-details-group p span:first-child,
+        .financial-details-group p span:first-child {
+            font-weight: 500; /* Medium weight for labels */
+        }
+
+        .investment-details-group p strong,
+        .financial-details-group p strong {
+            font-weight: 600; /* Semibold for values */
+            color: #1a202c; /* Darker color for values for emphasis */
+        }
+
+        /* Specific colors for financial values for quick identification */
+        .investment-details-group .text-blue-700 { color: #1d4ed8; } /* Invested amount */
+        .investment-details-group .text-green-700 { color: #047857; } /* Payouts and returns */
+        .investment-details-group .text-gray-800 { color: #2d3748; } /* Dates, UTR, etc. */
+
+
+        /* Style for UPI copy buttons */
+        .copy-upi-btn {
+            background-color: #28a745; /* Green */
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .copy-upi-btn:hover {
+            background-color: #218838;
+        }
+
+        /* Terms and Conditions checkbox and link styling */
+        .terms-checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            width: calc(100% - 20px); /* Match input width */
+        }
+
+        .terms-checkbox-group input[type="checkbox"] {
+            margin-right: 0.75rem;
+            transform: scale(1.2); /* Slightly larger checkbox */
+            cursor: pointer;
+        }
+
+        .terms-checkbox-group label {
+            display: inline-block;
+            margin: 0; /* Override default label margin */
+            font-weight: 500;
+            color: #4a5568;
+            cursor: pointer;
+        }
+
+        .terms-link {
+            color: #3b82f6; /* blue-500 */
+            text-decoration: underline;
+            transition: color 0.2s ease;
+        }
+
+        .terms-link:hover {
+            color: #2563eb; /* blue-600 */
+        }
     </style>
 </head>
 <body>
@@ -490,7 +634,10 @@
                     <li><a href="#why-choose-us" class="hover:text-blue-200 transition duration-300">Why Choose Us</a></li>
                     <li><a href="#limited-time-offer" class="hover:text-blue-200 transition duration-300">Special Offer</a></li>
                     <li><a href="#ai-calculator" class="hover:text-blue-200 transition duration-300">AI Calculator</a></li>
-                    <!-- Removed "My Investments" link -->
+                    <!-- Conditional Navigation based on Auth status -->
+                    <li id="navAuthLinks" class="flex space-x-8">
+                        <!-- Content managed by JavaScript -->
+                    </li>
                 </ul>
             </nav>
             <div class="md:hidden">
@@ -510,7 +657,10 @@
                 <li><a href="#why-choose-us" class="hover:text-yellow-300 transition duration-300" data-close-menu>Why Choose Us</a></li>
                 <li><a href="#limited-time-offer" class="hover:text-yellow-300 transition duration-300" data-close-menu>Special Offer</a></li>
                 <li><a href="#ai-calculator" class="hover:text-yellow-300 transition duration-300" data-close-menu>AI Calculator</a></li>
-                <!-- Removed "My Investments" link -->
+                <!-- Conditional Mobile Nav Links -->
+                <li id="mobileNavAuthLinks" class="flex flex-col items-center space-y-6">
+                    <!-- Content managed by JavaScript -->
+                </li>
             </ul>
         </div>
     </header>
@@ -519,19 +669,7 @@
     <section class="relative text-white flex items-center justify-center min-h-screen pt-20">
         <!-- New: Background image -->
         <div class="hero-background-image"></div>
-        <!-- Money Animation Container -->
-        <div class="money-animation-container">
-            <div class="money-particle" style="--initial-rotation: 15deg; --final-rotation: 375deg; --initial-x: 0px; --final-x: 20px; animation-duration: 7s;"></div>
-            <div class="money-particle" style="--initial-rotation: -10deg; --final-rotation: 350deg; --initial-x: 0px; --final-x: -30px; animation-duration: 8s; animation-delay: 2s;"></div>
-            <div class="money-particle" style="--initial-rotation: 5deg; --final-rotation: 365deg; --initial-x: 0px; --final-x: 10px; animation-duration: 6s; animation-delay: 4s;"></div>
-            <div class="money-particle" style="--initial-rotation: 20deg; --final-rotation: 380deg; --initial-x: 0px; --final-x: -15px; animation-duration: 9s; animation-delay: 1s;"></div>
-            <div class="money-particle" style="--initial-rotation: -25deg; --final-rotation: 335deg; --initial-x: 0px; --final-x: 25px; animation-duration: 7.5s; animation-delay: 3s;"></div>
-            <div class="money-particle" style="--initial-rotation: 10deg; --final-rotation: 370deg; --initial-x: 0px; --final-x: -5px; animation-duration: 6.5s; animation-delay: 5s;"></div>
-            <div class="money-particle" style="--initial-rotation: -18deg; --final-rotation: 342deg; --initial-x: 0px; --final-x: 18px; animation-duration: 8.5s; animation-delay: 0.5s;"></div>
-            <div class="money-particle" style="--initial-rotation: 22deg; --final-rotation: 382deg; --initial-x: 0px; --final-x: -22px; animation-duration: 7s; animation-delay: 2.5s;"></div>
-            <div class="money-particle" style="--initial-rotation: -7deg; --final-rotation: 353deg; --initial-x: 0px; --final-x: 12px; animation-duration: 9.5s; animation-delay: 4.5s;"></div>
-            <div class="money-particle" style="--initial-rotation: 30deg; --final-rotation: 390deg; --initial-x: 0px; --final-x: -28px; animation-duration: 8s; animation-delay: 6s;"></div>
-        </div>
+        <!-- Money Animation Container - REMOVED -->
 
         <div class="container mx-auto px-6 py-20 text-center relative z-10">
             <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-6 hero-text-stroke">
@@ -650,11 +788,6 @@
                 </div>
 
             </div>
-            <!-- Current Investor Count Display -->
-            <div class="text-center mt-12 text-2xl font-bold text-blue-800">
-                Current Investors: <span id="investorCountDisplay">0</span> / <span id="investorLimitDisplay">100</span>
-                <p id="limitReachedMessage" class="text-red-600 text-lg mt-2 hidden">Maximum investor limit reached! Please check back later.</p>
-            </div>
         </div>
     </section>
 
@@ -724,10 +857,10 @@
         </div>
     </section>
 
-    <!-- Investment Calculator & AI Insight Section -->
+    <!-- Investment Calculator Section -->
     <section id="ai-calculator" class="py-20 bg-gradient-to-br from-blue-700 to-indigo-800 text-white section-hidden">
         <div class="container mx-auto px-6 text-center">
-            <h2 class="text-4xl font-extrabold mb-12">Calculate Your Returns & Get ✨AI Insight✨</h2>
+            <h2 class="text-4xl font-extrabold mb-12">Calculate Your Returns</h2>
             <div class="bg-blue-600 rounded-2xl p-8 shadow-xl max-w-xl mx-auto">
                 <div class="mb-6 text-left">
                     <label for="investmentAmount" class="block text-xl font-medium mb-2">Investment Amount (₹):</label>
@@ -742,8 +875,7 @@
                     </select>
                 </div>
                 <button id="calculateBtn" class="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold py-3 px-8 rounded-full shadow-lg transform transition duration-300 hover:scale-105 inline-flex items-center justify-center">
-                    Calculate & Get AI Insight
-                    <span id="loadingSpinner" class="ai-loading-spinner ml-3 hidden"></span>
+                    Calculate Returns
                 </button>
 
                 <div id="results" class="mt-10 text-left bg-blue-700 p-6 rounded-lg hidden">
@@ -751,11 +883,6 @@
                     <p class="text-xl mb-4">Initial Investment: <span id="displayInitialInvestment" class="font-semibold">₹0</span></p>
                     <p class="text-xl mb-4">Projected Total Return: <span id="displayTotalReturn" class="font-semibold">₹0</span></p>
                     <p class="text-xl mb-4">Total Percentage Return: <span id="displayPercentageReturn" class="font-semibold">0%</span></p>
-
-                    <h3 class="text-2xl font-bold mt-6 mb-4 text-yellow-300">AI Insight:</h3>
-                    <div id="aiInsight" class="text-lg leading-relaxed bg-blue-800 p-4 rounded-lg shadow-inner">
-                        Your personalized investment insight will appear here.
-                    </div>
                 </div>
                 <div id="errorMessage" class="mt-6 text-red-300 text-lg hidden">
                     An error occurred. Please try again later.
@@ -775,7 +902,7 @@
     <!-- Investment Plan Detail Modal -->
     <div id="planDetailModal" class="modal-overlay">
         <div class="modal-content text-gray-800">
-            <button class="modal-close-btn" id="closeModalBtn">&times;</button>
+            <button class="modal-close-btn" id="closePlanDetailModalBtn">&times;</button>
             <h3 id="modalPlanName" class="text-3xl font-bold text-blue-700 mb-4"></h3>
             <p class="text-lg mb-2"><strong>Monthly Return:</strong> <span id="modalMonthlyReturn"></span></p>
             <p class="text-lg mb-2"><strong>Minimum Investment:</strong> ₹<span id="modalMinInvestment"></span></p>
@@ -790,335 +917,806 @@
             <button id="investNowBtn" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full shadow-md transform transition duration-300 hover:scale-105">
                 Invest Now!
             </button>
-             <p id="investLimitMessage" class="text-red-500 text-center mt-4 hidden">The maximum investor limit has been reached!</p>
         </div>
     </div>
 
-    <!-- Investor Form Modal -->
-    <div id="investorFormModal" class="modal-overlay">
+    <!-- Investment Form Modal (repurposed from #investForm) -->
+    <div id="investModal" class="modal-overlay">
         <div class="modal-content text-gray-800">
-            <button class="modal-close-btn" id="closeInvestorFormModalBtn">&times;</button>
-            <h3 class="text-3xl font-bold text-blue-700 mb-6 text-center">Investor Registration</h3>
-            <p class="text-lg text-gray-700 mb-6 text-center">
-                You are applying for the <span id="formSelectedPlan" class="font-bold text-purple-700"></span>.
-                Please provide your details below.
-            </p>
-
-            <form id="investorForm" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                <div class="form-group col-span-full">
-                    <label for="fullName" class="form-label">Full Name</label>
-                    <input type="text" id="fullName" name="fullName" class="form-input-field" required>
-                </div>
-                <div class="form-group">
-                    <label for="email" class="form-label">Email Address</label>
-                    <input type="email" id="email" name="email" class="form-input-field" required>
-                </div>
-                <div class="form-group">
-                    <label for="mobileNo" class="form-label">Mobile Number</label>
-                    <input type="tel" id="mobileNo" name="mobileNo" class="form-input-field" required>
-                </div>
-                <div class="form-group">
-                    <label for="formInvestmentAmountInput" class="form-label">Investment Amount (₹)</label>
-                    <input type="number" id="formInvestmentAmountInput" name="investmentAmount" class="form-input-field" min="0" required>
-                    <p class="text-sm text-gray-600 mt-1">Minimum for this plan: ₹<span id="formMinInvestmentDisplay"></span></p>
-                </div>
-                <div class="form-group col-span-full">
-                    <label for="address" class="form-label">Full Address</label>
-                    <textarea id="address" name="address" rows="3" class="form-textarea-field" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="bankAccount" class="form-label">Bank Account Number</label>
-                    <input type="text" id="bankAccount" name="bankAccount" class="form-input-field" required>
-                </div>
-                <div class="form-group">
-                    <label for="bankName" class="form-label">Bank Name</label>
-                    <input type="text" id="bankName" name="bankName" class="form-input-field" required>
-                </div>
-                <div class="form-group">
-                    <label for="ifscCode" class="form-label">IFSC Code</label>
-                    <input type="text" id="ifscCode" name="ifscCode" class="form-input-field" required>
-                </div>
-                <div class="form-group">
-                    <label for="upiId" class="form-label">UPI ID (Optional)</label>
-                    <input type="text" id="upiId" name="upiId" class="form-input-field">
-                </div>
-
-                <div class="col-span-full mt-4">
-                    <div class="flex items-center">
-                        <input id="termsConsent" name="termsConsent" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" required>
-                        <label for="termsConsent" class="ml-2 block text-sm text-gray-900">
-                            I agree to the <a href="#" class="text-blue-600 hover:underline">Terms and Conditions</a>
-                        </label>
+            <button class="modal-close-btn" id="closeInvestModalBtn">&times;</button>
+            <h2 class="text-3xl font-bold text-blue-700 mb-6 text-center">Invest in <span id="investFormPlanName"></span></h2>
+            <form id="investmentForm" class="flex flex-col items-center">
+                <!-- UPI IDs Section -->
+                <div class="w-full mb-6 text-center bg-gray-100 p-4 rounded-lg shadow-inner">
+                    <p class="text-lg font-semibold text-gray-800 mb-3">Please make your payment to one of the UPI IDs below:</p>
+                    
+                    <div class="flex items-center justify-center mb-3">
+                        <span id="upiId1" class="font-mono text-blue-700 text-lg break-all">chowdhurybarnadip98-1@okicici</span>
+                        <button type="button" class="copy-upi-btn" data-upi="chowdhurybarnadip98-1@okicici">Copy</button>
                     </div>
-                    <p id="formMessage" class="mt-2 hidden"></p>
+                    <div class="flex items-center justify-center">
+                        <span id="upiId2" class="font-mono text-blue-700 text-lg break-all">subhabubai1234-5@okicici</span>
+                        <button type="button" class="copy-upi-btn" data-upi="subhabubai1234-5@okicici">Copy</button>
+                    </div>
                 </div>
 
-                <div class="col-span-full mt-6">
-                    <button type="submit" id="submitInvestorFormBtn" class="form-submit-btn">
-                        Submit Investment Details
-                        <span id="formSubmitSpinner" class="ai-loading-spinner ml-3 hidden"></span>
-                    </button>
+                <label for="inv_name" class="w-full">Your Name:</label>
+                <input type="text" id="inv_name" placeholder="Your Name" required class="w-full">
+
+                <label for="inv_email" class="w-full">Your Email:</label>
+                <input type="email" id="inv_email" placeholder="Your Email" required class="w-full">
+
+                <label for="inv_mobile" class="w-full">Mobile Number:</label>
+                <input type="tel" id="inv_mobile" placeholder="Mobile Number" required class="w-full">
+
+                <label for="inv_amount" class="w-full">Investment Amount (₹):</label>
+                <input type="number" id="inv_amount" placeholder="Investment Amount (₹)" min="500" step="100" required class="w-full">
+                <p class="text-sm text-gray-700 text-left w-full mt-1" id="invAmountValidationMessage">Minimum ₹500, in multiples of ₹100.</p>
+
+                <label for="paidUpiId" class="w-full">Which UPI ID did you pay to?</label>
+                <select id="paidUpiId" required class="w-full">
+                    <option value="">Select UPI ID</option>
+                    <option value="chowdhurybarnadip98-1@okicici">chowdhurybarnadip98-1@okicici</option>
+                    <option value="subhabubai1234-5@okicici">subhabubai1234-5@okicici</option>
+                </select>
+                
+                <label for="inv_utr_number" class="w-full">UTR Number (Mandatory):</label>
+                <input type="text" id="inv_utr_number" placeholder="Enter UTR/Transaction Number" required class="w-full">
+
+                <label for="inv_bank_account_name" class="w-full">Bank Account Name:</label>
+                <input type="text" id="inv_bank_account_name" placeholder="Name on Bank Account" required class="w-full">
+
+                <label for="inv_bank_account" class="w-full">Bank Account Number:</label>
+                <input type="text" id="inv_bank_account" placeholder="Bank Account Number" required class="w-full">
+
+                <label for="inv_ifsc_code" class="w-full">IFSC Code:</label>
+                <input type="text" id="inv_ifsc_code" placeholder="IFSC Code" required class="w-full">
+
+                <label for="inv_upi_id_optional" class="w-full">Your UPI ID (Optional):</label>
+                <input type="text" id="inv_upi_id_optional" placeholder="Your UPI ID (Optional)" class="w-full">
+
+                <input type="hidden" id="inv_plan_hidden"> <!-- Hidden field to store selected plan name -->
+
+                <!-- Terms & Conditions Checkbox -->
+                <div class="terms-checkbox-group w-full justify-start">
+                    <input type="checkbox" id="acceptTerms" class="form-checkbox h-5 w-5 text-blue-600 rounded">
+                    <label for="acceptTerms" class="text-base text-gray-700">
+                        I accept the <a href="#" id="viewTermsLink" class="terms-link">Terms & Conditions</a>
+                    </label>
+                </div>
+
+
+                <div class="flex justify-center space-x-4 mt-6 w-full">
+                    <button type="submit" class="w-1/2">Submit Investment</button>
+                    <button type="button" class="w-1/2 cancel-btn" id="cancelInvestFormBtn">Cancel</button>
                 </div>
             </form>
         </div>
     </div>
 
+
+    <!-- Sign In Modal -->
+    <div id="signInModal" class="modal-overlay">
+        <div class="modal-content text-gray-800">
+            <button class="modal-close-btn" id="closeSignInModalBtn">&times;</button>
+            <h2 class="text-3xl font-bold text-blue-700 mb-6 text-center">Sign In</h2>
+            <form id="signInForm" class="flex flex-col items-center">
+                <label for="signInEmail" class="w-full">Email:</label>
+                <input type="email" id="signInEmail" placeholder="Your Email" required class="w-full">
+
+                <label for="signInPassword" class="w-full">Password:</label>
+                <input type="password" id="signInPassword" placeholder="Your Password" required class="w-full">
+
+                <div class="flex justify-center space-x-4 mt-6 w-full">
+                    <button type="submit" class="w-1/2">Sign In</button>
+                    <button type="button" class="w-1/2 cancel-btn" id="cancelSignInBtn">Cancel</button>
+                </div>
+                <p class="text-center text-sm text-gray-600 mt-4">
+                    Don't have an account? <a href="#" id="switchToSignUp" class="text-blue-500 hover:underline">Sign Up</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sign Up Modal -->
+    <div id="signUpModal" class="modal-overlay">
+        <div class="modal-content text-gray-800">
+            <button class="modal-close-btn" id="closeSignUpModalBtn">&times;</button>
+            <h2 class="text-3xl font-bold text-blue-700 mb-6 text-center">Sign Up</h2>
+            <form id="signUpForm" class="flex flex-col items-center">
+                <label for="signUpEmail" class="w-full">Email:</label>
+                <input type="email" id="signUpEmail" placeholder="Your Email" required class="w-full">
+
+                <label for="signUpPassword" class="w-full">Password:</label>
+                <input type="password" id="signUpPassword" placeholder="Create Password" required class="w-full">
+                <p class="text-sm text-gray-700 text-left w-full mt-1">Minimum 6 characters.</p>
+
+                <label for="signUpConfirmPassword" class="w-full">Confirm Password:</label>
+                <input type="password" id="signUpConfirmPassword" placeholder="Confirm Password" required class="w-full">
+
+                <div class="flex justify-center space-x-4 mt-6 w-full">
+                    <button type="submit" class="w-1/2">Sign Up</button>
+                    <button type="button" class="w-1/2 cancel-btn" id="cancelSignUpBtn">Cancel</button>
+                </div>
+                <p class="text-center text-sm text-gray-600 mt-4">
+                    Already have an account? <a href="#" id="switchToSignIn" class="text-blue-500 hover:underline">Sign In</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Message Modal -->
+    <div id="messageModal" class="modal-overlay">
+        <div class="modal-content text-gray-800 bg-white rounded-3xl p-8 shadow-xl text-center">
+            <h3 id="messageModalTitle" class="text-2xl font-bold mb-4"></h3>
+            <p id="messageModalText" class="text-lg mb-6"></p>
+            <button id="closeMessageModalBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full shadow-md">
+                OK
+            </button>
+        </div>
+    </div>
+
+    <!-- My Investments Modal (New) -->
+    <div id="myInvestmentsModal" class="modal-overlay">
+        <div class="modal-content text-gray-800">
+            <button class="modal-close-btn" id="closeMyInvestmentsModalBtn">&times;</button>
+            <h2 class="text-3xl font-bold text-blue-700 mb-6 text-center">My Investments</h2>
+            <div id="investments-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Investment cards will be dynamically loaded here -->
+                <p id="no-investments-message" class="text-center text-lg text-gray-600 col-span-full">
+                    You have no investments yet. Start investing today!
+                </p>
+            </div>
+            <p id="current-user-id" class="text-center text-sm text-gray-500 mt-8"></p>
+        </div>
+    </div>
+
+    <!-- Terms and Conditions Modal -->
+    <div id="termsAndConditionsModal" class="modal-overlay">
+        <div class="modal-content text-gray-800">
+            <button class="modal-close-btn" id="closeTermsAndConditionsModalBtn">&times;</button>
+            <h2 class="text-3xl font-bold text-blue-700 mb-6 text-center">Terms & Conditions</h2>
+            <div class="text-sm text-gray-700 space-y-4 max-h-96 overflow-y-auto pr-2">
+                <p>Welcome to ADS FUND. By proceeding with any investment through our platform, you acknowledge that you have read, understood, and agree to be bound by the following Terms & Conditions. Please read them carefully.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">1. Acceptance of Terms</h3>
+                <p>By clicking "I accept the Terms & Conditions" and submitting your investment, you enter into a binding agreement with ADS FUND. If you do not agree to these terms, you should not proceed with any investment.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">2. Investment Risks</h3>
+                <p>Investment in financial products involves inherent risks. While ADS FUND strives to provide consistent returns as outlined in our plans, we cannot guarantee any specific rate of return or the preservation of your principal investment. Market conditions, economic factors, and other unforeseen circumstances can impact investment performance. You acknowledge that you understand these risks and are willing to bear them.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">3. No Financial Advice</h3>
+                <p>The information provided on this website and through our communications is for general informational purposes only and does not constitute financial, investment, legal, or tax advice. You are solely responsible for conducting your own due diligence and consulting with qualified professionals before making any investment decisions.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">4. Investment Plans and Returns</h3>
+                <p>Details of our investment plans, including monthly returns, minimum investment amounts, payout frequencies, and lock-in periods, are as specified on the "Investment Plans" section of this website. Projected returns and bonuses are based on current market analysis and historical performance, but are not guaranteed.</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>Monthly Payouts:</strong> Monthly returns (e.g., 7.5%) are calculated on your principal investment and are typically disbursed at the end of each calendar month.</li>
+                    <li><strong>Bonuses:</strong> Additional bonuses for 6-month or 12-month plans are conditional upon the completion of the respective lock-in periods.</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">5. Lock-in Periods and Withdrawals</h3>
+                <p>Each investment plan has a specified lock-in period. During this period, your principal investment is committed to the fund.</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li><strong>After Lock-in:</strong> Upon completion of the lock-in period, you may choose to withdraw your principal and any accumulated bonuses, reinvest, or continue receiving monthly returns.</li>
+                    <li><strong>Early Withdrawals:</strong> For withdrawals requested before the completion of the stated lock-in period, the principal amount will be returned after a processing period of 15 business days. An early withdrawal penalty equivalent to <strong>two months' projected returns</strong> on the principal amount will be deducted from your principal before disbursement.</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">6. KYC and Verification</h3>
+                <p>To comply with regulatory requirements and prevent fraud, ADS FUND reserves the right to request Know Your Customer (KYC) documentation and other verification details from investors at any time. Failure to provide requested information may result in delays in processing investments or withdrawals, or the suspension of your account.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">7. Payment and UTR Number</h3>
+                <p>All investments must be made through the specified UPI IDs or bank transfer methods provided on our investment form. It is mandatory to provide an accurate UTR (Unique Transaction Reference) or transaction number for all payments. Investments cannot be confirmed or processed without a valid UTR number.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">8. Limitation of Liability</h3>
+                <p>ADS FUND, its directors, employees, or affiliates shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages, including but not limited to, loss of profits, data, or other intangible losses, resulting from:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>Your access to or use of, or inability to access or use, the service;</li>
+                    <li>Any conduct or content of any third party on the service;</li>
+                    <li>Any content obtained from the service; and</li>
+                    <li>Unauthorized access, use, or alteration of your transmissions or content, whether based on warranty, contract, tort (including negligence), or any other legal theory, whether or not we have been informed of the possibility of such damage.</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">9. Privacy Policy</h3>
+                <p>Your privacy is important to us. Our <a href="#" class="terms-link">Privacy Policy</a>, available on our website, explains how we collect, use, and protect your personal information. By agreeing to these Terms & Conditions, you also agree to our Privacy Policy.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">10. Governing Law and Dispute Resolution</h3>
+                <p>These Terms & Conditions shall be governed by and construed in accordance with the laws of India. Any disputes arising out of or in connection with these terms shall be subject to the exclusive jurisdiction of the courts in [Specify City/State, e.g., Mumbai, Maharashtra], India.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">11. Amendments to Terms</h3>
+                <p>ADS FUND reserves the right to amend or update these Terms & Conditions at any time without prior notice. It is your responsibility to review these terms periodically for any changes. Your continued use of the service or continued investment after any amendments constitutes your acceptance of the revised terms.</p>
+
+                <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">12. Contact Information</h3>
+                <p>For any questions regarding these Terms & Conditions, please contact us at <a href="mailto:info@adsfund.com" class="terms-link">info@adsfund.com</a>.</p>
+            </div>
+            <button id="closeTermsContentBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full shadow-md mt-8">
+                Close
+            </button>
+        </div>
+    </div>
+
+
     <script type="module">
         // Firebase imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, FieldValue, collection, addDoc, query } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import {
+            getAuth,
+            signInAnonymously,
+            signInWithCustomToken,
+            onAuthStateChanged,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import {
+            getFirestore,
+            collection,
+            addDoc,
+            query,
+            where,
+            onSnapshot,
+            serverTimestamp,
+            orderBy
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        const MAX_INVESTORS = 100; // Define your maximum limit here
-
-        // Global Firebase variables (will be initialized after authentication)
+        // Global Firebase variables - declared as `let` so they can be assigned later
         let app;
-        let db;
         let auth;
+        let db; // Firestore instance
         let currentUserId = null; // To store the authenticated user's ID
-        let investorCountDocRef; // Reference to the Firestore document for investor count
+        let currentUserEmail = null; // To store the authenticated user's email
         let selectedPlanDetails = {}; // To store details of the plan chosen by the user
-        let currentInvestorCount = 0; // To store the last known investor count for animation
+        let appId; // Declare appId globally for Firestore paths
 
-        // --- Number Counter Animation Function ---
-        function animateNumber(element, start, end, duration) {
-            let startTime = null;
-            const range = end - start;
-            const increment = end > start ? 1 : -1;
+        // --- Custom Message Modal Functions ---
+        const messageModal = document.getElementById('messageModal');
+        const messageModalTitle = document.getElementById('messageModalTitle');
+        const messageModalText = document.getElementById('messageModalText');
+        const closeMessageModalBtn = document.getElementById('closeMessageModalBtn');
 
-            const step = (currentTime) => {
-                if (!startTime) startTime = currentTime;
-                const progress = Math.min((currentTime - startTime) / duration, 1);
-                const currentValue = Math.floor(start + progress * range);
-                element.textContent = currentValue;
-
-                if (progress < 1) {
-                    requestAnimationFrame(step);
+        function showMessage(title, text, isSuccess = true) {
+            if (messageModalTitle) messageModalTitle.textContent = title;
+            if (messageModalText) messageModalText.textContent = text;
+            if (messageModal) {
+                if (isSuccess) {
+                    messageModalTitle.style.color = '#065f46'; // green-800
+                    messageModalText.style.color = '#065f46'; // green-800
                 } else {
-                    element.textContent = end; // Ensure it ends on the exact number
+                    messageModalTitle.style.color = '#991b1b'; // red-800
+                    messageModalText.style.color = '#991b1b'; // red-800
                 }
-            };
-            requestAnimationFrame(step);
+                messageModal.classList.add('active');
+            }
         }
 
-        // --- Firestore Investor Count Listener ---
-        const setupInvestorCountListener = () => {
-            if (!db || !investorCountDocRef) {
-                console.error("Firestore DB or investorCountDocRef not ready for listener setup.");
-                if (investorCountDisplay) investorCountDisplay.textContent = 'N/A';
-                if (investNowBtn) investNowBtn.disabled = true;
-                if (investLimitMessage) {
-                    investLimitMessage.classList.remove('hidden');
-                    investLimitMessage.textContent = "Database not connected. Please refresh.";
-                }
-                return;
-            }
+        function hideMessage() {
+            if (messageModal) messageModal.classList.remove('active');
+        }
 
-            onSnapshot(investorCountDocRef, async (docSnap) => {
-                let newCount = 0;
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    newCount = data.count || 0;
+        if (closeMessageModalBtn) {
+            closeMessageModalBtn.addEventListener('click', hideMessage);
+        }
 
-                    // Cap count at MAX_INVESTORS if it somehow exceeds (e.g., manual backend edit)
-                    if (newCount > MAX_INVESTORS) {
-                        newCount = MAX_INVESTORS;
-                        // Optionally, update Firestore to correct it if you want to strictly enforce it from frontend
-                        // await setDoc(investorCountDocRef, { count: MAX_INVESTORS });
-                    }
-                } else {
-                    // Document doesn't exist, initialize it to 0
-                    console.log("Investor count document does not exist, creating it.");
-                    await setDoc(investorCountDocRef, { count: 0 });
-                }
-
-                // Animate the number counter
-                if (investorCountDisplay) {
-                    animateNumber(investorCountDisplay, currentInvestorCount, newCount, 1000); // Animate over 1 second
-                    currentInvestorCount = newCount; // Update last known count
-                }
-
-                if (investorLimitDisplay) investorLimitDisplay.textContent = MAX_INVESTORS; // Display max limit
-
-                if (investNowBtn) {
-                    if (newCount >= MAX_INVESTORS) {
-                        investNowBtn.disabled = true;
-                        if (investLimitMessage) {
-                            investLimitMessage.classList.remove('hidden');
-                            investLimitMessage.textContent = "The maximum investor limit has been reached!";
-                        }
-                        if (limitReachedMessage) {
-                            limitReachedMessage.classList.remove('hidden'); // Also show on main page
-                        }
-                    } else {
-                        // Only re-enable if it was disabled due to limit and now count is less
-                        if (investNowBtn.disabled && investLimitMessage && investLimitMessage.textContent === "The maximum investor limit has been reached!") {
-                            investNowBtn.disabled = false;
-                        }
-                        if (investLimitMessage) {
-                            investLimitMessage.classList.add('hidden');
-                        }
-                        if (limitReachedMessage) {
-                            limitReachedMessage.classList.add('hidden');
-                        }
-                    }
-                }
-            }, (error) => {
-                console.error("Error listening to investor count:", error);
-                if (investorCountDisplay) investorCountDisplay.textContent = 'Error';
-                if (investNowBtn) investNowBtn.disabled = true;
-                if (investLimitMessage) {
-                    investLimitMessage.classList.remove('hidden');
-                    investLimitMessage.textContent = "Error updating investor count in real-time. Please refresh.";
+        if (messageModal) {
+            messageModal.addEventListener('click', (e) => {
+                if (e.target === messageModal) {
+                    hideMessage();
                 }
             });
+        }
+
+        // --- Modal Control Functions (General) ---
+        function openModal(modalElement) {
+            modalElement.classList.add('active');
+        }
+
+        function closeModal(modalElement) {
+            modalElement.classList.remove('active');
+        }
+
+        // --- Mobile Menu Toggle and Close ---
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const closeMobileMenuButton = document.getElementById('closeMobileMenuButton');
+
+        const closeMobileMenu = () => {
+            if (mobileMenu) {
+                mobileMenu.classList.remove('opacity-100');
+                mobileMenu.classList.add('opacity-0');
+                // Use transitionend event to hide the menu after the transition completes
+                mobileMenu.addEventListener('transitionend', () => {
+                    mobileMenu.classList.add('hidden');
+                }, { once: true }); // The { once: true } option ensures the listener is removed after it runs once
+            }
         };
 
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', () => {
+                if (mobileMenu) {
+                    mobileMenu.classList.remove('hidden');
+                    // Force reflow to ensure the transition starts correctly
+                    void mobileMenu.offsetWidth;
+                    setTimeout(() => mobileMenu.classList.add('opacity-100'), 10);
+                }
+            });
+        }
 
+        if (closeMobileMenuButton) {
+            closeMobileMenuButton.addEventListener('click', closeMobileMenu);
+        }
+        // Attach closeMobileMenu to all mobile menu links
+        document.querySelectorAll('#mobileMenu a[data-close-menu]').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+
+        // All main script logic moves inside DOMContentLoaded to ensure elements and Firebase are ready
         document.addEventListener('DOMContentLoaded', async () => {
+            // --- Element Declarations (ensure they are available here) ---
             const investmentAmountInput = document.getElementById('investmentAmount');
             const investmentPlanSelect = document.getElementById('investmentPlan');
             const calculateBtn = document.getElementById('calculateBtn');
-            const loadingSpinner = document.getElementById('loadingSpinner');
             const resultsDiv = document.getElementById('results');
             const displayInitialInvestment = document.getElementById('displayInitialInvestment');
             const displayTotalReturn = document.getElementById('displayTotalReturn');
             const displayPercentageReturn = document.getElementById('displayPercentageReturn');
-            const aiInsightDiv = document.getElementById('aiInsight');
             const errorMessageDiv = document.getElementById('errorMessage');
             const countdownElement = document.getElementById('countdown');
-            const investorCountDisplay = document.getElementById('investorCountDisplay');
-            const investorLimitDisplay = document.getElementById('investorLimitDisplay');
-            const limitReachedMessage = document.getElementById('limitReachedMessage');
 
             const planDetailModal = document.getElementById('planDetailModal');
-            const closeModalBtn = document.getElementById('closeModalBtn');
+            const closePlanDetailModalBtn = document.getElementById('closePlanDetailModalBtn');
             const investNowBtn = document.getElementById('investNowBtn');
-            const investLimitMessage = document.getElementById('investLimitMessage'); // Message for modal
             const planCards = document.querySelectorAll('.plan-card');
 
-            // Investor Form Modal elements
-            const investorFormModal = document.getElementById('investorFormModal');
-            const closeInvestorFormModalBtn = document.getElementById('closeInvestorFormModalBtn');
-            const investorForm = document.getElementById('investorForm');
-            const submitInvestorFormBtn = document.getElementById('submitInvestorFormBtn');
-            const formSubmitSpinner = document.getElementById('formSubmitSpinner'); // Spinner for form submit button
-            const formSelectedPlan = document.getElementById('formSelectedPlan');
-            // Removed formInvestmentAmount display, it's now an input
-            const formInvestmentAmountInput = document.getElementById('formInvestmentAmountInput'); // New input field
-            const formMinInvestmentDisplay = document.getElementById('formMinInvestmentDisplay'); // New min investment display
-            const formMessage = document.getElementById('formMessage'); // For displaying form errors/success
+            const investModal = document.getElementById('investModal');
+            const closeInvestModalBtn = document.getElementById('closeInvestModalBtn');
+            const investmentForm = document.getElementById('investmentForm');
+            const invNameInput = document.getElementById('inv_name');
+            const invEmailInput = document.getElementById('inv_email');
+            const invMobileInput = document.getElementById('inv_mobile');
+            const invAmountInput = document.getElementById('inv_amount');
+            const invAmountValidationMessage = document.getElementById('invAmountValidationMessage');
+            const invUtrNumberInput = document.getElementById('inv_utr_number');
+            const paidUpiIdSelect = document.getElementById('paidUpiId'); // New element
+            const invBankAccountNameInput = document.getElementById('inv_bank_account_name');
+            const invBankAccountInput = document.getElementById('inv_bank_account');
+            const invIfscCodeInput = document.getElementById('inv_ifsc_code');
+            const invUpiIdOptionalInput = document.getElementById('inv_upi_id_optional');
+            const invPlanHiddenInput = document.getElementById('inv_plan_hidden');
+            const investFormPlanName = document.getElementById('investFormPlanName');
+            const cancelInvestFormBtn = document.getElementById('cancelInvestFormBtn');
 
-            const mobileMenuButton = document.getElementById('mobileMenuButton');
-            const mobileMenu = document.getElementById('mobileMenu');
-            const closeMobileMenuButton = document.getElementById('closeMobileMenuButton');
-            const mobileMenuLinks = document.querySelectorAll('#mobileMenu a[data-close-menu]');
+            const explorePlansBtn = document.getElementById('explorePlansBtn');
 
-            const explorePlansBtn = document.getElementById('explorePlansBtn'); // Get the "Explore Our Plans" button
+            const navAuthLinks = document.getElementById('navAuthLinks');
+            const mobileNavAuthLinks = document.getElementById('mobileNavAuthLinks');
 
+            const myInvestmentsModal = document.getElementById('myInvestmentsModal');
+            const closeMyInvestmentsModalBtn = document.getElementById('closeMyInvestmentsModalBtn');
+            const investmentsContainer = document.getElementById('investments-container');
+            const noInvestmentsMessage = document.getElementById('no-investments-message');
+            const currentUserIdDisplay = document.getElementById('current-user-id');
 
-            // Toggle Mobile Menu
-            if (mobileMenuButton) {
-                mobileMenuButton.addEventListener('click', () => {
-                    if (mobileMenu) {
-                        mobileMenu.classList.remove('hidden');
-                        setTimeout(() => mobileMenu.classList.add('opacity-100'), 10); // Fade in
-                    }
-                });
-            }
+            const signInModal = document.getElementById('signInModal');
+            const signUpModal = document.getElementById('signUpModal');
+            const signInForm = document.getElementById('signInForm');
+            const signUpForm = document.getElementById('signUpForm');
+            const signInEmailInput = document.getElementById('signInEmail');
+            const signInPasswordInput = document.getElementById('signInPassword');
+            const signUpEmailInput = document.getElementById('signUpEmail');
+            const signUpPasswordInput = document.getElementById('signUpPassword');
+            const signUpConfirmPasswordInput = document.getElementById('signUpConfirmPassword');
+            const switchToSignUpBtn = document.getElementById('switchToSignUp');
+            const switchToSignInBtn = document.getElementById('switchToSignIn');
+            const cancelSignInBtn = document.getElementById('cancelSignInBtn');
+            const cancelSignUpBtn = document.getElementById('cancelSignUpBtn');
 
-            // Close Mobile Menu
-            const closeMobileMenu = () => {
-                if (mobileMenu) {
-                    mobileMenu.classList.remove('opacity-100');
-                    mobileMenu.classList.add('opacity-0');
-                    mobileMenu.addEventListener('transitionend', () => {
-                        mobileMenu.classList.add('hidden');
-                    }, { once: true }); // Ensure hidden is applied after transition
-                }
-            };
-
-            if (closeMobileMenuButton) {
-                closeMobileMenuButton.addEventListener('click', closeMobileMenu);
-            }
-
-            // Close mobile menu when a link is clicked
-            mobileMenuLinks.forEach(link => {
-                link.addEventListener('click', closeMobileMenu);
-            });
+            // New Terms & Conditions elements
+            const termsAndConditionsModal = document.getElementById('termsAndConditionsModal');
+            const closeTermsAndConditionsModalBtn = document.getElementById('closeTermsAndConditionsModalBtn');
+            const viewTermsLink = document.getElementById('viewTermsLink');
+            const acceptTermsCheckbox = document.getElementById('acceptTerms');
+            const closeTermsContentBtn = document.getElementById('closeTermsContentBtn');
 
 
-            const MONTHLY_RETURN_RATE = 0.075; // 7.5% monthly return
-
-            // --- Firebase Initialization and Authentication ---
+            // --- Firebase Initialization and Initial Auth Attempt ---
             try {
-                // Get Canvas-provided Firebase config and app ID
-                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                appId = 'ownads-07';
+                const firebaseConfig = {
+                    apiKey: "AIzaSyBFS4IF12Tr4ZN7n-xqHRwf5MM020zddvw",
+                    authDomain: "ownads-07.firebaseapp.com",
+                    databaseURL: "https://ownads-07-default-rtdb.asia-southeast1.firebasedatabase.app",
+                    projectId: "ownads-07",
+                    storageBucket: "ownads-07.firebasestorage.app",
+                    messagingSenderId: "274286517816",
+                    appId: "1:274286517816:web:d83478fdd4119d183d10cd",
+                    measurementId: "G-D5K9HCL8KB"
+                };
 
                 app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
 
-                // This flag ensures listeners are set up only once and only when auth is ready
-                let isAuthReady = false;
+                // Attempt initial sign-in
+                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                let userWasLoggedIn = false; // Flag to track if user was logged in (non-anonymous)
 
-                onAuthStateChanged(auth, async (user) => {
-                    if (user) {
-                        currentUserId = user.uid;
-                        console.log("Firebase Authenticated. User ID:", currentUserId);
-                    } else {
-                        // User is signed out or initial state. Attempt anonymous sign-in.
+                // First, check if a current user already exists (e.g., from a persistent session)
+                if (auth.currentUser) {
+                    currentUserId = auth.currentUser.uid;
+                    currentUserEmail = auth.currentUser.email;
+                    userWasLoggedIn = !auth.currentUser.isAnonymous;
+                    console.log("Existing Firebase user detected:", currentUserId, "Anonymous:", auth.currentUser.isAnonymous);
+                } else {
+                    // No current user, try to sign in with custom token or anonymously
+                    if (initialAuthToken) {
                         try {
-                            await signInAnonymously(auth);
-                            // After this, onAuthStateChanged will be called again with the new anonymous user.uid
-                            return; // Exit this call to avoid duplicate listener setup
-                        } catch (anonError) {
-                            console.error("Error signing in anonymously:", anonError);
-                            // If anonymous sign-in fails, default to a session-based random ID for basic functionality,
-                            // but note that data won't persist across browser closures unless Firebase Auth fixes itself.
-                            currentUserId = 'anonymous-' + crypto.randomUUID(); // Fallback for a session-based ID if Firebase Auth fails
-                            if (investorCountDisplay) investorCountDisplay.textContent = 'Auth Error (Anon failed)';
-                            if (investNowBtn) investNowBtn.disabled = true;
-                            if (investLimitMessage) {
-                                investLimitMessage.classList.remove('hidden');
-                                investLimitMessage.textContent = "Authentication failed. Some features may be limited.";
+                            const userCredential = await signInWithCustomToken(auth, initialAuthToken);
+                            currentUserId = userCredential.user.uid;
+                            currentUserEmail = userCredential.user.email;
+                            userWasLoggedIn = !userCredential.user.isAnonymous;
+                            console.log("Signed in with custom token successfully.");
+                        } catch (error) {
+                            console.warn("Warning: Error signing in with custom token. Attempting anonymous sign-in:", error.message);
+                            try {
+                                const userCredential = await signInAnonymously(auth);
+                                currentUserId = userCredential.user.uid;
+                                currentUserEmail = userCredential.user.email; // Will be null for anonymous
+                                userWasLoggedIn = false; // Anonymous user is not considered "logged in" for app features
+                                console.log("Signed in anonymously after custom token failure.");
+                            } catch (anonError) {
+                                console.error("Error signing in anonymously:", anonError.message);
+                                showMessage('Authentication Setup Failed', `Failed to sign in. Error: ${anonError.message}. Please ensure Anonymous and Email/Password sign-in methods are enabled in your Firebase project's Authentication settings.`, false);
+                                userWasLoggedIn = false; // Ensure logged out state is reflected
                             }
                         }
+                    } else {
+                        // No initial token, try anonymous sign-in directly
+                        try {
+                            const userCredential = await signInAnonymously(auth);
+                            currentUserId = userCredential.user.uid;
+                            currentUserEmail = userCredential.user.email;
+                            userWasLoggedIn = false; // Anonymous user is not considered "logged in" for app features
+                            console.log("Signed in anonymously (no initial token).");
+                        } catch (anonError) {
+                            console.error("Error signing in anonymously:", anonError.message);
+                            showMessage('Authentication Setup Failed', `Failed to sign in. Error: ${anonError.message}. Please ensure Anonymous and Email/Password sign-in methods are enabled in your Firebase project's Authentication settings.`, false);
+                            userWasLoggedIn = false; // Ensure logged out state is reflected
+                        }
                     }
+                }
 
-                    // Only set up listeners once auth is definitively ready and currentUserId is assigned
-                    if (currentUserId && !isAuthReady) {
-                        isAuthReady = true; // Mark as ready
-                        // Define Firestore document reference for the public investor count
-                        investorCountDocRef = doc(db, `artifacts/${appId}/public/data/investor_limits`, 'currentCount');
-                        setupInvestorCountListener(); // Start listening for count changes
+                // Immediately update UI based on the result of the initial auth attempt
+                updateAuthUI(userWasLoggedIn, currentUserEmail);
+
+                // Setup the real-time auth state listener for future changes
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        console.log("onAuthStateChanged: User state changed.", user.uid, "Email:", user.email, "Anonymous:", user.isAnonymous);
+                        currentUserId = user.uid;
+                        currentUserEmail = user.email;
+                        updateAuthUI(!user.isAnonymous, currentUserEmail);
+                    } else {
+                        console.log("onAuthStateChanged: User logged out.");
+                        currentUserId = null;
+                        currentUserEmail = null;
+                        updateAuthUI(false);
+                        // Clear investments display upon logout
+                        if (investmentsContainer) {
+                            investmentsContainer.innerHTML = '';
+                            investmentsContainer.appendChild(noInvestmentsMessage);
+                            noInvestmentsMessage.style.display = 'block';
+                        }
+                        if (currentUserIdDisplay) currentUserIdDisplay.textContent = '';
                     }
                 });
 
-                // Attempt initial sign-in if a custom token is provided (e.g., by Canvas env)
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                }
-                // The onAuthStateChanged listener will handle subsequent and anonymous sign-ins.
-
             } catch (error) {
-                console.error("Error initializing Firebase or authenticating (outer catch):", error);
-                if (investorCountDisplay) investorCountDisplay.textContent = 'Error';
-                if (investNowBtn) investNowBtn.disabled = true;
-                if (investLimitMessage) {
-                    investLimitMessage.classList.remove('hidden');
-                    investLimitMessage.textContent = "Error loading Firebase. Please refresh.";
+                console.error("Critical Error during Firebase initialization:", error);
+                showMessage('Initialization Error', `Failed to initialize Firebase services: ${error.message}. Please ensure your Firebase project's API Key and other configuration are correct, and that Email/Password and Anonymous sign-in methods are enabled in your Firebase Authentication settings.`, false);
+                // Ensure UI still shows logged out options even if init fails
+                updateAuthUI(false);
+            }
+
+            // --- Event Listeners for Modals (moved here to ensure elements exist) ---
+            closeSignInModalBtn?.addEventListener('click', () => closeModal(signInModal));
+            closeSignUpModalBtn?.addEventListener('click', () => closeModal(signUpModal));
+            cancelSignInBtn?.addEventListener('click', () => closeModal(signInModal));
+            cancelSignUpBtn?.addEventListener('click', () => closeModal(signUpModal));
+
+            switchToSignUpBtn?.addEventListener('click', (e) => {
+                e.preventDefault();
+                closeModal(signInModal);
+                openModal(signUpModal);
+            });
+            switchToSignInBtn?.addEventListener('click', (e) => {
+                e.preventDefault();
+                closeModal(signUpModal);
+                openModal(signInModal);
+            });
+
+            closeMyInvestmentsModalBtn?.addEventListener('click', () => {
+                closeModal(myInvestmentsModal);
+            });
+
+            // New: Terms and Conditions Modal event listeners
+            if (viewTermsLink) {
+                viewTermsLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal(termsAndConditionsModal);
+                });
+            }
+
+            if (closeTermsAndConditionsModalBtn) {
+                closeTermsAndConditionsModalBtn.addEventListener('click', () => closeModal(termsAndConditionsModal));
+            }
+             if (closeTermsContentBtn) {
+                closeTermsContentBtn.addEventListener('click', () => closeModal(termsAndConditionsModal));
+            }
+            if (termsAndConditionsModal) {
+                termsAndConditionsModal.addEventListener('click', (e) => {
+                    if (e.target === termsAndConditionsModal) {
+                        closeModal(termsAndConditionsModal);
+                    }
+                });
+            }
+
+
+            // Sign Up Form Submission
+            signUpForm?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = signUpEmailInput.value;
+                const password = signUpPasswordInput.value;
+                const confirmPassword = signUpConfirmPasswordInput.value;
+
+                if (password !== confirmPassword) {
+                    showMessage('Sign Up Failed', 'Passwords do not match.', false);
+                    return;
+                }
+                if (password.length < 6) {
+                    showMessage('Sign Up Failed', 'Password should be at least 6 characters.', false);
+                    return;
+                }
+
+                if (!auth) {
+                    showMessage('Sign Up Failed', 'Firebase Authentication is not ready. Please try again.', false);
+                    return;
+                }
+
+                try {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    showMessage('Sign Up Successful', 'Your account has been created! You are now signed in.', true);
+                    closeModal(signUpModal);
+                    signUpForm.reset();
+                } catch (error) {
+                    console.error("Sign Up Error:", error);
+                    let errorMessage = error.message;
+                    if (error.code === 'auth/operation-not-allowed') {
+                        errorMessage = 'Email/Password sign-in is not enabled. Please enable it in your Firebase project\'s Authentication settings (under "Sign-in method").';
+                    } else if (error.code === 'auth/email-already-in-use') {
+                        errorMessage = 'The email address is already in use by another account.';
+                    } else if (error.code === 'auth/invalid-email') {
+                        errorMessage = 'The email address is not valid.';
+                    }
+                    showMessage('Sign Up Failed', errorMessage, false);
+                }
+            });
+
+            // Sign In Form Submission
+            signInForm?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = signInEmailInput.value;
+                const password = signInPasswordInput.value;
+
+                if (!auth) {
+                    showMessage('Sign In Failed', 'Firebase Authentication is not ready. Please try again.', false);
+                    return;
+                }
+
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    showMessage('Sign In Successful', 'You are now signed in!', true);
+                    closeModal(signInModal);
+                    signInForm.reset();
+                } catch (error) {
+                    console.error("Sign In Error:", error);
+                    let errorMessage = error.message;
+                    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                        errorMessage = 'Invalid email or password.';
+                    } else if (error.code === 'auth/invalid-email') {
+                        errorMessage = 'The email address is not valid.';
+                    }
+                    showMessage('Sign In Failed', errorMessage, false);
+                }
+            });
+
+
+            // --- Auth UI Update Function ---
+            function updateAuthUI(loggedIn, email = '') {
+                const myInvestmentsLink = `<li><button id="myInvestmentsOpenBtn" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">My Investments</button></li>`;
+                const signOutLink = `<li><button id="signOutBtn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Sign Out</button></li>`;
+                const loggedOutLinks = `
+                    <li><button id="signInOpenBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Sign In</button></li>
+                    <li><button id="signUpOpenBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Sign Up</button></li>
+                `;
+
+                if (navAuthLinks) {
+                    navAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${signOutLink}` : loggedOutLinks;
+                } else {
+                    console.warn("navAuthLinks element not found.");
+                }
+
+                if (mobileNavAuthLinks) {
+                    mobileNavAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${signOutLink}` : loggedOutLinks;
+                } else {
+                    console.warn("mobileNavAuthLinks element not found.");
+                }
+
+                // Re-attach event listeners after innerHTML update
+                // Desktop navigation links
+                document.getElementById('signOutBtn')?.addEventListener('click', async () => {
+                    try {
+                        await signOut(auth);
+                        showMessage('Signed Out', 'You have been successfully signed out.', true);
+                        closeMobileMenu(); // This call should be safe now due to hoisting
+                    } catch (error) {
+                        console.error("Sign Out Error:", error);
+                        showMessage('Sign Out Failed', error.message, false);
+                    }
+                });
+
+                document.getElementById('signInOpenBtn')?.addEventListener('click', () => openModal(signInModal));
+                document.getElementById('signUpOpenBtn')?.addEventListener('click', () => openModal(signUpModal));
+
+                // My Investments button (desktop)
+                document.getElementById('myInvestmentsOpenBtn')?.addEventListener('click', () => {
+                    openModal(myInvestmentsModal);
+                    closeMobileMenu(); // This call should be safe now due to hoisting
+                    fetchInvestments();
+                });
+
+                // Mobile menu specific listeners
+                document.querySelector('#mobileNavAuthLinks #signOutBtn')?.addEventListener('click', async () => {
+                     try {
+                        await signOut(auth);
+                        showMessage('Signed Out', 'You have been successfully signed out.', true);
+                        closeMobileMenu(); // This call should be safe now due to hoisting
+                    } catch (error) {
+                        console.error("Sign Out Error:", error);
+                        showMessage('Sign Out Failed', error.message, false);
+                    }
+                });
+                document.querySelector('#mobileNavAuthLinks #signInOpenBtn')?.addEventListener('click', () => {
+                    openModal(signInModal);
+                    closeMobileMenu(); // This call should be safe now due to hoisting
+                });
+                document.querySelector('#mobileNavAuthLinks #signUpOpenBtn')?.addEventListener('click', () => {
+                    openModal(signUpModal);
+                    closeMobileMenu(); // This call should be safe now due to hoisting
+                });
+                document.querySelector('#mobileNavAuthLinks #myInvestmentsOpenBtn')?.addEventListener('click', () => {
+                    openModal(myInvestmentsModal);
+                    closeMobileMenu(); // This call should be safe now due to hoisting
+                    fetchInvestments();
+                });
+
+
+                if (loggedIn) {
+                    if (currentUserIdDisplay) currentUserIdDisplay.textContent = `Logged in as: ${email || currentUserId}`;
+                    if (invNameInput) invNameInput.value = '';
+                    if (invEmailInput) invEmailInput.value = email;
+                } else {
+                    if (currentUserIdDisplay) currentUserIdDisplay.textContent = '';
+                    if (invEmailInput) invEmailInput.value = '';
                 }
             }
 
 
-            // --- Existing Website Logic (modified for investor limit) ---
+            // --- Fetch and Display Investments ---
+            function fetchInvestments() {
+                if (!currentUserId || (auth && auth.currentUser && auth.currentUser.isAnonymous) || !db) {
+                    console.log("Not a registered user, anonymous, or Firestore is not ready. Cannot fetch investments.");
+                    if (investmentsContainer) {
+                        investmentsContainer.innerHTML = '';
+                        investmentsContainer.appendChild(noInvestmentsMessage);
+                        noInvestmentsMessage.textContent = 'Please sign in to view your investments.';
+                        noInvestmentsMessage.style.display = 'block';
+                    }
+                    if (currentUserIdDisplay) currentUserIdDisplay.textContent = '';
+                    return;
+                }
 
-            const sectionsToAnimate = document.querySelectorAll('section:not(#hero):not(#planDetailModal):not(#investorFormModal):not(#mobileMenu)');
+                if (investmentsContainer) {
+                    investmentsContainer.innerHTML = '<p class="text-center text-lg text-gray-600 col-span-full">Loading your investments...</p>';
+                    noInvestmentsMessage.style.display = 'none';
+                }
+                if (currentUserIdDisplay) currentUserIdDisplay.textContent = `User ID: ${currentUserId}`;
 
-            // Function to check if an element is in viewport
+                const userInvestmentsRef = collection(db, `artifacts/${appId}/users/${currentUserId}/investments`);
+                const q = query(userInvestmentsRef, orderBy("timestamp", "desc"));
+
+                onSnapshot(q, (snapshot) => {
+                    if (snapshot.empty) {
+                        if (investmentsContainer) {
+                            investmentsContainer.innerHTML = '<p class="text-center text-lg text-gray-600 col-span-full">You have no investments yet. Start investing today!</p>';
+                        }
+                    } else {
+                        if (investmentsContainer) investmentsContainer.innerHTML = '';
+                        snapshot.forEach((doc) => {
+                            const investment = doc.data();
+                            const investDate = investment.timestamp && investment.timestamp.toDate ? new Date(investment.timestamp.toDate()) : new Date();
+                            const formattedInvestDate = investDate.toLocaleDateString();
+
+                            const MONTHLY_RETURN_RATE = 0.075;
+                            let lockInMonths = 0;
+                            let totalProjectedReturn = 0;
+                            let monthlyPayout = investment.amount * MONTHLY_RETURN_RATE;
+
+                            if (investment.planName === "Standard Plan") {
+                                lockInMonths = 2;
+                                totalProjectedReturn = investment.amount * (1 + (MONTHLY_RETURN_RATE * lockInMonths));
+                            } else if (investment.planName === "Premium 6-Month Plan") {
+                                lockInMonths = 6;
+                                // Assuming the 5% bonus for Premium Plan for calculation in My Investments
+                                // If special offer 2% bonus was applied, that would need to be stored in Firestore on investment
+                                const premiumBonus = 0.05;
+                                totalProjectedReturn = investment.amount * (1 + (MONTHLY_RETURN_RATE * lockInMonths) + premiumBonus);
+                            } else if (investment.planName === "Elite 12-Month Plan") {
+                                lockInMonths = 12;
+                                const eliteBonus = 0.10;
+                                totalProjectedReturn = investment.amount * (1 + (MONTHLY_RETURN_RATE * lockInMonths) + eliteBonus);
+                            }
+
+                            const returnDate = new Date(investDate);
+                            returnDate.setMonth(returnDate.getMonth() + lockInMonths);
+                            const formattedReturnDate = returnDate.toLocaleDateString();
+
+                            const card = `
+                                <div class="investment-card ${investment.planName === 'Standard Plan' ? 'standard-plan-item' :
+                                                                           investment.planName === 'Premium 6-Month Plan' ? 'premium-plan-item' :
+                                                                           'elite-plan-item'} rounded-lg shadow-md transition-all duration-300 transform hover:scale-105">
+                                    <h3>
+                                        <span>${investment.planName}</span>
+                                        <span class="text-sm font-normal text-gray-500">Invest Date: ${formattedInvestDate}</span>
+                                    </h3>
+                                    <div class="investment-details-group space-y-1">
+                                        <p>
+                                            <span class="flex items-center"><span class="mr-2 text-blue-600">💰</span>Invested Amount:</span> <strong class="text-blue-700">₹${investment.amount.toFixed(2)}</strong>
+                                        </p>
+                                        <p>
+                                            <span class="flex items-center"><span class="mr-2 text-green-600">📈</span>Monthly Payout:</span> <strong class="text-green-700">₹${monthlyPayout.toFixed(2)}</strong>
+                                        </p>
+                                        <p>
+                                            <span class="flex items-center"><span class="mr-2 text-green-600">💸</span>Projected Total Return:</span> <strong class="text-green-700">₹${totalProjectedReturn.toFixed(2)}</strong>
+                                        </p>
+                                        <p>
+                                            <span class="flex items-center"><span class="mr-2 text-red-500">🗓️</span>Expected Return Date:</span> <strong class="text-gray-800">${formattedReturnDate}</strong>
+                                        </p>
+                                    </div>
+                                    <div class="financial-details-group mt-4 pt-4 text-sm space-y-1">
+                                        <p><span>UTR Number:</span> <strong class="text-gray-800">${investment.utrNumber}</strong></p>
+                                        <p><span>Paid To UPI ID:</span> <strong class="text-gray-800">${investment.paidUpiId || 'N/A'}</strong></p>
+                                        <p><span>Bank Account Name:</span> <strong class="text-gray-800">${investment.bankAccountName}</strong></p>
+                                        <p><span>Bank A/C:</span> <strong class="text-gray-800">${investment.bankAccount}</strong></p>
+                                        <p><span>IFSC:</span> <strong class="text-gray-800">${investment.ifscCode}</strong></p>
+                                        ${investment.upiIdOptional ? `<p><span>Your UPI ID:</span> <strong class="text-gray-800">${investment.upiIdOptional}</strong></p>` : ''}
+                                    </div>
+                                </div>
+                            `;
+                            if (investmentsContainer) investmentsContainer.insertAdjacentHTML('beforeend', card);
+                        });
+                    }
+                }, (error) => {
+                    console.error("Error fetching investments:", error);
+                    if (investmentsContainer) investmentsContainer.innerHTML = '<p class="text-center text-red-500 col-span-full">Error loading investments. Please try again later.</p>';
+                });
+            }
+
+            const MONTHLY_RETURN_RATE = 0.075;
+
+            // --- Section Reveal Animation Logic ---
+            const sectionsToAnimate = document.querySelectorAll('section:not(#hero):not(.modal-overlay)');
+
             const isInViewport = (element) => {
                 const rect = element.getBoundingClientRect();
                 return (
@@ -1127,7 +1725,6 @@
                 );
             };
 
-            // Function to reveal sections on scroll and initial load
             const revealSections = () => {
                 sectionsToAnimate.forEach(section => {
                     if (isInViewport(section)) {
@@ -1137,17 +1734,15 @@
                 });
             };
 
-            // Initial setup: Add section-hidden class to all animatable sections
             sectionsToAnimate.forEach(section => {
                 section.classList.add('section-hidden');
             });
 
-            // Initial reveal on load to catch sections already in view
             revealSections();
             window.addEventListener('scroll', revealSections);
 
 
-            // Countdown Timer Logic (1st day of next month)
+            // --- Countdown Timer Logic (1st day of next month) ---
             const updateCountdown = () => {
                 const now = new Date();
                 let nextMonth = now.getMonth() + 1;
@@ -1177,6 +1772,7 @@
             updateCountdown();
 
 
+            // --- Investment Calculator Logic (AI Insight part removed) ---
             calculateBtn.addEventListener('click', async () => {
                 const amount = parseFloat(investmentAmountInput.value);
                 const plan = investmentPlanSelect.value;
@@ -1186,9 +1782,10 @@
                 let bonusPercentage = 0;
 
                 if (isNaN(amount) || amount <= 0) {
-                    if (aiInsightDiv) aiInsightDiv.textContent = 'Please enter a valid investment amount.';
                     if (resultsDiv) resultsDiv.classList.remove('hidden');
-                    if (errorMessageDiv) errorMessageDiv.classList.add('hidden');
+                    if (displayInitialInvestment) displayInitialInvestment.textContent = `Invalid amount.`;
+                    if (displayTotalReturn) displayTotalReturn.textContent = `Invalid amount.`;
+                    if (displayPercentageReturn) displayPercentageReturn.textContent = `Invalid amount.`;
                     return;
                 }
 
@@ -1220,9 +1817,11 @@
                     totalReturn = amount * (1 + (MONTHLY_RETURN_RATE * lockInMonths) + bonusPercentage);
                     planName = "Elite 12-Month Plan";
                     if (amount < 1000) {
-                         if (aiInsightDiv) aiInsightDiv.textContent = 'The Elite 12-Month Plan requires a minimum investment of ₹1000.';
                          if (resultsDiv) resultsDiv.classList.remove('hidden');
-                         if (errorMessageDiv) errorMessageDiv.classList.add('hidden');
+                         if (displayInitialInvestment) displayInitialInvestment.textContent = `₹${amount.toFixed(2)}`;
+                         if (displayTotalReturn) displayTotalReturn.textContent = 'N/A';
+                         if (displayPercentageReturn) displayPercentageReturn.textContent = 'N/A';
+                         showMessage('Minimum Investment', 'The Elite 12-Month Plan requires a minimum investment of ₹1000.', false);
                          return;
                     }
                 }
@@ -1233,67 +1832,11 @@
                 if (displayTotalReturn) displayTotalReturn.textContent = `₹${totalReturn.toFixed(2)}`;
                 if (displayPercentageReturn) displayPercentageReturn.textContent = `${percentageReturn.toFixed(2)}%`;
                 if (resultsDiv) resultsDiv.classList.remove('hidden');
-                if (errorMessageDiv) errorMessageDiv.classList.add('hidden');
-                if (aiInsightDiv) aiInsightDiv.textContent = 'Generating AI insight...';
-
-                if (loadingSpinner) loadingSpinner.classList.remove('hidden');
-
-                const prompt = `Given an initial investment of ₹${amount.toFixed(2)} and selecting the ${planName} with a lock-in period of ${lockInMonths} months, the projected total return is ₹${totalReturn.toFixed(2)}, which is a total percentage return of ${percentageReturn.toFixed(2)}%. For the Elite 12-Month Plan, there is also a 2% referral bonus. Also, mention the current limited-time offer for the Premium 6-Month Plan which gives an additional 2% bonus, making it a total of 7% bonus for that plan if applicable. Provide a brief, encouraging, and clear insight about this investment, highlighting the benefits of ADS FUND and the chosen plan without giving direct financial advice. Focus on the value proposition and what this return signifies for the investor, keeping it within 100 words.`;
-
-                let chatHistory = [];
-                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-                const payload = { contents: chatHistory };
-                const apiKey = "";
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    const result = await response.json();
-
-                    if (result.candidates && result.candidates.length > 0 &&
-                        result.candidates[0].content && result.candidates[0].content.parts &&
-                        result.candidates[0].content.parts.length > 0) {
-                        const text = result.candidates[0].content.parts[0].text;
-                        if (aiInsightDiv) aiInsightDiv.textContent = text;
-                    } else {
-                        if (aiInsightDiv) aiInsightDiv.textContent = 'Failed to generate AI insight. Please try again.';
-                        console.error('Gemini API response structure unexpected:', result);
-                    }
-                } catch (error) {
-                    if (aiInsightDiv) aiInsightDiv.textContent = 'Error connecting to AI. Please check your network and try again.';
-                    if (errorMessageDiv) errorMessageDiv.classList.remove('hidden');
-                    console.error('Error calling Gemini API:', error);
-                } finally {
-                    if (loadingSpinner) loadingSpinner.classList.add('hidden');
-                }
             });
 
-            // Modal Functionality for Plan Details
+            // --- Plan Detail Modal Functionality ---
             planCards.forEach(card => {
                 card.addEventListener('click', () => {
-                    // Check if Firebase is initialized and current investor count is available
-                    if (investorCountDisplay && investorCountDisplay.textContent !== 'Loading...' && investorCountDisplay.textContent !== 'Error') {
-                        const currentCount = parseInt(investorCountDisplay.textContent);
-                        if (currentCount >= MAX_INVESTORS) {
-                            if (investNowBtn) investNowBtn.disabled = true;
-                            if (investLimitMessage) investLimitMessage.classList.remove('hidden');
-                        } else {
-                            if (investNowBtn) investNowBtn.disabled = false;
-                            if (investLimitMessage) investLimitMessage.classList.add('hidden');
-                        }
-                    } else {
-                        // If Firebase data isn't loaded yet, disable button and show loading message
-                        if (investNowBtn) investNowBtn.disabled = true;
-                        if (investLimitMessage) {
-                            investLimitMessage.classList.remove('hidden');
-                            investLimitMessage.textContent = "Checking investor limit...";
-                        }
-                    }
-
                     const planName = card.dataset.planName;
                     const monthlyReturn = card.dataset.monthlyReturn;
                     const minInvestment = parseFloat(card.dataset.minInvestment);
@@ -1302,7 +1845,6 @@
                     const benefitsRaw = card.dataset.benefits;
                     const totalReturn = card.dataset.totalReturn;
 
-                    // Store selected plan details
                     selectedPlanDetails = {
                         planName: planName,
                         monthlyReturn: monthlyReturn,
@@ -1322,10 +1864,9 @@
 
                     const benefitsList = document.getElementById('modalBenefits');
                     if (benefitsList) {
-                        benefitsList.innerHTML = ''; // Clear previous benefits
+                        benefitsList.innerHTML = '';
                         try {
                             const benefits = JSON.parse(benefitsRaw);
-                            // Separate benefits into 'SPECIAL OFFER' and 'Exclusive Perks' if they exist in the parsed benefits
                             const specialOffers = benefits.filter(benefit => benefit.includes("Bonus:") || benefit.includes("Total Return:"));
                             const exclusivePerks = benefits.filter(benefit => !benefit.includes("Bonus:") && !benefit.includes("Total Return:"));
 
@@ -1352,7 +1893,6 @@
                                     benefitsList.appendChild(li);
                                 });
                             }
-                            // If neither specific category exists, just list general benefits as before
                             if (specialOffers.length === 0 && exclusivePerks.length === 0 && benefits.length > 0) {
                                 const h4Benefits = document.createElement('h4');
                                 h4Benefits.className = 'text-xl font-semibold text-gray-700 mb-2';
@@ -1364,8 +1904,6 @@
                                     benefitsList.appendChild(li);
                                 });
                             }
-
-
                         } catch (e) {
                             console.error("Error parsing benefits:", e);
                             const li = document.createElement('li');
@@ -1374,229 +1912,156 @@
                         }
                     }
 
-                    if (planDetailModal) planDetailModal.classList.add('active');
+                    openModal(planDetailModal);
                 });
             });
 
-            if (closeModalBtn) {
-                closeModalBtn.addEventListener('click', () => {
-                    if (planDetailModal) planDetailModal.classList.remove('active');
+            if (closePlanDetailModalBtn) {
+                closePlanDetailModalBtn.addEventListener('click', () => {
+                    closeModal(planDetailModal);
                 });
             }
-
 
             if (planDetailModal) {
                 planDetailModal.addEventListener('click', (e) => {
                     if (e.target === planDetailModal) {
-                        planDetailModal.classList.remove('active');
+                        closeModal(planDetailModal);
                     }
                 });
             }
 
 
-            // Event listener for the "Invest Now!" button in the Plan Detail Modal
+            // --- Invest Now Button (from Plan Detail Modal) now opens the Invest Form Modal ---
             if (investNowBtn) {
                 investNowBtn.addEventListener('click', () => {
-                    if (planDetailModal) planDetailModal.classList.remove('active'); // Close plan detail modal
-
-                    // Populate and open investor form modal
-                    if (formSelectedPlan) formSelectedPlan.textContent = selectedPlanDetails.planName;
-                    
-                    // Set the minimum investment amount and display it
-                    if (formInvestmentAmountInput) {
-                        formInvestmentAmountInput.value = selectedPlanDetails.minInvestment;
-                        formInvestmentAmountInput.min = selectedPlanDetails.minInvestment; // Set min attribute
-
-                        // Set the step based on the plan type
-                        if (selectedPlanDetails.planName === "Standard Plan") {
-                            formInvestmentAmountInput.step = "100";
-                        } else if (selectedPlanDetails.planName === "Premium 6-Month Plan" || selectedPlanDetails.planName === "Elite 12-Month Plan") {
-                            formInvestmentAmountInput.step = "500";
-                        } else {
-                            formInvestmentAmountInput.step = "1"; // Default to 1 if plan name is unknown
-                        }
-                    }
-                    if (formMinInvestmentDisplay) {
-                        formMinInvestmentDisplay.textContent = selectedPlanDetails.minInvestment.toFixed(2);
-                    }
-
-                    if (investorForm) investorForm.reset(); // Clear previous form data
-                    if (formMessage) formMessage.classList.add('hidden'); // Hide any previous messages
-
-                    if (investorFormModal) investorFormModal.classList.add('active'); // Open investor form modal
-                });
-            }
-
-
-            // Close Investor Form Modal
-            if (closeInvestorFormModalBtn) {
-                closeInvestorFormModalBtn.addEventListener('click', () => {
-                    if (investorFormModal) investorFormModal.classList.remove('active');
-                });
-            }
-
-
-            if (investorFormModal) {
-                investorFormModal.addEventListener('click', (e) => {
-                    if (e.target === investorFormModal) {
-                        investorFormModal.classList.remove('active');
-                    }
-                });
-            }
-
-
-            // Handle Investor Form Submission
-            if (investorForm) {
-                investorForm.addEventListener('submit', async (e) => {
-                    e.preventDefault(); // Prevent default form submission
-
-                    if (formMessage) {
-                        formMessage.classList.add('hidden'); // Hide previous messages instantly
-                        formMessage.classList.remove('form-message-success', 'form-message-error', 'fade-out');
-                    }
-
-                    // Validate investment amount from the input field
-                    const submittedInvestmentAmount = parseFloat(formInvestmentAmountInput.value);
-                    if (isNaN(submittedInvestmentAmount) || submittedInvestmentAmount < selectedPlanDetails.minInvestment) {
-                        if (formMessage) {
-                            formMessage.classList.remove('hidden');
-                            formMessage.classList.add('form-message-error');
-                            formMessage.textContent = `Investment amount must be at least ₹${selectedPlanDetails.minInvestment.toFixed(2)} for ${selectedPlanDetails.planName}.`;
-                        }
-                        return; // Stop form submission
-                    }
-
-                    // Also validate that the amount is a multiple of the step size
-                    let step = 1; // Default step
-                    if (selectedPlanDetails.planName === "Standard Plan") {
-                        step = 100;
-                    } else if (selectedPlanDetails.planName === "Premium 6-Month Plan" || selectedPlanDetails.planName === "Elite 12-Month Plan") {
-                        step = 500;
-                    }
-
-                    if (submittedInvestmentAmount % step !== 0) {
-                        if (formMessage) {
-                            formMessage.classList.remove('hidden');
-                            formMessage.classList.add('form-message-error');
-                            formMessage.textContent = `Investment amount must be a multiple of ₹${step} for ${selectedPlanDetails.planName}.`;
-                        }
+                    if (!currentUserId || (auth && auth.currentUser && auth.currentUser.isAnonymous)) {
+                        showMessage('Authentication Required', 'Please sign in or sign up to invest. Anonymous users cannot submit investments.', false);
+                        closeModal(planDetailModal);
+                        openModal(signInModal);
                         return;
                     }
-
-
-                    // Show spinner and disable button
-                    if (formSubmitSpinner) formSubmitSpinner.classList.remove('hidden');
-                    if (submitInvestorFormBtn) submitInvestorFormBtn.disabled = true;
-
-                    const formData = new FormData(investorForm);
-                    const investorData = {};
-                    for (let [key, value] of formData.entries()) {
-                        investorData[key] = value;
-                    }
-
-                    // Add selected plan details and the submitted investment amount to investor data
-                    investorData.selectedPlan = selectedPlanDetails.planName;
-                    investorData.investmentAmount = submittedInvestmentAmount; // Use the value from the input field
-                    investorData.timestamp = new Date().toISOString();
-
-                    console.log("Investor Form Data:", investorData); // For demonstration, log data
-
-                    if (!db || !investorCountDocRef || !currentUserId) {
-                        if (formMessage) {
-                            formMessage.classList.remove('hidden');
-                            formMessage.classList.add('form-message-error');
-                            formMessage.textContent = "Database not ready or user not authenticated. Cannot process investment.";
+                    closeModal(planDetailModal);
+                    openModal(investModal);
+                    if (investFormPlanName) investFormPlanName.textContent = selectedPlanDetails.planName;
+                    if (invPlanHiddenInput) invPlanHiddenInput.value = selectedPlanDetails.planName;
+                    if (invAmountInput) {
+                        invAmountInput.value = selectedPlanDetails.minInvestment;
+                        invAmountInput.min = selectedPlanDetails.minInvestment;
+                        if (invAmountValidationMessage) {
+                             invAmountValidationMessage.textContent = `Minimum ₹${selectedPlanDetails.minInvestment}, in multiples of ₹100.`;
                         }
-                        console.error("Firestore, investorCountDocRef, or currentUserId not initialized.");
-                        // Hide spinner and re-enable button (if not explicitly disabled by limit)
-                        if (formSubmitSpinner) formSubmitSpinner.classList.add('hidden');
-                        if (currentInvestorCount < MAX_INVESTORS && submitInvestorFormBtn) submitInvestorFormBtn.disabled = false;
-                        return;
                     }
+                    if (invEmailInput && currentUserEmail) invEmailInput.value = currentUserEmail;
+                });
+            }
 
+            // --- Copy UPI ID functionality ---
+            document.querySelectorAll('.copy-upi-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const upiIdToCopy = e.target.dataset.upi;
+                    const tempInput = document.createElement('input');
+                    document.body.appendChild(tempInput);
+                    tempInput.value = upiIdToCopy;
+                    tempInput.select();
                     try {
-                        const docSnap = await getDoc(investorCountDocRef);
-                        let currentCount = 0;
-                        if (docSnap.exists()) {
-                            currentCount = docSnap.data().count || 0;
-                        }
-
-                        if (currentCount < MAX_INVESTORS) {
-                            // Atomically increment the count in Firestore
-                            await updateDoc(investorCountDocRef, {
-                                count: FieldValue.increment(1)
-                            });
-
-                            // --- Save investor details to Firestore (still happens, just not displayed) ---
-                            // Note: The previous request was to remove the display, not the storage.
-                            // If you wish to stop storing it, please clarify.
-                            const userInvestmentsCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/investments`);
-                            await addDoc(userInvestmentsCollectionRef, investorData);
-                            // --- End save investor details ---
-
-                            if (formMessage) {
-                                formMessage.classList.remove('hidden');
-                                formMessage.classList.add('form-message-success');
-                                formMessage.textContent = "Investment registered successfully! Thank you for joining ADS FUND.";
-                            }
-
-                            if (investorForm) investorForm.reset(); // Clear the form
-                            // Close modal after a short delay
-                            setTimeout(() => {
-                                if (investorFormModal) investorFormModal.classList.remove('active');
-                                if (formSubmitSpinner) formSubmitSpinner.classList.add('hidden');
-                                if (submitInvestorFormBtn) submitInvestorFormBtn.disabled = false;
-                            }, 3000); // Keep message visible for 3 seconds
-                            // Hide spinner and re-enable button immediately after successful update, before modal closes.
-                            if (formSubmitSpinner) formSubmitSpinner.classList.add('hidden');
-                            if (submitInvestorFormBtn) submitInvestorFormBtn.disabled = false;
-
-                        } else {
-                            if (formMessage) {
-                                formMessage.classList.remove('hidden');
-                                formMessage.classList.add('form-message-error');
-                                formMessage.textContent = "Sorry, the maximum investor limit has been reached!";
-                            }
-                            if (submitInvestorFormBtn) submitInvestorFormBtn.disabled = true; // Keep disabled if limit is reached
-                            if (formSubmitSpinner) formSubmitSpinner.classList.add('hidden'); // Hide spinner
-                        }
-
-                    } catch (error) {
-                        console.error("Error processing investment:", error);
-                        if (formMessage) {
-                            formMessage.classList.remove('hidden');
-                            formMessage.classList.add('form-message-error');
-                            formMessage.textContent = "An error occurred during registration. Please try again.";
-                        }
-                        // Hide spinner and re-enable button (if not explicitly disabled by limit)
-                        if (formSubmitSpinner) formSubmitSpinner.classList.add('hidden');
-                        if (currentInvestorCount < MAX_INVESTORS && submitInvestorFormBtn) submitInvestorFormBtn.disabled = false;
+                        document.execCommand('copy');
+                        showMessage('Copied!', 'UPI ID copied to clipboard.', true);
+                    } catch (err) {
+                        console.error('Failed to copy text: ', err);
+                        showMessage('Copy Failed', 'Could not copy UPI ID. Please copy it manually.', false);
                     }
+                    document.body.removeChild(tempInput);
                 });
-            }
+            });
 
-            // New: Event listener for "Explore Our Plans" button
+            // --- Investment Form Modal Logic ---
+            closeInvestModalBtn?.addEventListener('click', () => closeModal(investModal));
+            cancelInvestFormBtn?.addEventListener('click', () => closeModal(investModal));
+
+            investmentForm?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                // Check if terms are accepted
+                if (!acceptTermsCheckbox || !acceptTermsCheckbox.checked) {
+                    showMessage('Agreement Required', 'You must accept the Terms & Conditions to proceed with your investment.', false);
+                    return;
+                }
+
+                const name = invNameInput.value.trim();
+                const email = invEmailInput.value.trim();
+                const mobile = invMobileInput.value.trim();
+                const amount = parseFloat(invAmountInput.value);
+                const paidUpiId = paidUpiIdSelect.value; // Get the selected UPI ID
+                const utrNumber = invUtrNumberInput.value.trim();
+                const bankAccountName = invBankAccountNameInput.value.trim();
+                const bankAccount = invBankAccountInput.value.trim();
+                const ifscCode = invIfscCodeInput.value.trim();
+                const upiIdOptional = invUpiIdOptionalInput.value.trim();
+                const planName = invPlanHiddenInput.value.trim();
+
+                if (!name || !email || !mobile || !utrNumber || !bankAccountName || !bankAccount || !ifscCode || !planName || isNaN(amount) || !paidUpiId) {
+                    showMessage('Missing Information', 'Please fill in all required fields and ensure investment amount is valid.', false);
+                    return;
+                }
+
+                if (amount < selectedPlanDetails.minInvestment || (amount % 100 !== 0)) {
+                    showMessage('Invalid Amount', `Investment amount must be at least ₹${selectedPlanDetails.minInvestment} and in multiples of ₹100.`, false);
+                    return;
+                }
+
+                if (!currentUserId || (auth && auth.currentUser && auth.currentUser.isAnonymous)) {
+                     showMessage('Authentication Error', 'You must be signed in with a registered account to submit an investment, and Firebase services must be ready.', false);
+                     return;
+                }
+
+                try {
+                    const userInvestmentsCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/investments`);
+                    await addDoc(userInvestmentsCollectionRef, {
+                        userId: currentUserId,
+                        name: name,
+                        email: email,
+                        mobile: mobile,
+                        amount: amount,
+                        planName: planName,
+                        paidUpiId: paidUpiId, // Store the selected UPI ID
+                        utrNumber: utrNumber,
+                        bankAccountName: bankAccountName,
+                        bankAccount: bankAccount,
+                        ifscCode: ifscCode,
+                        upiIdOptional: upiIdOptional || null,
+                        timestamp: serverTimestamp()
+                    });
+
+                    showMessage('Investment Submitted!', `Your investment in the ${planName} of ₹${amount.toFixed(2)} has been recorded. We will verify the UTR number shortly.`, true);
+                    closeModal(investModal);
+                    investmentForm.reset();
+                    // Uncheck terms after successful submission
+                    if (acceptTermsCheckbox) acceptTermsCheckbox.checked = false;
+                } catch (error) {
+                    console.error("Error submitting investment:", error);
+                    showMessage('Submission Failed', `An error occurred: ${error.message}`, false);
+                }
+            });
+
+
+            // --- Event listener for "Explore Our Plans" button ---
             if (explorePlansBtn) {
                 explorePlansBtn.addEventListener('click', (event) => {
-                    event.preventDefault(); // Prevent default anchor jump
+                    event.preventDefault();
 
                     const plansSection = document.getElementById('plans');
                     if (plansSection) {
                         plansSection.scrollIntoView({ behavior: 'smooth' });
 
-                        // Add animation to each plan card after a short delay
                         setTimeout(() => {
                             planCards.forEach((card, index) => {
-                                // Remove any existing animation class to allow re-triggering
                                 card.classList.remove('animate-card-pop');
-                                // Force reflow
                                 void card.offsetWidth;
-                                // Add the animation class with a staggered delay
                                 setTimeout(() => {
                                     card.classList.add('animate-card-pop');
-                                }, index * 100); // Stagger by 100ms
+                                }, index * 100);
                             });
-                        }, 800); // Start animation after 0.8 seconds (allowing scroll to finish)
+                        }, 800);
                     }
                 });
             }
