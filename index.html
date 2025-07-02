@@ -86,13 +86,15 @@
         #myInvestmentsModal .modal-content,
         #termsAndConditionsModal .modal-content,
         #investmentDetailsModal .modal-content,
-        #whereMoneyWorksModal .modal-content { /* Added new detail modal and Where Your Money Works modal */
+        #whereMoneyWorksModal .modal-content,
+        #referEarnModal .modal-content { /* Added new detail modal and Where Your Money Works modal, and Refer & Earn */
             width: 600px;
         }
         /* Specifically ensuring myInvestmentsModal content is plain white */
         #myInvestmentsModal .modal-content,
         #investmentDetailsModal .modal-content,
-        #whereMoneyWorksModal .modal-content { /* Ensure plain white for detail modal too */
+        #whereMoneyWorksModal .modal-content,
+        #referEarnModal .modal-content { /* Ensure plain white for detail modal too */
             background-color: white;
             background-image: none;
         }
@@ -198,7 +200,7 @@
 
         .modal-content .cancel-btn:active {
             transform: translateY(0);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 44px 6px rgba(0, 0, 0, 0.1);
         }
 
 
@@ -216,8 +218,8 @@
         /* Section reveal animation */
         .section-hidden {
             opacity: 0;
-            transform: translateY(80px); /* Increased initial offset */
-            transition: opacity 1.2s ease-out, transform 1.2s ease-out; /* Longer, smoother transition */
+            transform: translateY(50px); /* Reduced initial offset for a smoother fade-in-up */
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* Faster, smoother transition */
         }
         .section-visible {
             opacity: 1;
@@ -244,6 +246,9 @@
         }
 
         /* Enhanced card hover effects */
+        .card-hover-effect {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+        }
         .card-hover-effect:hover {
             transform: translateY(-8px) scale(1.02); /* Lift and slight scale */
             box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2), 0 10px 10px -5px rgba(0,0,0,0.04); /* Deeper shadow */
@@ -309,6 +314,7 @@
             border-radius: 0.75rem; /* rounded-lg */
             box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05); /* subtle inset shadow */
             transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smoother transition */
+            color: #2d3748;
         }
 
         .form-input-field:focus, .form-textarea-field:focus {
@@ -464,7 +470,7 @@
         .plan-card .text-lg.mb-4 {
             margin-bottom: 0.75rem; /* Adjusted from 1rem */
         }
-        .plan-card .block.text-2xl.font-semibold.mb-2 {
+        .plan-card .block.text-2xl.font-semibold.mb-1 {
             margin-bottom: 0.25rem; /* Adjusted from 0.5rem */
         }
         .plan-card .border-t.pt-4 {
@@ -627,6 +633,48 @@
         .terms-link:hover {
             color: #2563eb; /* blue-600 */
         }
+
+        /* Referred User Card Styles */
+        .referred-user-card {
+            background-color: #f8fafc; /* Light blue-gray */
+            border: 1px solid #e2e8f0; /* gray-200 */
+            border-radius: 0.75rem;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column; /* Stack details vertically */
+            align-items: flex-start; /* Align text to the left */
+            font-size: 1rem;
+            color: #2d3748;
+        }
+
+        .referred-user-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+
+        .referred-user-card p {
+            margin: 0;
+            padding: 0;
+            line-height: 1.4;
+        }
+
+        .referred-user-card .referred-user-id-text {
+            font-weight: 600;
+            color: #1d4ed8; /* blue-700 */
+        }
+
+        .referred-user-card .text-xs {
+            color: #6b7280; /* gray-500 */
+        }
+
+        /* Styles for disabled buttons */
+        .button-disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            pointer-events: none; /* Prevent click events */
+        }
     </style>
 </head>
 <body>
@@ -658,7 +706,7 @@
                     <li><a href="#ai-calculator" class="hover:text-blue-200 transition duration-300">AI Calculator</a></li>
                     <!-- Conditional Navigation based on Auth status -->
                     <li id="navAuthLinks" class="flex space-x-8">
-                        <!-- Content managed by JavaScript -->
+                        <!-- Content managed by JavaScript based on auth state -->
                     </li>
                 </ul>
             </nav>
@@ -682,7 +730,7 @@
                 <li><a href="#ai-calculator" class="hover:text-yellow-300 transition duration-300" data-close-menu>AI Calculator</a></li>
                 <!-- Conditional Mobile Nav Links -->
                 <li id="mobileNavAuthLinks" class="flex flex-col items-center space-y-6">
-                    <!-- Content managed by JavaScript -->
+                    <!-- Content managed by JavaScript based on auth state -->
                 </li>
             </ul>
         </div>
@@ -769,7 +817,6 @@
                         </ul>
                         <h4 class="text-xl font-semibold text-gray-700 mb-2 mt-4">Exclusive Perks:</h4>
                         <ul class="list-disc list-inside text-gray-600 space-y-1">
-                            <li>Priority Support.</li>
                             <li>Referral Bonus: Refer another investor and earn an extra <span class="font-bold">1%</span> on your referrals investment.</li>
                         </ul>
                     </div>
@@ -868,8 +915,8 @@
         <div class="container mx-auto px-6">
             <h2 class="text-5xl font-extrabold mb-6">🔥 Limited Time Offer! 🔥</h2>
             <p class="text-2xl mb-8 max-w-2xl mx-auto">
-                Invest in our Premium 6-Month Plan this month and receive an **additional 2% bonus** at the end of your term!
-                That's a total of <span class="font-bold text-yellow-300">7% bonus</span> for just 6 months!
+                Invest in our Premium 6-Month Plan within the next <span class="font-bold text-yellow-300">7 days</span> and receive an **additional 5% bonus** at the end of your term!
+                That's a total of <span class="font-bold text-yellow-300">50% over 6 months</span>!
             </p>
             <div class="countdown-timer mb-8" id="countdown"></div>
             <a href="#plans" class="bg-yellow-400 hover:bg-yellow-500 text-red-900 font-bold py-3 px-10 rounded-full shadow-lg transform transition duration-300 hover:scale-105 inline-block text-xl">
@@ -918,7 +965,7 @@
             <p>&copy; 2024 ADS FUND. All rights reserved.</p>
             <p class="mt-2">For inquiries, please contact us at <a href="mailto:itsads2k23@gmail.com" class="text-blue-400 hover:underline">itsads2k23@gmail.com</a></p>
         </div>
-    </footer  >
+    </footer>
 
     <!-- Investment Plan Detail Modal -->
     <div id="planDetailModal" class="modal-overlay">
@@ -996,6 +1043,10 @@
                 <label for="inv_upi_id_optional" class="w-full">Your UPI ID (Optional):</label>
                 <input type="text" id="inv_upi_id_optional" placeholder="Your UPI ID (Optional)" class="w-full">
 
+                <!-- Removed: Referral ID input from investment form -->
+                <!-- <label for="inv_referral_id" class="w-full">Referral ID (Optional):</label>
+                <input type="text" id="inv_referral_id" placeholder="Enter Referral ID (e.g., 123456)" pattern="\d{6}" title="Referral ID must be a 6-digit number" class="w-full"> -->
+
                 <input type="hidden" id="inv_plan_hidden"> <!-- Hidden field to store selected plan name -->
 
                 <!-- Terms & Conditions Checkbox -->
@@ -1054,6 +1105,10 @@
 
                 <label for="signUpConfirmPassword" class="w-full">Confirm Password:</label>
                 <input type="password" id="signUpConfirmPassword" placeholder="Confirm Password" required class="w-full">
+                
+                <!-- Retained: Referral ID input in Sign Up form (for tracking who referred this new user) -->
+                <label for="signUpReferrerId" class="w-full">Referrer ID (Optional):</label>
+                <input type="text" id="signUpReferrerId" placeholder="Referrer's 6-digit ID (e.g., 123456)" pattern="\d{6}" title="Referrer ID must be a 6-digit number" class="w-full">
 
                 <div class="flex justify-center space-x-4 mt-6 w-full">
                     <button type="submit" class="w-1/2" id="signUpSubmitBtn">Sign Up</button>
@@ -1124,6 +1179,8 @@
                 <p><span>Bank A/C:</span> <strong id="detailBankAccount" class="text-gray-800"></strong></p>
                 <p><span>IFSC:</span> <strong id="detailIfscCode" class="text-gray-800"></strong></p>
                 <p id="detailOptionalUpiRow" class="hidden"><span>Your UPI ID:</span> <strong id="detailUpiIdOptional" class="text-gray-800"></strong></p>
+                <!-- Removed: Referral ID row from investment details -->
+                <!-- <p id="detailReferralIdRow" class="hidden"><span>Referral ID:</span> <strong id="detailReferralId" class="text-gray-800"></strong></p> -->
             </div>
         </div>
     </div>
@@ -1144,6 +1201,34 @@
                     <h3 class="text-2xl font-bold text-blue-700 mb-3 text-center">Secure Lending on Trusted Platforms</h3>
                     <p class="text-lg text-gray-700 text-center">To ensure stable and consistent returns, a portion of your investment is allocated to lending on verified and trusted platforms. This diversifies risk and provides a reliable income stream, ensuring your money is always working for you.</p>
                 </div>
+            </div>
+        </div>
+    </div >
+
+    <!-- New: Refer & Earn Modal (Simplified) -->
+    <div id="referEarnModal" class="modal-overlay">
+        <div class="modal-content text-gray-800">
+            <button class="modal-close-btn" id="closeReferEarnModalBtn">&times;</button>
+            <h2 class="text-3xl font-bold text-blue-700 mb-6 text-center">Refer & Track</h2>
+            
+            <div class="bg-green-50 p-6 rounded-lg mb-6 text-center shadow-inner">
+                <p class="text-lg font-semibold text-green-800 mb-3">Your Unique Referrer ID:</p>
+                <div class="flex items-center justify-center space-x-2 mb-4">
+                    <span id="yourReferralId" class="font-mono text-xl md:text-2xl font-bold text-green-700 break-all">Loading...</span>
+                    <button type="button" class="copy-upi-btn bg-green-600 hover:bg-green-700" data-copy-target="yourReferralId">Copy</button>
+                </div>
+                <!-- New: Referral Link Section -->
+                <p class="text-lg font-semibold text-green-800 mb-3">Share this Referral Link:</p>
+                <div class="flex items-center justify-center space-x-2">
+                    <span id="yourReferralLink" class="font-mono text-base md:text-lg text-blue-700 break-all">Loading...</span>
+                    <button type="button" class="copy-upi-btn bg-blue-600 hover:bg-blue-700" data-copy-target="yourReferralLink">Copy</button>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-bold text-blue-700 mb-4 text-center">Users You've Referred</h3>
+            <p id="noReferredUsersMessage" class="text-center text-lg text-gray-600 mb-4">No users referred yet. Share your ID!</p>
+            <div id="referredUsersList" class="space-y-4">
+                <!-- Referred users (ID and joined date) will be loaded here -->
             </div>
         </div>
     </div >
@@ -1177,7 +1262,7 @@
                 <p>Each investment plan has a specified lock-in period. During this period, your principal investment is committed to the fund.</p>
                 <ul class="list-disc list-inside ml-4">
                     <li><strong>After Lock-in:</strong> Upon completion of the lock-in period, you may choose to withdraw your principal and any accumulated bonuses, reinvest, or continue receiving monthly returns.</li>
-                    <li><strong>Early Withdrawals:</strong> For withdrawals requested before the completion of the stated lock-in period, the principal amount will be returned after a processing period of 15 business days. An early withdrawal penalty equivalent to <strong>two months' projected returns</strong> on the principal amount will be deducted from your principal before disbursement.</li>
+                    <li><strong>Early Withdrawals:</strong> For withdrawals requested before the completion of the stated lock-in period, the principal amount will be returned after a processing period of 15 business days. An early withdrawal penalty equivalent to <strong>two months' projected returns</strong> on the principal amount will be deducted from your principal before disbursement.</p>
                 </ul>
 
                 <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">6. KYC and Verification</h3>
@@ -1208,15 +1293,18 @@
                 <p>For any questions regarding these Terms & Conditions, please contact us at <a href="mailto:itsads2k23@gmail.com" class="terms-link">itsads2k23@gmail.com</a>.</p>
             </div>
             <button id="closeTermsContentBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full shadow-md mt-8">
-                Close
+                OK
             </button>
         </div>
-    </div>
+    </div >
 
 
     <script type="module">
+        // Global variable to store referral ID from URL
+        let referralIdFromUrl = null;
+
         // Firebase imports
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js"; // Updated SDK version
         import {
             getAuth,
             signInAnonymously,
@@ -1225,27 +1313,40 @@
             createUserWithEmailAndPassword,
             signInWithEmailAndPassword,
             signOut
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js"; // Updated SDK version
         import {
             getFirestore,
             collection,
             addDoc,
+            doc,
+            setDoc,
             query,
             where,
             onSnapshot,
             serverTimestamp,
-            orderBy
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+            getDoc,
+            getDocs
+            // Removed updateDoc and FieldValue as they are no longer used client-side for referral earnings
+        } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js"; // Updated SDK version
 
         // Global Firebase variables - declared as `let` so they can be assigned later
         let app;
         let auth;
         let db; // Firestore instance
-        let currentUserId = null; // To store the authenticated user's ID
+        let currentUserId = null; // To store the Firebase authenticated user's UID
+        let currentUserCustomId = null; // To store the user's generated 6-digit ID
         let currentUserEmail = null; // To store the authenticated user's email
+        let currentUserReferredBy = null; // Store the referrer's custom ID for the current user
+        // Removed currentUserReferralEarnings as it's no longer needed for client-side display/logic
         let selectedPlanDetails = {}; // To store details of the plan chosen by the user
         let appId; // Declare appId globally for Firestore paths
         let userInvestmentsData = []; // Store fetched investments here
+        let isAuthReady = false; // New flag to indicate Firebase Auth is initialized and state determined
+
+        // Unsubscribe functions for onSnapshot listeners
+        let unsubscribeInvestments = null;
+        let unsubscribeCurrentUserDoc = null; // New unsubscribe for the current user's document
+
 
         // --- Custom Message Modal Functions ---
         const messageModal = document.getElementById('messageModal');
@@ -1254,6 +1355,7 @@
         const closeMessageModalBtn = document.getElementById('closeMessageModalBtn');
 
         function showMessage(title, text, isSuccess = true) {
+            console.log(`[Message Modal] Title: ${title}, Text: ${text}, Success: ${isSuccess}`); // Debugging
             if (messageModalTitle) messageModalTitle.textContent = title;
             if (messageModalText) messageModalText.textContent = text;
             if (messageModal) {
@@ -1348,7 +1450,6 @@
             const planCards = document.querySelectorAll('.plan-card');
 
             const investModal = document.getElementById('investModal');
-            // FIX: Corrected the assignment of closeInvestModalBtn
             const closeInvestModalBtn = document.getElementById('closeInvestModalBtn');
             const investmentForm = document.getElementById('investmentForm');
             const invNameInput = document.getElementById('inv_name');
@@ -1357,15 +1458,16 @@
             const invAmountInput = document.getElementById('inv_amount');
             const invAmountValidationMessage = document.getElementById('invAmountValidationMessage');
             const invUtrNumberInput = document.getElementById('inv_utr_number');
-            const paidUpiIdSelect = document.getElementById('paidUpiId'); // New element
+            const paidUpiIdSelect = document.getElementById('paidUpiId');
             const invBankAccountNameInput = document.getElementById('inv_bank_account_name');
             const invBankAccountInput = document.getElementById('inv_bank_account');
             const invIfscCodeInput = document.getElementById('inv_ifsc_code');
             const invUpiIdOptionalInput = document.getElementById('inv_upi_id_optional');
+            // Removed invReferralIdInput
             const invPlanHiddenInput = document.getElementById('inv_plan_hidden');
             const investFormPlanName = document.getElementById('investFormPlanName');
             const cancelInvestFormBtn = document.getElementById('cancelInvestFormBtn');
-            const submitInvestmentBtn = document.getElementById('submitInvestmentBtn'); // Added for loading state
+            const submitInvestmentBtn = document.getElementById('submitInvestmentBtn');
 
             const explorePlansBtn = document.getElementById('explorePlansBtn');
 
@@ -1387,12 +1489,13 @@
             const signUpEmailInput = document.getElementById('signUpEmail');
             const signUpPasswordInput = document.getElementById('signUpPassword');
             const signUpConfirmPasswordInput = document.getElementById('signUpConfirmPassword');
+            const signUpReferrerIdInput = document.getElementById('signUpReferrerId'); // Renamed from signUpReferralIdInput
             const switchToSignUpBtn = document.getElementById('switchToSignUp');
             const switchToSignInBtn = document.getElementById('switchToSignIn');
             const cancelSignInBtn = document.getElementById('cancelSignInBtn');
             const cancelSignUpBtn = document.getElementById('cancelSignUpBtn');
-            const signInSubmitBtn = document.getElementById('signInSubmitBtn'); // Added for loading state
-            const signUpSubmitBtn = document.getElementById('signUpSubmitBtn'); // Added for loading state
+            const signInSubmitBtn = document.getElementById('signInSubmitBtn');
+            const signUpSubmitBtn = document.getElementById('signUpSubmitBtn');
 
 
             // New Terms & Conditions elements
@@ -1419,111 +1522,234 @@
             const detailIfscCode = document.getElementById('detailIfscCode');
             const detailUpiIdOptional = document.getElementById('detailUpiIdOptional');
             const detailOptionalUpiRow = document.getElementById('detailOptionalUpiRow');
+            // Removed detailReferralId and detailReferralIdRow
 
-            // Where Your Money Works specific elements (now for the modal)
+            // Where Your Money Works specific elements
             const whereMoneyWorksModal = document.getElementById('whereMoneyWorksModal');
-            const closeWhereMoneyWorksModalBtn = document.getElementById('closeWhereMoneyWorksModalBtn'); // Corrected assignment
+            const closeWhereMoneyWorksModalBtn = document.getElementById('closeWhereMoneyWorksModalBtn');
             const whereMoneyWorksDesktopLink = document.getElementById('whereMoneyWorksDesktopLink');
             const whereMoneyWorksMobileLink = document.getElementById('whereMoneyWorksMobileLink');
+
+            // Refer & Earn elements
+            const referEarnModal = document.getElementById('referEarnModal');
+            const closeReferEarnModalBtn = document.getElementById('closeReferEarnModalBtn');
+            const yourReferralIdSpan = document.getElementById('yourReferralId');
+            const yourReferralLinkSpan = document.getElementById('yourReferralLink'); // New element for referral link
+            const referredUsersListDiv = document.getElementById('referredUsersList');
+            const noReferredUsersMessage = document.getElementById('noReferredUsersMessage');
+
+
+            // --- Helper to generate a unique 6-digit number ---
+            async function generateUnique6DigitId() {
+                let isUnique = false;
+                let newId = '';
+                // Use the hardcoded appId (which is the projectId)
+                const usersCollectionRef = collection(db, `artifacts/${appId}/users`);
+
+                while (!isUnique) {
+                    newId = String(Math.floor(100000 + Math.random() * 900000)); // Generate 6-digit number
+                    const q = query(usersCollectionRef, where("customUserId", "==", newId));
+                    const querySnapshot = await getDocs(q);
+                    if (querySnapshot.empty) {
+                        isUnique = true;
+                    }
+                }
+                console.log(`[generateUnique6DigitId] Generated unique ID: ${newId}`); // Debugging
+                return newId;
+            }
+
+            // Variable to temporarily store referredBy during signup
+            let referredByDuringSignUp = null;
+
+            // --- Handle referral link in URL on page load (initial check) ---
+            const urlParams = new URLSearchParams(window.location.search);
+            const referrerParam = urlParams.get('ref'); // Renamed from refParam
+            if (referrerParam && /^\d{6}$/.test(referrerParam)) {
+                referralIdFromUrl = referrerParam;
+                console.log("Referrer ID detected (early):", referralIdFromUrl); // Debugging
+            } else if (referrerParam) {
+                console.warn("Invalid referrer ID format found in URL parameter (early): ", referrerParam); // Debugging
+            }
 
 
             // --- Firebase Initialization and Initial Auth Attempt ---
             try {
-                appId = 'ownads-07';
+                // HARDCODED Firebase config with the user-provided details
                 const firebaseConfig = {
-                    apiKey: "AIzaSyBFS4IF12Tr4ZN7n-xqHRwf5MM020zddvw",
-                    authDomain: "ownads-07.firebaseapp.com",
-                    databaseURL: "https://ownads-07-default-rtdb.asia-southeast1.firebasedatabase.app",
-                    projectId: "ownads-07",
-                    storageBucket: "ownads-07.firebasestorage.app",
-                    messagingSenderId: "274286517816",
-                    appId: "1:274286517816:web:d83478fdd4119d183d10cd",
-                    measurementId: "G-D5K9HCL8KB"
+                     apiKey: "AIzaSyC72SodhNkBsFxAAHdzldDOoVofxFr9Fus",
+  authDomain: "dreamproject-b5b4d.firebaseapp.com",
+  projectId: "dreamproject-b5b4d",
+  storageBucket: "dreamproject-b5b4d.firebasestorage.app",
+  messagingSenderId: "1265667993",
+  appId: "1:1265667993:web:635a639284a161ef2b4d08",
+  measurementId: "G-SW4EFFLBN2"
                 };
+
+                // CRITICAL: Set appId directly from the hardcoded firebaseConfig.projectId
+                appId = firebaseConfig.projectId;
+                console.log(`[Firebase Init] Determined appId for Firestore paths: ${appId}`); // Debugging: Log the determined appId
+
+                // Ensure firebaseConfig is not empty before initializing
+                if (Object.keys(firebaseConfig).length === 0 || !firebaseConfig.apiKey) {
+                    throw new Error("Firebase configuration is incomplete or not found.");
+                }
 
                 app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
 
-                // Attempt initial sign-in
-                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-                let userWasLoggedIn = false; // Flag to track if user was logged in (non-anonymous)
+                // --- Crucial: Attempt initial sign-in anonymously ---
+                await signInAnonymously(auth);
+                console.log("[Firebase Init] Signed in anonymously.");
 
-                // First, check if a current user already exists (e.g., from a persistent session)
-                if (auth.currentUser) {
-                    currentUserId = auth.currentUser.uid;
-                    currentUserEmail = auth.currentUser.email;
-                    userWasLoggedIn = !auth.currentUser.isAnonymous;
-                    console.log("Existing Firebase user detected:", currentUserId, "Anonymous:", auth.currentUser.isAnonymous);
-                } else {
-                    // No current user, try to sign in with custom token or anonymously
-                    if (initialAuthToken) {
-                        try {
-                            const userCredential = await signInWithCustomToken(auth, initialAuthToken);
-                            currentUserId = userCredential.user.uid;
-                            currentUserEmail = userCredential.user.email;
-                            userWasLoggedIn = !userCredential.user.isAnonymous;
-                            console.log("Signed in with custom token successfully.");
-                        } catch (error) {
-                            console.warn("Warning: Error signing in with custom token. Attempting anonymous sign-in:", error.message);
-                            try {
-                                const userCredential = await signInAnonymously(auth);
-                                currentUserId = userCredential.user.uid;
-                                currentUserEmail = userCredential.user.email; // Will be null for anonymous
-                                userWasLoggedIn = false; // Anonymous user is not considered "logged in" for app features
-                                console.log("Signed in anonymously after custom token failure.");
-                            } catch (anonError) {
-                                console.error("Error signing in anonymously:", anonError.message);
-                                showMessage('Authentication Setup Failed', `Failed to sign in. Error: ${anonError.message}. Please ensure Anonymous and Email/Password sign-in methods are enabled in your Firebase project's Authentication settings.`, false);
-                                userWasLoggedIn = false; // Ensure logged out state is reflected
-                            }
-                        }
-                    } else {
-                        // No initial token, try anonymous sign-in directly
-                        try {
-                            const userCredential = await signInAnonymously(auth);
-                            currentUserId = userCredential.user.uid;
-                            currentUserEmail = userCredential.user.email;
-                            userWasLoggedIn = false; // Anonymous user is not considered "logged in" for app features
-                            console.log("Signed in anonymously (no initial token).");
-                        } catch (anonError) {
-                            console.error("Error signing in anonymously:", anonError.message);
-                            showMessage('Authentication Setup Failed', `Failed to sign in. Error: ${anonError.message}. Please ensure Anonymous and Email/Password sign-in methods are enabled in your Firebase project's Authentication settings.`, false);
-                            userWasLoggedIn = false; // Ensure logged out state is reflected
-                        }
-                    }
-                }
 
-                // Immediately update UI based on the result of the initial auth attempt
-                updateAuthUI(userWasLoggedIn, currentUserEmail);
+                onAuthStateChanged(auth, async (user) => {
+                    console.log("[onAuthStateChanged] Triggered. User:", user ? user.uid : "null", "Anonymous:", user ? user.isAnonymous : "N/A");
 
-                // Setup the real-time auth state listener for future changes
-                onAuthStateChanged(auth, (user) => {
+                    // Set isAuthReady to true early within onAuthStateChanged, as soon as we know auth state is determined
+                    isAuthReady = true;
+                    console.log(`[onAuthStateChanged] isAuthReady set to: ${isAuthReady}`);
+                    updateAuthUI(user && !user.isAnonymous, currentUserEmail, currentUserCustomId);
+
+
                     if (user) {
-                        console.log("onAuthStateChanged: User state changed.", user.uid, "Email:", user.email, "Anonymous:", user.isAnonymous);
                         currentUserId = user.uid;
                         currentUserEmail = user.email;
-                        updateAuthUI(!user.isAnonymous, currentUserEmail);
+
+                        const userDocRef = doc(db, `artifacts/${appId}/users/${currentUserId}`);
+
+                        // Check if user document exists. If not, create it (for new sign-ups or existing users without profiles)
+                        const userDocSnap = await getDoc(userDocRef);
+                        if (!userDocSnap.exists() && !user.isAnonymous) {
+                            console.log(`[onAuthStateChanged] User document for ${currentUserId} does not exist. Creating it.`);
+                            // ADDED THIS LOG FOR DEBUGGING THE EXACT PATH
+                            console.log(`[Firestore Write Attempt] Path: artifacts/${appId}/users/${currentUserId}`);
+                            try {
+                                const newCustomUserId = await generateUnique6DigitId();
+                                await setDoc(userDocRef, {
+                                    email: user.email,
+                                    customUserId: newCustomUserId,
+                                    referredBy: referredByDuringSignUp || null, // Use the global variable
+                                    createdAt: serverTimestamp()
+                                });
+                                console.log(`[onAuthStateChanged] User document created for ${user.uid} with custom ID ${newCustomUserId}.`);
+                                currentUserCustomId = newCustomUserId; // Update global state
+                                currentUserReferredBy = referredByDuringSignUp; // Update global state
+                                referredByDuringSignUp = null; // Clear the temporary variable after use
+                                showMessage('Profile Created!', 'Your user profile has been successfully created in Firestore.', true); // Added success message for profile creation
+                                updateAuthUI(true, user.email, newCustomUserId); // Re-update UI with new custom ID
+                            } catch (error) {
+                                console.error("[onAuthStateChanged: User Doc Creation Error]", error);
+                                let errorMessage = error.message;
+                                if (error.code === 'permission-denied') {
+                                    errorMessage = 'Missing or insufficient permissions. This often means your Firestore Security Rules are too restrictive for creating user profiles. Please ensure the rule allows authenticated users to create documents in their own user path.';
+                                }
+                                showMessage('Profile Creation Failed', `Failed to create user profile: ${errorMessage}`, false);
+                            }
+                        } else if (userDocSnap.exists()) {
+                            const userData = userDocSnap.data();
+                            currentUserCustomId = userData.customUserId;
+                            currentUserReferredBy = userData.referredBy || null;
+                            console.log(`[onAuthStateChanged:onSnapshot] User ${currentUserId} data loaded. Custom ID: ${currentUserCustomId}`);
+                            updateAuthUI(user && !user.isAnonymous, currentUserEmail, currentUserCustomId);
+                        } else {
+                            console.log(`[onAuthStateChanged] User is anonymous or document already exists.`);
+                        }
+
+
+                        // Unsubscribe from previous listener if it exists
+                        if (unsubscribeCurrentUserDoc) {
+                            unsubscribeCurrentUserDoc();
+                            console.log("[onAuthStateChanged] Unsubscribed from previous current user doc listener.");
+                        }
+
+                        // Now set up the real-time listener for the user document
+                        unsubscribeCurrentUserDoc = onSnapshot(userDocRef, (docSnap) => {
+                            if (docSnap.exists()) {
+                                const userData = docSnap.data();
+                                currentUserCustomId = userData.customUserId;
+                                currentUserReferredBy = userData.referredBy || null;
+                                console.log(`[onAuthStateChanged:onSnapshot] User ${currentUserId} data updated. Custom ID: ${currentUserCustomId}`);
+                                updateAuthUI(user && !user.isAnonymous, currentUserEmail, currentUserCustomId);
+                                if (referEarnModal && referEarnModal.classList.contains('active')) {
+                                    displayYourReferralId();
+                                    displayYourReferralLink(); // Call to update referral link display
+                                    displayReferredUsers();
+                                }
+                            } else {
+                                // If doc disappears after creation, or was never created for some reason
+                                console.warn(`[onAuthStateChanged:onSnapshot] User document for ${currentUserId} does not exist after initial check.`);
+                                currentUserCustomId = null;
+                                currentUserReferredBy = null;
+                                updateAuthUI(user && !user.isAnonymous, currentUserEmail, currentUserCustomId);
+                            }
+                        }, (error) => {
+                            console.error("[onAuthStateChanged:onSnapshot Error]", error);
+                            // Only show error if the user is supposed to be logged in
+                            if (user && !user.isAnonymous) {
+                                showMessage('Data Fetch Error', `Failed to load user data: ${error.message}`, false);
+                            }
+                        });
+
+                        if (referralIdFromUrl && signUpReferrerIdInput) {
+                            signUpReferrerIdInput.value = referralIdFromUrl;
+                            console.log("[onAuthStateChanged] User already logged in, pre-filled signup referrer ID (but not opening modal):", referralIdFromUrl);
+                        }
                     } else {
-                        console.log("onAuthStateChanged: User logged out.");
+                        // User logged out or is anonymous. Clear data.
                         currentUserId = null;
+                        currentUserCustomId = null;
                         currentUserEmail = null;
-                        updateAuthUI(false);
-                        // Clear investments display upon logout
+                        currentUserReferredBy = null; // Clear referredBy on logout
+                        updateAuthUI(false); // Update UI to reflect logged out state
+
+                        // Clear investments and referred users display upon logout
                         if (investmentsContainer) {
                             investmentsContainer.innerHTML = '';
-                            investmentsContainer.appendChild(noInvestmentsMessage);
+                            if (noInvestmentsMessage.parentNode !== investmentsContainer) {
+                                investmentsContainer.appendChild(noInvestmentsMessage);
+                            }
+                            noInvestmentsMessage.textContent = 'Please sign in to view your investments.';
                             noInvestmentsMessage.style.display = 'block';
                         }
                         if (currentUserIdDisplay) currentUserIdDisplay.textContent = '';
+                        if (referredUsersListDiv) {
+                            referredUsersListDiv.innerHTML = '';
+                            noReferredUsersMessage.textContent = 'Please sign in to view your referred users.';
+                            noReferredUsersMessage.style.display = 'block';
+                        }
+                        if (yourReferralIdSpan) yourReferralIdSpan.textContent = 'Sign in to get your ID';
+                        if (yourReferralLinkSpan) yourReferralLinkSpan.textContent = 'Sign in to get your link'; // Clear referral link
+
+                        // --- Crucial: Unsubscribe from listeners on logout ---
+                        if (unsubscribeInvestments) {
+                            unsubscribeInvestments();
+                            unsubscribeInvestments = null;
+                            console.log("[onAuthStateChanged] Unsubscribed from investments listener.");
+                        }
+                        if (unsubscribeCurrentUserDoc) {
+                            unsubscribeCurrentUserDoc();
+                            unsubscribeCurrentUserDoc = null;
+                            console.log("[onAuthStateChanged] Unsubscribed from current user document listener.");
+                        }
+
+                        if (referralIdFromUrl && signUpReferrerIdInput) {
+                            signUpReferrerIdInput.value = referralIdFromUrl;
+                            if (!user) {
+                                openModal(signUpModal);
+                                console.log(`[onAuthStateChanged] Referral link: Opened signup modal with ID ${referralIdFromUrl} for new/anonymous user. Pre-filled value: ${signUpReferrerIdInput.value}`);
+                            }
+                        } else {
+                            console.log("[onAuthStateChanged] No referrer ID in URL or user already authenticated for initial load.");
+                        }
                     }
                 });
 
             } catch (error) {
-                console.error("Critical Error during Firebase initialization:", error);
+                console.error("[Firebase Init Error]", error);
                 showMessage('Initialization Error', `Failed to initialize Firebase services: ${error.message}. Please ensure your Firebase project's API Key and other configuration are correct, and that Email/Password and Anonymous sign-in methods are enabled in your Firebase Authentication settings.`, false);
-                // Ensure UI still shows logged out options even if init fails
                 updateAuthUI(false);
+                isAuthReady = true;
             }
 
             // --- Event Listeners for Modals (moved here to ensure elements exist) ---
@@ -1535,6 +1761,9 @@
             switchToSignUpBtn?.addEventListener('click', (e) => {
                 e.preventDefault();
                 closeModal(signInModal);
+                if (referralIdFromUrl && signUpReferrerIdInput) {
+                    signUpReferrerIdInput.value = referralIdFromUrl;
+                }
                 openModal(signUpModal);
             });
             switchToSignInBtn?.addEventListener('click', (e) => {
@@ -1546,7 +1775,7 @@
             closeMyInvestmentsModalBtn?.addEventListener('click', () => {
                 closeModal(myInvestmentsModal);
             });
-            // New: Close Investment Details Modal
+            // Close Investment Details Modal
             closeInvestmentDetailsModalBtn?.addEventListener('click', () => {
                 closeModal(investmentDetailsModal);
             });
@@ -1558,7 +1787,7 @@
                 });
             }
 
-            // New: Terms and Conditions Modal event listeners
+            // Terms and Conditions Modal event listeners
             if (viewTermsLink) {
                 viewTermsLink.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -1580,29 +1809,40 @@
                 });
             }
 
-            // New: Where Your Money Works Modal event listeners
+            // Where Your Money Works Modal event listeners
             if (whereMoneyWorksDesktopLink && whereMoneyWorksModal) {
                 whereMoneyWorksDesktopLink.addEventListener('click', (event) => {
-                    event.preventDefault(); // Prevent default anchor jump
+                    event.preventDefault();
                     openModal(whereMoneyWorksModal);
                 });
             }
             if (whereMoneyWorksMobileLink && whereMoneyWorksModal) {
                 whereMoneyWorksMobileLink.addEventListener('click', (event) => {
-                    event.preventDefault(); // Prevent default anchor jump
+                    event.preventDefault();
                     openModal(whereMoneyWorksModal);
-                    closeMobileMenu(); // Close mobile menu after clicking the link
+                    closeMobileMenu();
                 });
             }
 
-            // FIX: Add event listeners for the close button and overlay of the "Where Your Money Works" modal
             if (closeWhereMoneyWorksModalBtn) {
-                closeWhereMoneyWorksModalBtn.addEventListener('click', () => closeModal(whereMoneyWorksModal));
-            }
+                    closeWhereMoneyWorksModalBtn.addEventListener('click', () => closeModal(whereMoneyWorksModal));
+                }
             if (whereMoneyWorksModal) {
                 whereMoneyWorksModal.addEventListener('click', (e) => {
-                    if (e.target === whereMoneyWorksModal) { // Only close if clicking on the overlay itself
+                    if (e.target === whereMoneyWorksModal) {
                         closeModal(whereMoneyWorksModal);
+                    }
+                });
+            }
+
+            // New: Refer & Earn Modal event listeners
+            if (closeReferEarnModalBtn) {
+                closeReferEarnModalBtn.addEventListener('click', () => closeModal(referEarnModal));
+            }
+            if (referEarnModal) {
+                referEarnModal.addEventListener('click', (e) => {
+                    if (e.target === referEarnModal) {
+                        closeModal(referEarnModal);
                     }
                 });
             }
@@ -1611,8 +1851,17 @@
             // Sign Up Form Submission
             signUpForm?.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                console.log("[Sign Up] Form submitted.");
 
-                // Disable button and show loading state
+                if (!isAuthReady) {
+                    showMessage('Sign Up Failed', 'Firebase Authentication is not ready. Please wait a moment and try again.', false);
+                    if (signUpSubmitBtn) {
+                        signUpSubmitBtn.disabled = false;
+                        signUpSubmitBtn.textContent = 'Sign Up';
+                    }
+                    return;
+                }
+
                 if (signUpSubmitBtn) {
                     signUpSubmitBtn.disabled = true;
                     signUpSubmitBtn.textContent = 'Processing...';
@@ -1621,6 +1870,8 @@
                 const email = signUpEmailInput.value;
                 const password = signUpPasswordInput.value;
                 const confirmPassword = signUpConfirmPasswordInput.value;
+                referredByDuringSignUp = signUpReferrerIdInput.value.trim(); // Capture referrer ID from signup form
+                console.log(`[Sign Up] Email: ${email}, Referrer ID: ${referredByDuringSignUp}`);
 
                 if (password !== confirmPassword) {
                     showMessage('Sign Up Failed', 'Passwords do not match.', false);
@@ -1639,8 +1890,8 @@
                     return;
                 }
 
-                if (!auth) {
-                    showMessage('Sign Up Failed', 'Firebase Authentication is not ready. Please try again.', false);
+                if (!auth || !db) {
+                    showMessage('Sign Up Failed', 'Firebase services are not ready. Please wait a moment and try again.', false);
                     if (signUpSubmitBtn) {
                         signUpSubmitBtn.disabled = false;
                         signUpSubmitBtn.textContent = 'Sign Up';
@@ -1649,12 +1900,28 @@
                 }
 
                 try {
+                    if (referredByDuringSignUp && !/^\d{6}$/.test(referredByDuringSignUp)) {
+                        showMessage('Sign Up Failed', 'Referrer ID must be a 6-digit number if provided.', false);
+                        if (signUpSubmitBtn) {
+                            signUpSubmitBtn.disabled = false;
+                            signUpSubmitBtn.textContent = 'Sign Up';
+                        }
+                        return;
+                    }
+
+                    // Only create the Firebase Auth user. Firestore document creation will be handled by onAuthStateChanged.
                     await createUserWithEmailAndPassword(auth, email, password);
-                    showMessage('Sign Up Successful', 'Your account has been created! You are now signed in.', true);
+                    console.log(`[Sign Up] Firebase user created. onAuthStateChanged will handle document creation.`);
+
+                    // Show success message immediately, as Auth user is created.
+                    // The profile creation message will come from onAuthStateChanged.
+                    showMessage('Sign Up Successful', `Your account has been created! Your User ID will appear shortly. You are now signed in.`, true);
                     closeModal(signUpModal);
                     signUpForm.reset();
+                    // referredByDuringSignUp is NOT cleared here, it will be cleared in onAuthStateChanged after use.
+
                 } catch (error) {
-                    console.error("Sign Up Error:", error);
+                    console.error("[Sign Up Error]", error);
                     let errorMessage = error.message;
                     if (error.code === 'auth/operation-not-allowed') {
                         errorMessage = 'Email/Password sign-in is not enabled. Please enable it in your Firebase project\'s Authentication settings (under "Sign-in method").';
@@ -1662,6 +1929,8 @@
                         errorMessage = 'The email address is already in use by another account.';
                     } else if (error.code === 'auth/invalid-email') {
                         errorMessage = 'The email address is not valid.';
+                    } else if (error.code === 'permission-denied') {
+                        errorMessage = 'Permission denied. This often means your Firestore Security Rules are too restrictive for creating user profiles. Please ensure the rule allows authenticated users to create documents in their own user path.';
                     }
                     showMessage('Sign Up Failed', errorMessage, false);
                 } finally {
@@ -1675,11 +1944,20 @@
             // Sign In Form Submission
             signInForm?.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                console.log("[Sign In] Form submitted.");
 
-                // Disable button and show loading state
+                if (!isAuthReady) {
+                    showMessage('Sign In Failed', 'Firebase Authentication is not ready. Please wait a moment and try again.', false);
+                    if (signInSubmitBtn) {
+                        signInSubmitBtn.disabled = false;
+                        signInSubmitBtn.textContent = 'Sign In';
+                    }
+                    return;
+                }
+
                 if (signInSubmitBtn) {
                     signInSubmitBtn.disabled = true;
-                    signInSubmitBtn.textContent = 'Processing...';
+                    signInSubmitBtn.textContent = 'Sign In';
                 }
 
                 const email = signInEmailInput.value;
@@ -1695,17 +1973,39 @@
                 }
 
                 try {
-                    await signInWithEmailAndPassword(auth, email, password);
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    currentUserId = userCredential.user.uid;
+                    console.log(`[Sign In] User signed in with UID: ${currentUserId}`);
+
+                    // When signing in, ensure the user has a custom ID.
+                    // This is a fallback for users who might have signed up before custom IDs were implemented,
+                    // or if profile creation somehow failed during their initial signup.
+                    const userDocRef = doc(db, `artifacts/${appId}/users/${currentUserId}`);
+                    const userDocSnap = await getDoc(userDocRef);
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+                        currentUserCustomId = userData.customUserId;
+                        currentUserReferredBy = userData.referredBy || null;
+                        console.log(`[Sign In] Fetched custom ID for signed-in user: ${currentUserCustomId}`);
+                    } else {
+                        console.warn("[Sign In] User doc or customUserId not found for existing user. Generating one.");
+                        const newCustomUserId = await generateUnique6DigitId();
+                        await setDoc(userDocRef, { customUserId: newCustomUserId, email: email, createdAt: serverTimestamp() }, { merge: true });
+                        currentUserCustomId = newCustomUserId;
+                        currentUserReferredBy = null; // No referrer for this fallback creation
+                        console.log(`[Sign In] Generated new custom ID for existing user without one: ${currentUserCustomId}`);
+                    }
+
                     showMessage('Sign In Successful', 'You are now signed in!', true);
                     closeModal(signInModal);
                     signInForm.reset();
                 } catch (error) {
-                    console.error("Sign In Error:", error);
+                    console.error("[Sign In Error]", error);
                     let errorMessage = error.message;
                     if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-                        errorMessage = 'Invalid email or password.'; // Catch both for a generic "invalid" message
+                        errorMessage = 'Invalid email or password.';
                     } else if (error.code === 'auth/wrong-password') {
-                        errorMessage = 'Wrong password.'; // Specific message for wrong password
+                        errorMessage = 'Wrong password.';
                     } else if (error.code === 'auth/invalid-email') {
                         errorMessage = 'The email address is not valid.';
                     }
@@ -1720,8 +2020,10 @@
 
 
             // --- Auth UI Update Function ---
-            function updateAuthUI(loggedIn, email = '') {
+            function updateAuthUI(loggedIn, email = '', customId = null) {
+                console.log(`[Auth UI] Updating UI. LoggedIn: ${loggedIn}, Email: ${email}, Custom ID: ${customId}`);
                 const myInvestmentsLink = `<li><button id="myInvestmentsOpenBtn" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">My Investments</button></li>`;
+                const referEarnLink = `<li><button id="referEarnOpenBtn" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Refer & Track</button></li>`; // Updated button text
                 const signOutLink = `<li><button id="signOutBtn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Sign Out</button></li>`;
                 const loggedOutLinks = `
                     <li><button id="signInOpenBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Sign In</button></li>
@@ -1729,84 +2031,216 @@
                 `;
 
                 if (navAuthLinks) {
-                    navAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${signOutLink}` : loggedOutLinks;
+                    navAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${referEarnLink}${signOutLink}` : loggedOutLinks;
                 } else {
                     console.warn("navAuthLinks element not found.");
                 }
 
                 if (mobileNavAuthLinks) {
-                    mobileNavAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${signOutLink}` : loggedOutLinks;
+                    mobileNavAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${referEarnLink}${signOutLink}` : loggedOutLinks;
                 } else {
                     console.warn("mobileNavAuthLinks element not found.");
                 }
 
                 // Re-attach event listeners after innerHTML update
-                // Desktop navigation links
                 document.getElementById('signOutBtn')?.addEventListener('click', async () => {
                     try {
                         await signOut(auth);
                         showMessage('Signed Out', 'You have been successfully signed out.', true);
-                        closeMobileMenu(); // This call should be safe now due to hoisting
+                        closeMobileMenu();
                     } catch (error) {
-                        console.error("Sign Out Error:", error);
+                        console.error("[Sign Out Error]", error);
                         showMessage('Sign Out Failed', error.message, false);
                     }
                 });
 
-                document.getElementById('signInOpenBtn')?.addEventListener('click', () => openModal(signInModal));
-                document.getElementById('signUpOpenBtn')?.addEventListener('click', () => openModal(signUpModal));
+                const newSignInOpenBtn = document.getElementById('signInOpenBtn');
+                const newSignUpOpenBtn = document.getElementById('signUpOpenBtn');
+                const newMobileSignInOpenBtn = document.querySelector('#mobileNavAuthLinks #signInOpenBtn');
+                const newMobileSignUpOpenBtn = document.querySelector('#mobileNavAuthLinks #signUpOpenBtn');
 
-                // My Investments button (desktop)
+                if (newSignInOpenBtn) {
+                    newSignInOpenBtn.addEventListener('click', () => openModal(signInModal));
+                    newSignInOpenBtn.classList.toggle('button-disabled', !isAuthReady);
+                }
+                if (newSignUpOpenBtn) {
+                    newSignUpOpenBtn.addEventListener('click', () => openModal(signUpModal));
+                    newSignUpOpenBtn.classList.toggle('button-disabled', !isAuthReady);
+                }
+                 if (newMobileSignInOpenBtn) {
+                    newMobileSignInOpenBtn.addEventListener('click', () => {
+                        openModal(signInModal);
+                        closeMobileMenu();
+                    });
+                    newMobileSignInOpenBtn.classList.toggle('button-disabled', !isAuthReady);
+                }
+                if (newMobileSignUpOpenBtn) {
+                    newMobileSignUpOpenBtn.addEventListener('click', () => {
+                        openModal(signUpModal);
+                        closeMobileMenu();
+                    });
+                    newMobileSignUpOpenBtn.classList.toggle('button-disabled', !isAuthReady);
+                }
+
+
                 document.getElementById('myInvestmentsOpenBtn')?.addEventListener('click', () => {
                     openModal(myInvestmentsModal);
-                    closeMobileMenu(); // This call should be safe now due to hoisting
+                    closeMobileMenu();
                     fetchInvestments();
                 });
+
+                document.getElementById('referEarnOpenBtn')?.addEventListener('click', () => {
+                    openModal(referEarnModal);
+                    closeMobileMenu();
+                    displayYourReferralId();
+                    displayYourReferralLink(); // Call to update referral link
+                    displayReferredUsers();
+                });
+
 
                 // Mobile menu specific listeners
                 document.querySelector('#mobileNavAuthLinks #signOutBtn')?.addEventListener('click', async () => {
                      try {
                         await signOut(auth);
                         showMessage('Signed Out', 'You have been successfully signed out.', true);
-                        closeMobileMenu(); // This call should be safe now due to hoisting
+                        closeMobileMenu();
                     } catch (error) {
-                        console.error("Sign Out Error:", error);
+                        console.error("[Sign Out Error]", error);
                         showMessage('Sign Out Failed', error.message, false);
                     }
                 });
-                document.querySelector('#mobileNavAuthLinks #signInOpenBtn')?.addEventListener('click', () => {
-                    openModal(signInModal);
-                    closeMobileMenu(); // This call should be safe now due to hoisting
-                });
-                document.querySelector('#mobileNavAuthLinks #signUpOpenBtn')?.addEventListener('click', () => {
-                    openModal(signUpModal);
-                    closeMobileMenu(); // This call should be safe now due to hoisting
-                });
+
                 document.querySelector('#mobileNavAuthLinks #myInvestmentsOpenBtn')?.addEventListener('click', () => {
                     openModal(myInvestmentsModal);
-                    closeMobileMenu(); // This call should be safe now due to hoisting
+                    closeMobileMenu();
                     fetchInvestments();
+                });
+                document.querySelector('#mobileNavAuthLinks #referEarnOpenBtn')?.addEventListener('click', () => {
+                    openModal(referEarnModal);
+                    closeMobileMenu();
+                    displayYourReferralId();
+                    displayYourReferralLink(); // Call to update referral link
+                    displayReferredUsers();
                 });
 
 
                 if (loggedIn) {
-                    if (currentUserIdDisplay) currentUserIdDisplay.textContent = `Logged in as: ${email || currentUserId}`;
+                    if (currentUserIdDisplay) currentUserIdDisplay.textContent = `Logged in: ${email || 'Guest'} (ID: ${customId || 'N/A'})`;
                     if (invNameInput) invNameInput.value = '';
                     if (invEmailInput) invEmailInput.value = email;
+                    if (yourReferralIdSpan) yourReferralIdSpan.textContent = customId || 'N/A';
+                    if (yourReferralLinkSpan) yourReferralLinkSpan.textContent = `${window.location.origin}/?ref=${customId || 'N/A'}`; // Set referral link
                 } else {
                     if (currentUserIdDisplay) currentUserIdDisplay.textContent = '';
                     if (invEmailInput) invEmailInput.value = '';
+                    if (yourReferralIdSpan) yourReferralIdSpan.textContent = 'Sign in to get your ID';
+                    if (yourReferralLinkSpan) yourReferralLinkSpan.textContent = 'Sign in to get your link'; // Clear referral link
+                }
+            }
+
+            // --- Display Your Referrer ID in Modal ---
+            function displayYourReferralId() {
+                console.log(`[Referrer ID Display] Current User Custom ID: ${currentUserCustomId}`);
+                if (yourReferralIdSpan && currentUserCustomId) {
+                    yourReferralIdSpan.textContent = currentUserCustomId;
+                } else if (yourReferralIdSpan) {
+                    yourReferralIdSpan.textContent = 'Sign in to get your ID';
+                }
+            }
+
+            // --- Display Your Referral Link in Modal ---
+            function displayYourReferralLink() {
+                console.log(`[Referral Link Display] Current User Custom ID: ${currentUserCustomId}`);
+                if (yourReferralLinkSpan && currentUserCustomId) {
+                    // Use window.location.origin to get the base URL (e.g., https://your-site.com)
+                    yourReferralLinkSpan.textContent = `${window.location.origin}/?ref=${currentUserCustomId}`;
+                } else if (yourReferralLinkSpan) {
+                    yourReferralLinkSpan.textContent = 'Sign in to get your link';
+                }
+            }
+
+            // --- Display Referred Users ---
+            async function displayReferredUsers() {
+                console.log(`[Display Referred Users] Current User Custom ID: ${currentUserCustomId}`);
+
+                const referredUsersList = document.getElementById('referredUsersList');
+                const noReferredUsersMessage = document.getElementById('noReferredUsersMessage');
+
+                if (!referredUsersList || !noReferredUsersMessage) {
+                    console.warn("[Display Referred Users] Required DOM elements not found.");
+                    return;
+                }
+
+                if (!isAuthReady || !currentUserId || (auth && auth.currentUser && auth.currentUser.isAnonymous) || !db || !currentUserCustomId) {
+                    console.log("[Display Referred Users] Auth not ready, not a registered user, anonymous, or Firestore/custom ID not ready. Cannot display referred users.");
+                    referredUsersList.innerHTML = '';
+                    noReferredUsersMessage.textContent = 'Please sign in to view your referred users.';
+                    noReferredUsersMessage.style.display = 'block';
+                    return;
+                }
+
+                referredUsersList.innerHTML = '';
+                noReferredUsersMessage.style.display = 'block';
+
+                try {
+                    const usersCollectionRef = collection(db, `artifacts/${appId}/users`);
+                    const q = query(usersCollectionRef, where("referredBy", "==", currentUserCustomId));
+                    const querySnapshot = await getDocs(q);
+
+                    if (querySnapshot.empty) {
+                        console.log("[Display Referred Users] No users referred by this user.");
+                        noReferredUsersMessage.textContent = 'No users referred yet. Share your ID!';
+                        noReferredUsersMessage.style.display = 'block';
+                    } else {
+                        console.log(`[Display Referred Users] Found ${querySnapshot.size} referred users.`);
+                        noReferredUsersMessage.style.display = 'none';
+
+                        const referredUsers = [];
+                        querySnapshot.forEach(doc => {
+                            const userData = doc.data();
+                            referredUsers.push({
+                                customUserId: userData.customUserId,
+                                email: userData.email,
+                                createdAt: userData.createdAt // Keep original timestamp for sorting
+                            });
+                        });
+
+                        referredUsers.sort((a, b) => {
+                            const dateA = a.createdAt && a.createdAt.toDate ? a.createdAt.toDate() : new Date(0);
+                            const dateB = b.createdAt && b.createdAt.toDate ? b.createdAt.toDate() : new Date(0);
+                            return dateB.getTime() - dateA.getTime();
+                        });
+
+                        referredUsers.forEach(user => {
+                            const formattedJoinedDate = user.createdAt && user.createdAt.toDate ? user.createdAt.toDate().toLocaleDateString() : 'N/A';
+                            const card = `
+                                <div class="referred-user-card">
+                                    <p>User ID: <span class="referred-user-id-text">${user.customUserId || 'N/A'}</span></p>
+                                    <p class="text-xs text-gray-500">Email: ${user.email || 'N/A'}</p>
+                                    <p class="text-xs text-gray-500">Joined Date: ${formattedJoinedDate}</p>
+                                </div>
+                            `;
+                            referredUsersList.insertAdjacentHTML('beforeend', card);
+                        });
+                    }
+                } catch (error) {
+                    console.error("[Display Referred Users Error]", error);
+                    referredUsersList.innerHTML = '';
+                    noReferredUsersMessage.textContent = `Error loading referred users: ${error.message}`;
+                    noReferredUsersMessage.style.display = 'block';
                 }
             }
 
 
             // --- Fetch and Display Investments ---
             function fetchInvestments() {
-                if (!currentUserId || (auth && auth.currentUser && auth.currentUser.isAnonymous) || !db) {
-                    console.log("Not a registered user, anonymous, or Firestore is not ready. Cannot fetch investments.");
-                    if (investmentsContainer) {
+                if (!isAuthReady || !currentUserId || (auth && auth.currentUser && auth.currentUser.isAnonymous) || !db) {
+                    console.log("[Fetch Investments] Auth not ready, not a registered user, anonymous, or Firestore is not ready. Cannot fetch investments.");
+                    if (investmentsContainer && noInvestmentsMessage) {
                         investmentsContainer.innerHTML = '';
-                        investmentsContainer.appendChild(noInvestmentsMessage);
+                        if (noInvestmentsMessage.parentNode !== investmentsContainer) {
+                            investmentsContainer.appendChild(noInvestmentsMessage);
+                        }
                         noInvestmentsMessage.textContent = 'Please sign in to view your investments.';
                         noInvestmentsMessage.style.display = 'block';
                     }
@@ -1818,32 +2252,55 @@
                     investmentsContainer.innerHTML = '<p class="text-center text-lg text-gray-600 col-span-full">Loading your investments...</p>';
                     noInvestmentsMessage.style.display = 'none';
                 }
-                if (currentUserIdDisplay) currentUserIdDisplay.textContent = `User ID: ${currentUserId}`;
+                if (currentUserIdDisplay) currentUserIdDisplay.textContent = `User ID: ${currentUserCustomId || currentUserId}`;
+                console.log(`[Fetch Investments] Attempting to fetch investments for user UID: ${currentUserId}, Custom ID: ${currentUserCustomId} in path: artifacts/${appId}/users/${currentUserId}/investments`);
 
                 const userInvestmentsRef = collection(db, `artifacts/${appId}/users/${currentUserId}/investments`);
-                const q = query(userInvestmentsRef, orderBy("timestamp", "desc"));
+                const q = query(userInvestmentsRef);
 
-                onSnapshot(q, (snapshot) => {
-                    userInvestmentsData = []; // Clear previous data
+                if (unsubscribeInvestments) {
+                    unsubscribeInvestments();
+                    console.log("[Fetch Investments] Unsubscribed from previous investments listener.");
+                }
+
+                unsubscribeInvestments = onSnapshot(q, (snapshot) => {
+                    userInvestmentsData = [];
                     if (snapshot.empty) {
-                        if (investmentsContainer) {
-                            investmentsContainer.innerHTML = '<p class="text-center text-lg text-gray-600 col-span-full">You have no investments yet. Start investing today!</p>';
+                        console.log("[Fetch Investments] No investments found for this user.");
+                        if (investmentsContainer && noInvestmentsMessage) {
+                            investmentsContainer.innerHTML = '';
+                            if (noInvestmentsMessage.parentNode !== investmentsContainer) {
+                                investmentsContainer.appendChild(noInvestmentsMessage);
+                            }
+                            noInvestmentsMessage.textContent = 'You have no investments yet. Start investing today!';
+                            noInvestmentsMessage.style.display = 'block';
                         }
                     } else {
                         if (investmentsContainer) investmentsContainer.innerHTML = '';
+                        noInvestmentsMessage.style.display = 'none';
                         snapshot.forEach((doc) => {
                             const investment = doc.data();
-                            const docId = doc.id; // Get the Firestore document ID
-                            investment.id = docId; // Add ID to the investment object
-                            userInvestmentsData.push(investment); // Store the full investment data
+                            const docId = doc.id;
+                            investment.id = docId;
+                            userInvestmentsData.push(investment);
+                            console.log(`[Fetch Investments] Fetched investment:`, investment);
+                        });
 
+                        userInvestmentsData.sort((a, b) => {
+                            const dateA = a.timestamp && a.timestamp.toDate ? a.timestamp.toDate() : new Date(0);
+                            const dateB = b.timestamp && b.timestamp.toDate ? b.timestamp.toDate() : new Date(0);
+                            return dateB.getTime() - dateA.getTime();
+                        });
+
+
+                        userInvestmentsData.forEach((investment) => {
                             const investDate = investment.timestamp && investment.timestamp.toDate ? new Date(investment.timestamp.toDate()) : new Date();
                             const formattedInvestDate = investDate.toLocaleDateString();
 
                             const card = `
                                 <div class="investment-summary-card ${investment.planName === 'Standard Plan' ? 'standard-plan-item' :
                                                                            investment.planName === 'Premium 6-Month Plan' ? 'premium-plan-item' :
-                                                                           'elite-plan-item'} clickable-investment-summary" data-id="${docId}">
+                                                                           'elite-plan-item'} clickable-investment-summary" data-id="${investment.id}">
                                     <div>
                                         <div class="plan-name">${investment.planName}</div>
                                         <div class="invest-date">Invested on: ${formattedInvestDate}</div>
@@ -1853,17 +2310,19 @@
                             `;
                             if (investmentsContainer) investmentsContainer.insertAdjacentHTML('beforeend', card);
                         });
-                        // Attach click listeners to the newly created summary cards
                         document.querySelectorAll('.clickable-investment-summary').forEach(card => {
                             card.addEventListener('click', (event) => {
                                 const id = event.currentTarget.dataset.id;
                                 showInvestmentDetail(id);
                             });
                         });
+                        console.log("[Fetch Investments] Investments displayed.");
                     }
                 }, (error) => {
-                    console.error("Error fetching investments:", error);
-                    if (investmentsContainer) investmentsContainer.innerHTML = '<p class="text-center text-red-500 col-span-full">Error loading investments. Please try again later.</p>';
+                    console.error("[Fetch Investments Error]", error);
+                    if (currentUserId && (auth && auth.currentUser && !auth.currentUser.isAnonymous)) {
+                        if (investmentsContainer) investmentsContainer.innerHTML = '<p class="text-center text-red-500 col-span-full">Error loading investments. Please try again later.</p>';
+                    }
                 });
             }
 
@@ -1876,8 +2335,8 @@
                     return;
                 }
 
-                console.log("Investment object from Firestore:", investment);
-                console.log("investment.monthlyReturn (raw):", investment.monthlyReturn);
+                console.log("[Investment Detail] Displaying investment object:", investment);
+                console.log("[Investment Detail] investment.monthlyReturn (raw):", investment.monthlyReturn);
 
                 let monthlyReturnRate;
                 let monthlyReturnStrFromFirestore = typeof investment.monthlyReturn === 'string' ? investment.monthlyReturn : '';
@@ -1886,8 +2345,6 @@
                     monthlyReturnRate = parseFloat(monthlyReturnStrFromFirestore.replace('%', '')) / 100;
                 }
 
-                // Fallback: If monthlyReturn is missing or parsed to 0 from Firestore,
-                // try to get it from the planCards data attributes using the planName
                 if (isNaN(monthlyReturnRate) || monthlyReturnRate === 0) {
                     const correspondingPlanCard = Array.from(planCards).find(card =>
                         card.dataset.planName === investment.planName
@@ -1896,28 +2353,25 @@
                         const rateFromCard = parseFloat(correspondingPlanCard.dataset.monthlyReturn.replace('%', '')) / 100;
                         if (!isNaN(rateFromCard) && rateFromCard > 0) {
                             monthlyReturnRate = rateFromCard;
-                            console.log(`Monthly return rate fallback: Used value from plan card (${monthlyReturnRate}) for plan ${investment.planName}`);
+                            console.log(`[Investment Detail] Monthly return rate fallback: Used value from plan card (${monthlyReturnRate}) for plan ${investment.planName}`);
                         } else {
-                            // If even fallback fails, default to 0 to prevent NaN calculations
                             monthlyReturnRate = 0;
-                            console.warn(`Fallback for monthly return rate failed for plan ${investment.planName}. Defaulting to 0.`);
+                            console.warn(`[Investment Detail] Fallback for monthly return rate failed for plan ${investment.planName}. Defaulting to 0.`);
                         }
                     } else {
                         monthlyReturnRate = 0;
-                        console.warn(`No corresponding plan card found for ${investment.planName}. Monthly payout will be 0.`);
+                        console.warn(`[Investment Detail] No corresponding plan card found for ${investment.planName}. Monthly payout will be 0.`);
                     }
                 }
 
-                console.log("monthlyReturnRate (after fallback check):", monthlyReturnRate);
-                console.log("Type of monthlyReturnRate:", typeof monthlyReturnRate);
+                console.log("[Investment Detail] monthlyReturnRate (after fallback check):", monthlyReturnRate);
 
                 let lockInMonths = 0;
                 let totalProjectedReturn = 0;
-                // Ensure investment.amount is treated as a number for calculation
                 let monthlyPayout = parseFloat(investment.amount) * monthlyReturnRate;
-                console.log("investment.amount:", investment.amount);
-                console.log("Type of investment.amount:", typeof investment.amount);
-                console.log("monthlyPayout (calculated):", monthlyPayout);
+                console.log("[Investment Detail] investment.amount:", investment.amount);
+                console.log("[Investment Detail] Type of investment.amount:", typeof investment.amount);
+                console.log("[Investment Detail] monthlyPayout (calculated):", monthlyPayout);
 
 
                 if (investment.planName === "Standard Plan") {
@@ -1925,23 +2379,30 @@
                 } else if (investment.planName === "Premium 6-Month Plan") {
                     lockInMonths = 6;
                 }
-                // Removed redundant "else if (investment.planName === "Elite 12-Month Plan")" for clarity, as lockInMonths is 12 by default for Elite
                 else if (investment.planName === "Elite 12-Month Plan") {
                     lockInMonths = 12;
                 }
 
 
-                // Re-calculate total projected return based on the (potentially corrected) monthlyReturnRate
-                // and the bonus applicable for the plan.
                 if (investment.planName === "Standard Plan") {
                     totalProjectedReturn = parseFloat(investment.amount) * (1 + (monthlyReturnRate * lockInMonths));
                 } else if (investment.planName === "Premium 6-Month Plan") {
-                    const premiumBonus = 0.045; // Base 4.5% bonus for Premium plan
-                    totalProjectedReturn = parseFloat(investment.amount) * (1 + (monthlyReturnRate * lockInMonths) + premiumBonus);
+                    const premiumBaseBonus = 0.045;
+                    const now = new Date();
+                    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+                    const offerEndDate = new Date(today.getTime() + (7 * 24 * 60 * 60 * 1000));
+
+                    let additionalOfferBonus = 0;
+                    if (now < offerEndDate) {
+                        additionalOfferBonus = 0.05;
+                    }
+
+                    totalProjectedReturn = parseFloat(investment.amount) * (1 + (monthlyReturnRate * lockInMonths) + premiumBaseBonus + additionalOfferBonus);
                 } else if (investment.planName === "Elite 12-Month Plan") {
-                    const eliteBonus = 0.10; // Base 10% bonus for Elite plan
+                    const eliteBonus = 0.10;
                     totalProjectedReturn = parseFloat(investment.amount) * (1 + (monthlyReturnRate * lockInMonths) + eliteBonus);
                 }
+                console.log("[Investment Detail] Calculated total projected return:", totalProjectedReturn);
 
 
                 const investDate = investment.timestamp && investment.timestamp.toDate ? new Date(investment.timestamp.toDate()) : new Date();
@@ -1951,10 +2412,9 @@
                 planEndDate.setMonth(planEndDate.getMonth() + lockInMonths);
                 const formattedPlanEndDate = planEndDate.toLocaleDateString();
 
-                const payoutReturnDate = new Date(planEndDate.getFullYear(), planEndDate.getMonth() + 1, 0); // Last day of the plan end month
+                const payoutReturnDate = new Date(planEndDate.getFullYear(), planEndDate.getMonth() + 1, 0);
                 const formattedPayoutReturnDate = payoutReturnDate.toLocaleDateString();
 
-                // Populate the new modal
                 detailModalPlanName.textContent = investment.planName;
                 detailInvestedAmount.textContent = `₹${parseFloat(investment.amount).toFixed(2)}`;
                 detailMonthlyPayout.textContent = `₹${monthlyPayout.toFixed(2)}`;
@@ -1976,13 +2436,16 @@
                     detailOptionalUpiRow.classList.add('hidden');
                 }
 
-                closeModal(myInvestmentsModal); // Close the summary modal
-                openModal(investmentDetailsModal); // Open the details modal
+                // Removed referral ID population and visibility logic from investment details
+                console.log("[Investment Detail] Modal populated and opened.");
+
+
+                closeModal(myInvestmentsModal);
+                openModal(investmentDetailsModal);
             }
 
 
             // --- Section Reveal Animation Logic ---
-            // Filter out 'where-money-works' from sections to be animated by scroll, as it's now a modal
             const sectionsToAnimate = document.querySelectorAll('section:not(#hero):not(.modal-overlay):not(#where-money-works)');
 
             const isInViewport = (element) => {
@@ -2012,29 +2475,34 @@
             // --- Where Your Money Works - Click to Reveal Logic (now opens a modal) ---
             if (whereMoneyWorksDesktopLink && whereMoneyWorksModal) {
                 whereMoneyWorksDesktopLink.addEventListener('click', (event) => {
-                    event.preventDefault(); // Prevent default anchor jump
+                    event.preventDefault();
                     openModal(whereMoneyWorksModal);
                 });
             }
             if (whereMoneyWorksMobileLink && whereMoneyWorksModal) {
                 whereMoneyWorksMobileLink.addEventListener('click', (event) => {
-                    event.preventDefault(); // Prevent default anchor jump
+                    event.preventDefault();
                     openModal(whereMoneyWorksModal);
-                    closeMobileMenu(); // Close mobile menu after clicking the link
+                    closeMobileMenu();
                 });
             }
 
+            if (closeWhereMoneyWorksModalBtn) {
+                    closeWhereMoneyWorksModalBtn.addEventListener('click', () => closeModal(whereMoneyWorksModal));
+                }
+            if (whereMoneyWorksModal) {
+                whereMoneyWorksModal.addEventListener('click', (e) => {
+                    if (e.target === whereMoneyWorksModal) {
+                        closeModal(whereMoneyWorksModal);
+                    }
+                });
+            }
 
-            // --- Countdown Timer Logic (1st day of next month) ---
+            // --- Countdown Timer Logic (7 days from now) ---
             const updateCountdown = () => {
                 const now = new Date();
-                let nextMonth = now.getMonth() + 1;
-                let year = now.getFullYear();
-                if (nextMonth === 12) {
-                    nextMonth = 0;
-                    year++;
-                }
-                const offerEndDate = new Date(year, nextMonth, 1);
+                const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+                const offerEndDate = new Date(todayMidnight.getTime() + (7 * 24 * 60 * 60 * 1000));
 
                 const totalSeconds = (offerEndDate - now) / 1000;
 
@@ -2063,9 +2531,8 @@
                 let lockInMonths = 0;
                 let planName = "";
                 let bonusPercentage = 0;
-                let currentPlanTotalReturnDisplayed = 0; // To store the original total-return from the card
+                let currentPlanTotalReturnDisplayed = 0;
 
-                // Find the selected plan card to get its data-attributes
                 let selectedPlanCard = null;
                 for (let i = 0; i < planCards.length; i++) {
                     if (planCards[i].dataset.planName.toLowerCase().includes(plan)) {
@@ -2075,16 +2542,12 @@
                 }
 
                 if (!selectedPlanCard) {
-                    console.error("Selected plan card not found for calculation.");
+                    console.error("[Calculator] Selected plan card not found for calculation.");
                     showMessage('Calculation Error', 'Could not find details for the selected plan.', false);
                     return;
                 }
 
                 monthlyReturnRate = parseFloat(selectedPlanCard.dataset.monthlyReturn.replace('%', '')) / 100;
-                currentPlanTotalReturnDisplayed = parseFloat(selectedPlanCard.dataset.totalReturn.replace('%', '')); // For display purposes
-                // The dataset.totalReturn from HTML is a percentage, convert it
-                currentPlanTotalReturnDisplayed = amount * (currentPlanTotalReturnDisplayed / 100);
-
 
                 if (isNaN(amount) || amount <= 0) {
                     if (resultsDiv) resultsDiv.classList.remove('hidden');
@@ -2094,13 +2557,12 @@
                     return;
                 }
 
-                // Add max investment validation for calculator as well
                 const MAX_INVESTMENT_AMOUNT_CALCULATOR = 10000;
                 if (amount > MAX_INVESTMENT_AMOUNT_CALCULATOR) {
                     if (resultsDiv) resultsDiv.classList.remove('hidden');
                     if (displayInitialInvestment) displayInitialInvestment.textContent = `₹${amount.toFixed(2)}`;
                     if (displayTotalReturn) displayTotalReturn.textContent = 'N/A';
-                    if (displayPercentageReturn) displayPercentageReturn.textContent = 'N/A';
+                    if (displayPercentageReturn) displayPercentageReturn.displayPercentageReturn = 'N/A';
                     showMessage('Investment Limit', `Investment amount cannot exceed ₹${MAX_INVESTMENT_AMOUNT_CALCULATOR}.`, false);
                     return;
                 }
@@ -2114,27 +2576,18 @@
                 } else if (plan === 'premium') {
                     lockInMonths = 6;
                     const now = new Date();
-                    let nextMonth = now.getMonth() + 1;
-                    let year = now.getFullYear();
-                    if (nextMonth === 12) {
-                        nextMonth = 0;
-                        year++;
-                    }
-                    const offerEndDate = new Date(year, nextMonth, 1);
+                    const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+                    const offerEndDate = new Date(todayMidnight.getTime() + (7 * 24 * 60 * 60 * 1000));
 
-                    // Note: The problem description implies a fixed monthly rate for premium/elite,
-                    // and then a bonus. I'll re-calculate total return based on monthlyRate * months + bonus.
-                    // The bonus here is an an additional percentage ON TOP of the monthly accumulated return.
+                    let totalBonusForInvestor = 0.045;
                     if (now < offerEndDate) {
-                        bonusPercentage = 0.07; // 4.5% + 2.5% special offer
-                    } else {
-                        bonusPercentage = 0.045; // Base 4.5% bonus
+                        totalBonusForInvestor += 0.05;
                     }
-                    calculatedTotalReturn = amount * (1 + (monthlyReturnRate * lockInMonths) + bonusPercentage);
+                    calculatedTotalReturn = amount * (1 + (monthlyReturnRate * lockInMonths) + totalBonusForInvestor);
                     planName = "Premium 6-Month Plan";
                 } else if (plan === 'elite') {
                     lockInMonths = 12;
-                    bonusPercentage = 0.10; // Elite 10% bonus
+                    bonusPercentage = 0.10;
                     calculatedTotalReturn = amount * (1 + (monthlyReturnRate * lockInMonths) + bonusPercentage);
                     planName = "Elite 12-Month Plan";
                     if (amount < 1000) {
@@ -2147,10 +2600,9 @@
                     }
                 }
 
-                // If the HTML data-total-return is meant to be the final projected return, use that for display
-                // Otherwise, use the calculated totalReturn. For consistency, let's recalculate fully.
                 const percentageReturn = ((calculatedTotalReturn - amount) / amount) * 100;
 
+                console.log(`[Calculator] Amount: ${amount}, Plan: ${planName}, Monthly Rate: ${monthlyReturnRate}, Calculated Total Return: ${calculatedTotalReturn.toFixed(2)}, Percentage Return: ${percentageReturn.toFixed(2)}%`);
 
                 if (displayInitialInvestment) displayInitialInvestment.textContent = `₹${amount.toFixed(2)}`;
                 if (displayTotalReturn) displayTotalReturn.textContent = `₹${calculatedTotalReturn.toFixed(2)}`;
@@ -2167,17 +2619,18 @@
                     const payoutFrequency = card.dataset.payoutFrequency;
                     const lockIn = card.dataset.lockIn;
                     const benefitsRaw = card.dataset.benefits;
-                    const totalReturn = card.dataset.totalReturn; // Correctly accessing camelCase
+                    const totalReturn = card.dataset.totalReturn;
 
                     selectedPlanDetails = {
                         planName: planName,
-                        monthlyReturn: monthlyReturn, // Store as string "X.X%"
+                        monthlyReturn: monthlyReturn,
                         minInvestment: minInvestment,
                         payoutFrequency: payoutFrequency,
                         lockIn: lockIn,
                         benefits: benefitsRaw,
-                        totalReturn: totalReturn // Store as string "X.X% over Y months"
+                        totalReturn: totalReturn
                     };
+                    console.log("[Plan Detail Modal] Selected plan details:", selectedPlanDetails);
 
                     if (document.getElementById('modalPlanName')) document.getElementById('modalPlanName').textContent = planName;
                     if (document.getElementById('modalMonthlyReturn')) document.getElementById('modalMonthlyReturn').textContent = monthlyReturn;
@@ -2192,7 +2645,8 @@
                         try {
                             const benefits = JSON.parse(benefitsRaw);
                             const specialOffers = benefits.filter(benefit => benefit.includes("Bonus:") || benefit.includes("Total Return:"));
-                            const exclusivePerks = benefits.filter(benefit => !benefit.includes("Bonus:") && !benefit.includes("Total Return:"));
+                            const exclusivePerks = benefits.filter(benefit => benefit.includes("Priority Support.") || benefit.includes("Referral Bonus:") || benefit.includes("Annual Investment Report:"));
+                            const generalBenefits = benefits.filter(benefit => !specialOffers.includes(benefit) && !exclusivePerks.includes(benefit));
 
                             if (specialOffers.length > 0) {
                                 const h4Offer = document.createElement('h4');
@@ -2217,19 +2671,22 @@
                                     benefitsList.appendChild(li);
                                 });
                             }
-                            if (specialOffers.length === 0 && exclusivePerks.length === 0 && benefits.length > 0) {
+
+                            if (generalBenefits.length > 0) {
                                 const h4Benefits = document.createElement('h4');
                                 h4Benefits.className = 'text-xl font-semibold text-gray-700 mb-2';
                                 h4Benefits.textContent = 'Benefits:';
                                 benefitsList.appendChild(h4Benefits);
-                                benefits.forEach(benefit => {
+                                generalBenefits.forEach(benefit => {
                                     const li = document.createElement('li');
                                     li.textContent = benefit;
                                     benefitsList.appendChild(li);
                                 });
                             }
+
+
                         } catch (e) {
-                            console.error("Error parsing benefits:", e);
+                            console.error("[Plan Detail Modal] Error parsing benefits:", e);
                             const li = document.createElement('li');
                             li.textContent = "Benefits information unavailable.";
                             benefitsList.appendChild(li);
@@ -2271,29 +2728,33 @@
                     if (invAmountInput) {
                         invAmountInput.value = selectedPlanDetails.minInvestment;
                         invAmountInput.min = selectedPlanDetails.minInvestment;
-                        // Update validation message for max limit too
                         if (invAmountValidationMessage) {
                              invAmountValidationMessage.textContent = `Minimum ₹${selectedPlanDetails.minInvestment}, in multiples of ₹100. Maximum ₹10,000.`;
                         }
                     }
                     if (invEmailInput && currentUserEmail) invEmailInput.value = currentUserEmail;
+                    // Removed pre-filling referral ID from investment form as the field is removed
                 });
             }
 
             // --- Copy UPI ID functionality ---
             document.querySelectorAll('.copy-upi-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
-                    const upiIdToCopy = e.target.dataset.upi;
+                    const upiIdToCopy = e.target.dataset.upi || document.getElementById(e.target.dataset.copyTarget)?.textContent;
+                    if (!upiIdToCopy) {
+                        showMessage('Copy Failed', 'Nothing to copy.', false);
+                        return;
+                    }
                     const tempInput = document.createElement('input');
                     document.body.appendChild(tempInput);
                     tempInput.value = upiIdToCopy;
                     tempInput.select();
                     try {
                         document.execCommand('copy');
-                        showMessage('Copied!', 'UPI ID copied to clipboard.', true);
+                        showMessage('Copied!', 'ID copied to clipboard.', true);
                     } catch (err) {
-                        console.error('Failed to copy text: ', err);
-                        showMessage('Copy Failed', 'Could not copy UPI ID. Please copy it manually.', false);
+                        console.error('[Copy UPI] Failed to copy text: ', err);
+                        showMessage('Copy Failed', 'Could not copy ID. Please copy it manually.', false);
                     }
                     document.body.removeChild(tempInput);
                 });
@@ -2305,14 +2766,13 @@
 
             investmentForm?.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                console.log("[Investment Form] Submission started.");
 
-                // Check if terms are accepted
                 if (!acceptTermsCheckbox || !acceptTermsCheckbox.checked) {
                     showMessage('Agreement Required', 'You must accept the Terms & Conditions to proceed with your investment.', false);
                     return;
                 }
 
-                // Disable button and show loading state
                 if (submitInvestmentBtn) {
                     submitInvestmentBtn.disabled = true;
                     submitInvestmentBtn.textContent = 'Processing...';
@@ -2322,13 +2782,16 @@
                 const email = invEmailInput.value.trim();
                 const mobile = invMobileInput.value.trim();
                 const amount = parseFloat(invAmountInput.value);
-                const paidUpiId = paidUpiIdSelect.value; // Get the selected UPI ID
+                const paidUpiId = paidUpiIdSelect.value;
                 const utrNumber = invUtrNumberInput.value.trim();
                 const bankAccountName = invBankAccountNameInput.value.trim();
                 const bankAccount = invBankAccountInput.value.trim();
                 const ifscCode = invIfscCodeInput.value.trim();
                 const upiIdOptional = invUpiIdOptionalInput.value.trim();
+                // Removed referralId
                 const planName = invPlanHiddenInput.value.trim();
+
+                console.log(`[Investment Form] Collected data: Name=${name}, Email=${email}, Amount=${amount}, Plan=${planName}`);
 
                 if (!name || !email || !mobile || !utrNumber || !bankAccountName || !bankAccount || !ifscCode || !planName || isNaN(amount) || !paidUpiId) {
                     showMessage('Missing Information', 'Please fill in all required fields and ensure investment amount is valid.', false);
@@ -2339,7 +2802,6 @@
                     return;
                 }
 
-                // New UTR validation (12 digits)
                 if (!/^\d{12}$/.test(utrNumber)) {
                     showMessage('Invalid UTR Number', 'UTR Number must be exactly 12 digits.', false);
                     if (submitInvestmentBtn) {
@@ -2349,7 +2811,8 @@
                     return;
                 }
 
-                // Minimum investment validation based on selected plan
+                // Removed referral ID validation from investment form
+
                 if (amount < selectedPlanDetails.minInvestment || (amount % 100 !== 0)) {
                     showMessage('Invalid Amount', `Investment amount must be at least ₹${selectedPlanDetails.minInvestment} and in multiples of ₹100.`, false);
                     if (submitInvestmentBtn) {
@@ -2359,7 +2822,6 @@
                     return;
                 }
 
-                // New: Maximum investment validation
                 const MAX_INVESTMENT_AMOUNT = 10000;
                 if (amount > MAX_INVESTMENT_AMOUNT) {
                     showMessage('Investment Limit Exceeded', `Investment amount cannot exceed ₹${MAX_INVESTMENT_AMOUNT}.`, false);
@@ -2383,29 +2845,32 @@
                     const userInvestmentsCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/investments`);
                     await addDoc(userInvestmentsCollectionRef, {
                         userId: currentUserId,
+                        customUserId: currentUserCustomId,
                         name: name,
                         email: email,
                         mobile: mobile,
                         amount: amount,
                         planName: planName,
-                        monthlyReturn: selectedPlanDetails.monthlyReturn, // Save the actual monthly return %
-                        paidUpiId: paidUpiId, // Store the selected UPI ID
+                        monthlyReturn: selectedPlanDetails.monthlyReturn,
+                        paidUpiId: paidUpiId,
                         utrNumber: utrNumber,
                         bankAccountName: bankAccountName,
                         bankAccount: bankAccount,
                         ifscCode: ifscCode,
                         upiIdOptional: upiIdOptional || null,
+                        // Removed referralId from investment document
                         timestamp: serverTimestamp()
                     });
+                    console.log(`[Investment Form] Investment successfully added for user ${currentUserId}.`);
 
                     showMessage('Investment Submitted!', `Your investment in the ${planName} of ₹${amount.toFixed(2)} has been recorded. We will verify the UTR number shortly.`, true);
                     closeModal(investModal);
                     investmentForm.reset();
-                    // Uncheck terms after successful submission
                     if (acceptTermsCheckbox) acceptTermsCheckbox.checked = false;
+
                 }
                 catch (error) {
-                    console.error("Error submitting investment:", error);
+                    console.error("[Investment Submission Error]", error);
                     showMessage('Submission Failed', `An error occurred: ${error.message}`, false);
                 } finally {
                     if (submitInvestmentBtn) {
