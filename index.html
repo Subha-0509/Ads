@@ -706,7 +706,14 @@
         #whereMoneyWorksModal .modal-content h2 {
             color: #1d4ed8; /* Darker blue for modal title */
             font-size: 2.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem; /* Reduced margin */
+        }
+
+        #whereMoneyWorksModal .modal-content .intro-text {
+            font-size: 1.15rem;
+            color: #374151;
+            margin-bottom: 2.5rem; /* Increased margin below intro */
+            line-height: 1.7;
         }
 
         #whereMoneyWorksModal .modal-content .info-card {
@@ -717,6 +724,7 @@
             margin-bottom: 1.5rem;
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
             border-bottom: 5px solid; /* For accent color */
+            text-align: left; /* Align text left within cards */
         }
 
         #whereMoneyWorksModal .modal-content .info-card:hover {
@@ -736,6 +744,8 @@
             font-size: 3.5rem;
             margin-bottom: 1rem;
             color: #1e3a8a;
+            text-align: center; /* Center icon within card */
+            display: block; /* Make icon a block element for centering */
         }
 
         #whereMoneyWorksModal .modal-content .info-card h3 {
@@ -743,11 +753,34 @@
             font-weight: 600;
             color: #2d3748;
             margin-bottom: 0.75rem;
+            text-align: center; /* Center heading within card */
         }
 
         #whereMoneyWorksModal .modal-content .info-card p {
             font-size: 1.05rem;
             color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 1rem; /* Space between paragraphs */
+        }
+
+        #whereMoneyWorksModal .modal-content .info-card ul {
+            list-style: disc;
+            list-style-position: inside;
+            padding-left: 1.25rem; /* Indent list items */
+            color: #4a5568;
+            font-size: 1rem;
+        }
+        #whereMoneyWorksModal .modal-content .info-card ul li {
+            margin-bottom: 0.5rem;
+        }
+        #whereMoneyWorksModal .modal-content .info-card ul li:last-child {
+            margin-bottom: 0;
+        }
+
+        #whereMoneyWorksModal .modal-content .conclusion-text {
+            font-size: 1.1rem;
+            color: #374151;
+            margin-top: 2rem;
             line-height: 1.6;
         }
     </style>
@@ -1393,18 +1426,40 @@
         <div class="modal-content text-gray-800">
             <button class="modal-close-btn" id="closeWhereMoneyWorksModalBtn">&times;</button>
             <h2 class="text-3xl font-bold text-blue-700 mb-6 text-center">Where Your Money Works: Building Your Future, Bit by Bit</h2>
+            
+            <p class="intro-text">
+                At ADS FUND, we believe in a diversified and strategic approach to investment. Your capital is carefully allocated across two primary avenues to maximize returns while managing risk effectively. We prioritize transparency and security in every step.
+            </p>
+
             <div class="grid grid-cols-1 gap-6">
                 <div class="info-card market-card">
                     <div class="icon">📈</div>
                     <h3 class="text-2xl font-bold mb-3">Strategic Investments in Share Market</h3>
-                    <p class="text-lg text-gray-700">A significant portion of your capital is expertly managed in the share market, focusing on diversified portfolios with high-growth potential. We employ rigorous analysis and smart trading strategies to secure substantial returns.</p>
+                    <p class="text-lg text-gray-700">A significant portion of your capital is expertly managed in the share market. Our approach includes:</p>
+                    <ul>
+                        <li>Diversified Portfolios:Investing across various sectors and companies to mitigate risk.</li>
+                        <li>Fundamental & Technical Analysis: Employing in-depth research to identify high-growth potential stocks.</li>
+                        <li>**Dynamic Trading Strategies: Adapting to market conditions with agile buying and selling to capitalize on opportunities.</li>
+                        <li>Long-term Growth Focus: Balancing short-term gains with sustainable long-term capital appreciation.</li>
+                    </ul>
+                    <p class="text-lg text-gray-700 mt-4">This strategy aims to generate substantial returns by leveraging market movements and expert insights.</p>
                 </div>
                 <div class="info-card lending-card">
                     <div class="icon">🤝</div>
                     <h3 class="text-2xl font-bold mb-3">Secure Lending on Trusted Platforms</h3>
-                    <p class="text-lg text-gray-700">To ensure stable and consistent returns, a portion of your investment is allocated to lending on verified and trusted platforms. This diversifies risk and provides a reliable income stream, ensuring your money is always working for you.</p>
+                    <p class="text-lg text-gray-700">To ensure stable and consistent returns, a portion of your investment is allocated to lending on verified and trusted platforms. This includes:</p>
+                    <ul>
+                        <li>Peer-to-Peer (P2P) Lending: Facilitating loans to creditworthy individuals or small businesses.</li>
+                        <li>Secured Debt Instruments: Investing in debt instruments backed by collateral for enhanced security.</li>
+                        <li>Rigorous Due Diligence: Partnering only with platforms that have stringent borrower vetting processes.</li>
+                        <li>Consistent Income Stream: Generating predictable interest income to provide a stable foundation for your returns.</li>
+                    </ul>
+                    <p class="text-lg text-gray-700 mt-4">This diversifies risk and provides a reliable income stream, ensuring your money is always working for you, even during market fluctuations.</p>
                 </div>
             </div>
+            <p class="conclusion-text">
+                By strategically combining these two powerful investment avenues, ADS FUND strives to deliver optimal returns, secure your principal, and build a robust financial future for our investors. Your trust is our greatest asset.
+            </p>
         </div>
     </div >
 
@@ -1499,11 +1554,19 @@
 
         // --- Modal Control Functions (General) ---
         function openModal(modalElement) {
-            modalElement.classList.add('active');
+            if (modalElement) {
+                modalElement.classList.add('active');
+            } else {
+                console.warn("Attempted to open a null modal element.");
+            }
         }
 
         function closeModal(modalElement) {
-            modalElement.classList.remove('active');
+            if (modalElement) {
+                modalElement.classList.remove('active');
+            } else {
+                console.warn("Attempted to close a null modal element.");
+            }
         }
 
         // --- Mobile Menu Toggle and Close ---
@@ -1561,6 +1624,7 @@
             const planCards = document.querySelectorAll('.plan-card');
 
             const investModal = document.getElementById('investModal');
+            // FIX: Corrected typo here from `document = document.getElementById`
             const closeInvestModalBtn = document.getElementById('closeInvestModalBtn');
             const investmentForm = document.getElementById('investmentForm');
             const invNameInput = document.getElementById('inv_name');
@@ -1869,8 +1933,8 @@
             } catch (error) {
                 console.error("[Firebase Init Error]", error);
                 showMessage('Initialization Error', `Failed to initialize Firebase services: ${error.message}. Please ensure your Firebase project's API Key and other configuration are correct, and that Email/Password and Anonymous sign-in methods are enabled in your Firebase Authentication settings.`, false);
+                isAuthReady = true; // Set to true even on error to unblock UI
                 updateAuthUI(false);
-                isAuthReady = true;
                 updateReferralButtonState(); // Update referral button state
             }
 
@@ -2683,7 +2747,7 @@
 
 
             // --- Investment Calculator Logic ---
-            calculateBtn.addEventListener('click', async () => {
+            calculateBtn?.addEventListener('click', async () => {
                 const amount = parseFloat(investmentAmountInput.value);
                 const plan = investmentPlanSelect.value;
                 let monthlyReturnRate = 0;
@@ -2868,16 +2932,20 @@
 
                     // Populate and show/hide referral info
                     if (planName === "Standard Plan") {
-                        modalReferralInfo.classList.remove('hidden'); // Standard plan now has referral
-                        let referralText = `When you refer an investor: <br>- For any plan: ${referralBonusStandard} of their investment`;
-                        modalReferralText.innerHTML = referralText;
+                        if (modalReferralInfo) modalReferralInfo.classList.remove('hidden'); // Standard plan now has referral
+                        if (modalReferralText) {
+                            let referralText = `When you refer an investor: <br>- For any plan: ${referralBonusStandard} of their investment`;
+                            modalReferralText.innerHTML = referralText;
+                        }
                     } else {
-                        modalReferralInfo.classList.remove('hidden');
-                        let referralText = `When you refer an investor:`;
-                        if (referralBonusStandard) referralText += `<br>- If they take Standard Plan: ${referralBonusStandard} of their investment`;
-                        if (referralBonusPremium) referralText += `<br>- If they take 6-Month Plan: ${referralBonusPremium} of their investment`;
-                        if (referralBonusElite) referralText += `<br>- If they take 12-Month Plan: ${referralBonusElite} of their investment`;
-                        modalReferralText.innerHTML = referralText;
+                        if (modalReferralInfo) modalReferralInfo.classList.remove('hidden');
+                        if (modalReferralText) {
+                            let referralText = `When you refer an investor:`;
+                            if (referralBonusStandard) referralText += `<br>- If they take Standard Plan: ${referralBonusStandard} of their investment`;
+                            if (referralBonusPremium) referralText += `<br>- If they take 6-Month Plan: ${referralBonusPremium} of their investment`;
+                            if (referralBonusElite) referralText += `<br>- If they take 12-Month Plan: ${referralBonusElite} of their investment`;
+                            modalReferralText.innerHTML = referralText;
+                        }
                     }
 
                     openModal(planDetailModal);
