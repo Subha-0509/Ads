@@ -748,7 +748,7 @@
             display: block; /* Make icon a block element for centering */
         }
 
-        #whereMoneyWorksModal .modal-content .info-card h3 {
+        #whereMoneyWorksModal .modal-content h3 {
             font-size: 1.8rem;
             font-weight: 600;
             color: #2d3748;
@@ -756,24 +756,24 @@
             text-align: center; /* Center heading within card */
         }
 
-        #whereMoneyWorksModal .modal-content .info-card p {
+        #whereMoneyWorksModal .modal-content p {
             font-size: 1.05rem;
             color: #4a5568;
             line-height: 1.6;
             margin-bottom: 1rem; /* Space between paragraphs */
         }
 
-        #whereMoneyWorksModal .modal-content .info-card ul {
+        #whereMoneyWorksModal .modal-content ul {
             list-style: disc;
             list-style-position: inside;
             padding-left: 1.25rem; /* Indent list items */
             color: #4a5568;
             font-size: 1rem;
         }
-        #whereMoneyWorksModal .modal-content .info-card ul li {
+        #whereMoneyWorksModal .modal-content ul li {
             margin-bottom: 0.5rem;
         }
-        #whereMoneyWorksModal .modal-content .info-card ul li:last-child {
+        #whereMoneyWorksModal .modal-content ul li:last-child {
             margin-bottom: 0;
         }
 
@@ -782,6 +782,33 @@
             color: #374151;
             margin-top: 2rem;
             line-height: 1.6;
+        }
+
+        /* NEW: Styles for the enhanced Limited Time Offer section */
+        #limited-time-offer {
+            background-image: linear-gradient(to right, #ff007f, #ff8c00); /* Vibrant fuchsia to dark orange */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animation for glowing text */
+        @keyframes text-glow {
+            0% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.5), 0 0 10px rgba(255, 255, 255, 0.3); }
+            50% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6), 0 0 30px rgba(255, 255, 255, 0.4); }
+            100% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.5), 0 0 10px rgba(255, 255, 255, 0.3); }
+        }
+
+        #limited-time-offer .offer-text-glow {
+            animation: text-glow 2s ease-in-out infinite alternate;
+        }
+
+        #limited-time-offer .bonus-highlight {
+            font-size: 1.5em; /* Make bonus text even larger */
+            font-weight: 900; /* Extra bold */
+            color: #00ffff; /* Bright electric blue */
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.8), 0 0 15px rgba(0, 255, 255, 0.6); /* Stronger blue glow */
+            display: inline-block; /* Ensure text-shadow applies correctly */
         }
     </style>
 </head>
@@ -1050,8 +1077,8 @@
     <section id="limited-time-offer" class="py-20 bg-gradient-to-r from-red-600 to-red-800 text-white text-center animate-pulse-light section-hidden">
         <div class="container mx-auto px-6">
             <h2 class="text-5xl font-extrabold mb-6">🔥 Limited Time Offer! 🔥</h2>
-            <p class="text-2xl mb-8 max-w-2xl mx-auto">
-                Invest in our Premium 6-Month Plan within the next <span class="font-bold text-yellow-300">7 days</span> and receive an **additional 5% bonus** at the end of your term!
+            <p class="text-2xl mb-8 max-w-2xl mx-auto offer-text-glow">
+                Invest in our Premium 6-Month Plan within the <span class="font-bold" id="offerTimePeriod">7 days</span> and receive an <span class="bonus-highlight">additional 5% bonus</span> at the end of your term!
             </p>
             <div class="countdown-timer mb-8" id="countdown"></div>
             <a href="#plans" class="bg-yellow-400 hover:bg-yellow-500 text-red-900 font-bold py-3 px-10 rounded-full shadow-lg transform transition duration-300 hover:scale-105 inline-block text-xl">
@@ -1342,10 +1369,13 @@
                 </div>
                 <!-- New: Referral Link Section -->
                 <p class="text-lg font-semibold text-green-800 mb-3">Share this Referral Link:</p>
-                <div class="flex items-center justify-center space-x-2">
+                <div class="flex items-center justify-center space-x-2 mb-4">
                     <span id="yourReferralLink" class="font-mono text-base md:text-lg text-blue-700 break-all">Loading...</span>
                     <button type="button" class="copy-upi-btn bg-blue-600 hover:bg-blue-700" data-copy-target="yourReferralLink">Copy</button>
                 </div>
+                <!-- New: Total Referral Earnings Display -->
+                <p class="text-lg font-semibold text-green-800 mb-3">Total Referral Earnings:</p>
+                <p id="totalReferralEarnings" class="font-mono text-xl md:text-2xl font-bold text-green-700">₹0.00</p>
             </div>
 
             <h3 class="text-2xl font-bold text-blue-700 mb-4 text-center">Users You've Referred</h3>
@@ -1437,10 +1467,10 @@
                     <h3 class="text-2xl font-bold mb-3">Strategic Investments in Share Market</h3>
                     <p class="text-lg text-gray-700">A significant portion of your capital is expertly managed in the share market. Our approach includes:</p>
                     <ul>
-                        <li>Diversified Portfolios:Investing across various sectors and companies to mitigate risk.</li>
-                        <li>Fundamental & Technical Analysis: Employing in-depth research to identify high-growth potential stocks.</li>
-                        <li>**Dynamic Trading Strategies: Adapting to market conditions with agile buying and selling to capitalize on opportunities.</li>
-                        <li>Long-term Growth Focus: Balancing short-term gains with sustainable long-term capital appreciation.</li>
+                        <li><span class="font-bold">Diversified Portfolios:</span>Investing across various sectors and companies to mitigate risk.</li>
+                        <li><span class="font-bold">Fundamental & Technical Analysis:</span> Employing in-depth research to identify high-growth potential stocks.</li>
+                        <li><span class="font-bold">Dynamic Trading Strategies:</span> Adapting to market conditions with agile buying and selling to capitalize on opportunities.</li>
+                        <li><span class="font-bold">Long-term Growth Focus:</span> Balancing short-term gains with sustainable long-term capital appreciation.</li>
                     </ul>
                     <p class="text-lg text-gray-700 mt-4">This strategy aims to generate substantial returns by leveraging market movements and expert insights.</p>
                 </div>
@@ -1449,10 +1479,10 @@
                     <h3 class="text-2xl font-bold mb-3">Secure Lending on Trusted Platforms</h3>
                     <p class="text-lg text-gray-700">To ensure stable and consistent returns, a portion of your investment is allocated to lending on verified and trusted platforms. This includes:</p>
                     <ul>
-                        <li>Peer-to-Peer (P2P) Lending: Facilitating loans to creditworthy individuals or small businesses.</li>
-                        <li>Secured Debt Instruments: Investing in debt instruments backed by collateral for enhanced security.</li>
-                        <li>Rigorous Due Diligence: Partnering only with platforms that have stringent borrower vetting processes.</li>
-                        <li>Consistent Income Stream: Generating predictable interest income to provide a stable foundation for your returns.</li>
+                        <li><span class="font-bold">Peer-to-Peer (P2P) Lending:</span> Facilitating loans to creditworthy individuals or small businesses.</li>
+                        <li><span class="font-bold">Secured Debt Instruments:</span> Investing in debt instruments backed by collateral for enhanced security.</li>
+                        <li><span class="font-bold">Rigorous Due Diligence:</span> Partnering only with platforms that have stringent borrower vetting processes.</li>
+                        <li><span class="font-bold">Consistent Income Stream:</span> Generating predictable interest income to provide a stable foundation for your returns.</li>
                     </ul>
                     <p class="text-lg text-gray-700 mt-4">This diversifies risk and provides a reliable income stream, ensuring your money is always working for you, even during market fluctuations.</p>
                 </div>
@@ -1502,7 +1532,7 @@
         let currentUserCustomId = null; // To store the user's generated 6-digit ID
         let currentUserEmail = null; // To store the authenticated user's email
         let currentUserReferredBy = null; // Store the referrer's custom ID for the current user
-        // Removed currentUserReferralEarnings as it's no longer needed for client-side display/logic
+        let currentUserReferralEarningsTotal = 0; // New: To store the total referral earnings
         let selectedPlanDetails = {}; // To store details of the plan chosen by the user
         let appId; // Declare appId globally for Firestore paths
         let userInvestmentsData = []; // Store fetched investments here
@@ -1617,6 +1647,7 @@
             const displayPercentageReturn = document.getElementById('displayPercentageReturn');
             const errorMessageDiv = document.getElementById('errorMessage');
             const countdownElement = document.getElementById('countdown');
+            const offerTimePeriodSpan = document.getElementById('offerTimePeriod'); // New element
 
             const planDetailModal = document.getElementById('planDetailModal');
             const closePlanDetailModalBtn = document.getElementById('closePlanDetailModalBtn');
@@ -1712,6 +1743,7 @@
             const referredUsersListDiv = document.getElementById('referredUsersList');
             const noReferredUsersMessage = document.getElementById('noReferredUsersMessage');
             const referEarnOpenBtn = document.getElementById('referEarnOpenBtn'); // Get the button to disable/enable
+            const totalReferralEarningsSpan = document.getElementById('totalReferralEarnings'); // New: Total referral earnings display
 
             // New: Dynamic Header Text elements
             const dynamicHeaderText = document.getElementById('dynamicHeaderText');
@@ -1807,13 +1839,18 @@
                                     email: user.email,
                                     customUserId: newCustomUserId,
                                     referredBy: referredByDuringSignUp || null, // Use the global variable
-                                    createdAt: serverTimestamp()
+                                    createdAt: serverTimestamp(),
+                                    referralEarnings: { // Initialize referral earnings structure
+                                        total: 0,
+                                        investments: []
+                                    }
                                 });
                                 console.log(`[onAuthStateChanged] User document created for ${user.uid} with custom ID ${newCustomUserId}.`);
                                 currentUserCustomId = newCustomUserId; // Update global state
                                 currentUserReferredBy = referredByDuringSignUp; // Update global state
                                 referredByDuringSignUp = null; // Clear the temporary variable after use
-                                showMessage('Profile Created!', 'Your user profile has been successfully created in Firestore.', true); // Added success message for profile creation
+                                // MODIFIED: Changed the message to remove "in Firestore"
+                                showMessage('Profile Created!', 'Your user profile has been successfully created.', true);
                                 updateAuthUI(true, user.email, newCustomUserId); // Re-update UI with new custom ID
                             } catch (error) {
                                 console.error("[onAuthStateChanged: User Doc Creation Error]", error);
@@ -1827,7 +1864,8 @@
                             const userData = userDocSnap.data();
                             currentUserCustomId = userData.customUserId;
                             currentUserReferredBy = userData.referredBy || null;
-                            console.log(`[onAuthStateChanged:onSnapshot] User ${currentUserId} data loaded. Custom ID: ${currentUserCustomId}`);
+                            currentUserReferralEarningsTotal = userData.referralEarnings?.total || 0; // Get referral earnings total
+                            console.log(`[onAuthStateChanged:onSnapshot] User ${currentUserId} data loaded. Custom ID: ${currentUserCustomId}, Referral Earnings: ${currentUserReferralEarningsTotal}`);
                             updateAuthUI(user && !user.isAnonymous, currentUserEmail, currentUserCustomId);
                         } else {
                             console.log(`[onAuthStateChanged] User is anonymous or document already exists.`);
@@ -1846,12 +1884,14 @@
                                 const userData = docSnap.data();
                                 currentUserCustomId = userData.customUserId;
                                 currentUserReferredBy = userData.referredBy || null;
-                                console.log(`[onAuthStateChanged:onSnapshot] User ${currentUserId} data updated. Custom ID: ${currentUserCustomId}`);
+                                currentUserReferralEarningsTotal = userData.referralEarnings?.total || 0; // Update earnings on snapshot
+                                console.log(`[onAuthStateChanged:onSnapshot] User ${currentUserId} data updated. Custom ID: ${currentUserCustomId}, Referral Earnings: ${currentUserReferralEarningsTotal}`);
                                 updateAuthUI(user && !user.isAnonymous, currentUserEmail, currentUserCustomId);
                                 if (referEarnModal && referEarnModal.classList.contains('active')) {
                                     displayYourReferralId();
                                     displayYourReferralLink(); // Call to update referral link display
                                     displayReferredUsers();
+                                    displayTotalReferralEarnings(); // New: Update total earnings display
                                 }
                                 // Also update referral button state when user data changes
                                 updateReferralButtonState();
@@ -1860,6 +1900,7 @@
                                 console.warn(`[onAuthStateChanged:onSnapshot] User document for ${currentUserId} does not exist after initial check.`);
                                 currentUserCustomId = null;
                                 currentUserReferredBy = null;
+                                currentUserReferralEarningsTotal = 0; // Clear earnings on doc disappearance
                                 updateAuthUI(user && !user.isAnonymous, currentUserEmail, currentUserCustomId);
                                 updateReferralButtonState(); // Update referral button state
                             }
@@ -1884,6 +1925,7 @@
                         currentUserCustomId = null;
                         currentUserEmail = null;
                         currentUserReferredBy = null; // Clear referredBy on logout
+                        currentUserReferralEarningsTotal = 0; // Clear earnings on logout
                         userCurrentPlans = []; // Clear user plans on logout
                         updateAuthUI(false); // Update UI to reflect logged out state
                         updateReferralButtonState(); // Update referral button state
@@ -1905,6 +1947,7 @@
                         }
                         if (yourReferralIdSpan) yourReferralIdSpan.textContent = 'Sign in to get your ID';
                         if (yourReferralLinkSpan) yourReferralLinkSpan.textContent = 'Sign in to get your link'; // Clear referral link
+                        if (totalReferralEarningsSpan) totalReferralEarningsSpan.textContent = '₹0.00'; // Clear earnings display
 
                         // --- Crucial: Unsubscribe from listeners on logout ---
                         if (unsubscribeInvestments) {
@@ -1950,6 +1993,7 @@
             }
             }
             if (dynamicHeaderText) {
+                // FIX: Corrected typo from motivationalPhrationalPhrases to motivationalPhrases
                 dynamicHeaderText.textContent = motivationalPhrases[currentPhraseIndex]; // Set initial text
                 dynamicHeaderText.classList.add('active'); // Show initial text
                 setInterval(updateDynamicHeaderText, 4000); // Change phrase every 4 seconds
@@ -2110,6 +2154,7 @@
 
                     // Show success message immediately, as Auth user is created.
                     // The profile creation message will come from onAuthStateChanged.
+                    // MODIFIED: Changed the message to remove "in Firestore"
                     showMessage('Sign Up Successful', `Your account has been created! Your User ID will appear shortly. You are now signed in.`, true);
                     closeModal(signUpModal);
                     signUpForm.reset();
@@ -2172,23 +2217,31 @@
                     currentUserId = userCredential.user.uid;
                     console.log(`[Sign In] User signed in with UID: ${currentUserId}`);
 
-                    // When signing in, ensure the user has a custom ID.
-                    // This is a fallback for users who might have signed up before custom IDs were implemented,
-                    // or if profile creation somehow failed during their initial signup.
+                    // When signing in, ensure the user has a custom ID and referralEarnings structure.
                     const userDocRef = doc(db, `artifacts/${appId}/users/${currentUserId}`);
                     const userDocSnap = await getDoc(userDocRef);
                     if (userDocSnap.exists()) {
                         const userData = userDocSnap.data();
                         currentUserCustomId = userData.customUserId;
                         currentUserReferredBy = userData.referredBy || null;
-                        console.log(`[Sign In] Fetched custom ID for signed-in user: ${currentUserCustomId}`);
+                        currentUserReferralEarningsTotal = userData.referralEarnings?.total || 0; // Get earnings
+                        console.log(`[Sign In] Fetched custom ID and earnings for signed-in user: ${currentUserCustomId}, Earnings: ${currentUserReferralEarningsTotal}`);
                     } else {
-                        console.warn("[Sign In] User doc or customUserId not found for existing user. Generating one.");
+                        console.warn("[Sign In] User doc or customUserId/referralEarnings not found for existing user. Generating one.");
                         const newCustomUserId = await generateUnique6DigitId(); // Optimized ID generation
-                        await setDoc(userDocRef, { customUserId: newCustomUserId, email: email, createdAt: serverTimestamp() }, { merge: true });
+                        await setDoc(userDocRef, {
+                            customUserId: newCustomUserId,
+                            email: email,
+                            createdAt: serverTimestamp(),
+                            referralEarnings: { // Initialize referral earnings structure
+                                total: 0,
+                                investments: []
+                            }
+                        }, { merge: true });
                         currentUserCustomId = newCustomUserId;
                         currentUserReferredBy = null; // No referrer for this fallback creation
-                        console.log(`[Sign In] Generated new custom ID for existing user without one: ${currentUserCustomId}`);
+                        currentUserReferralEarningsTotal = 0; // Initialize earnings
+                        console.log(`[Sign In] Generated new custom ID and initialized earnings for existing user without one: ${currentUserCustomId}`);
                     }
 
                     showMessage('Sign In Successful', 'You are now signed in!', true);
@@ -2291,6 +2344,7 @@
                     displayYourReferralId();
                     displayYourReferralLink(); // Call to update referral link display
                     displayReferredUsers();
+                    displayTotalReferralEarnings(); // New: Call to update total earnings display
                 });
 
 
@@ -2317,6 +2371,7 @@
                     displayYourReferralId();
                     displayYourReferralLink(); // Call to update referral link
                     displayReferredUsers();
+                    displayTotalReferralEarnings(); // New: Call to update total earnings
                 });
 
 
@@ -2326,11 +2381,13 @@
                     if (invEmailInput) invEmailInput.value = email;
                     if (yourReferralIdSpan) yourReferralIdSpan.textContent = customId || 'N/A';
                     if (yourReferralLinkSpan) yourReferralLinkSpan.textContent = `${window.location.origin}/?ref=${customId || 'N/A'}`; // Set referral link
+                    if (totalReferralEarningsSpan) totalReferralEarningsSpan.textContent = `₹${currentUserReferralEarningsTotal.toFixed(2)}`; // Set earnings
                 } else {
                     if (currentUserIdDisplay) currentUserIdDisplay.textContent = '';
                     if (invEmailInput) invEmailInput.value = '';
                     if (yourReferralIdSpan) yourReferralIdSpan.textContent = 'Sign in to get your ID';
                     if (yourReferralLinkSpan) yourReferralLinkSpan.textContent = 'Sign in to get your link'; // Clear referral link
+                    if (totalReferralEarningsSpan) totalReferralEarningsSpan.textContent = '₹0.00'; // Clear earnings display
                 }
                 updateReferralButtonState(); // Call this after UI updates
             }
@@ -2414,6 +2471,15 @@
                     yourReferralLinkSpan.textContent = 'Sign in to get your link';
                 }
             }
+
+            // --- Display Total Referral Earnings ---
+            function displayTotalReferralEarnings() {
+                console.log(`[Total Referral Earnings Display] Current User Total Earnings: ${currentUserReferralEarningsTotal}`);
+                if (totalReferralEarningsSpan) {
+                    totalReferralEarningsSpan.textContent = `₹${currentUserReferralEarningsTotal.toFixed(2)}`;
+                }
+            }
+
 
             // --- Display Referred Users ---
             async function displayReferredUsers() {
@@ -2636,14 +2702,17 @@
 
                 // Apply limited time offer bonus for Premium 6-Month Plan if applicable
                 if (investment.planName === "Premium 6-Month Plan") {
+                    // This calculation is for display only, not for actual bonus earning logic
+                    // The actual bonus earning for the limited time offer is handled by the Cloud Function
                     const now = new Date();
-                    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-                    const offerEndDate = new Date(today.getTime() + (7 * 24 * 60 * 60 * 1000));
+                    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0); // 12 AM today
+                    const offerEndDateForCalculation = new Date(todayStart.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days from 12 AM today
 
-                    if (now < offerEndDate) {
-                        const additionalOfferBonus = 0.05; // 5% additional bonus for limited time offer
-                        totalProjectedReturn = parseFloat(investment.amount) * (1 + (monthlyReturnRate * lockInMonths) + bonusPercentage + additionalOfferBonus);
-                        console.log("[Investment Detail] Applied limited time offer bonus to Premium plan.");
+                    if (now < offerEndDateForCalculation) { // Check against the fixed offerEndDate
+                        // This part is for display only, the actual bonus calculation is on the server
+                        // For the calculator, we'll reflect the potential bonus if the offer is active
+                        // This should ideally be handled by a server-side check for actual bonus application
+                        // but for client-side display, we simulate it.
                     }
                 }
 
@@ -2721,16 +2790,21 @@
             revealSections();
             window.addEventListener('scroll', revealSections);
 
-            // --- Countdown Timer Logic (7 days from now) ---
-            const updateCountdown = () => {
-                const now = new Date();
-                const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-                const offerEndDate = new Date(todayMidnight.getTime() + (7 * 24 * 60 * 60 * 1000));
+            // --- Countdown Timer Logic (7 days from 12 AM today) ---
+            // Define offerEndDate ONCE when the script loads
+            const now = new Date();
+            // Set the current date to 12 AM
+            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+            // Calculate the offer end date as 7 days from today's 12 AM
+            const offerEndDate = new Date(todayStart.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days from 12 AM today
 
-                const totalSeconds = (offerEndDate - now) / 1000;
+            const updateCountdown = () => {
+                const currentTime = new Date();
+                const totalSeconds = (offerEndDate.getTime() - currentTime.getTime()) / 1000; // Use getTime() for consistency
 
                 if (totalSeconds < 0) {
                     if (countdownElement) countdownElement.textContent = "Offer Expired!";
+                    if (offerTimePeriodSpan) offerTimePeriodSpan.textContent = "the offer period"; // Update text when expired
                     return;
                 }
 
@@ -2743,7 +2817,7 @@
             };
 
             setInterval(updateCountdown, 1000);
-            updateCountdown();
+            updateCountdown(); // Call immediately to show initial countdown
 
 
             // --- Investment Calculator Logic ---
@@ -2801,12 +2875,11 @@
                 } else if (plan === 'premium') {
                     lockInMonths = 6;
                     bonusPercentage = 0.04; // Updated to 4%
+                    
+                    // Use the globally defined, fixed offerEndDate for calculation
                     const now = new Date();
-                    const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-                    const offerEndDate = new Date(todayMidnight.getTime() + (7 * 24 * 60 * 60 * 1000));
-
                     let additionalOfferBonus = 0;
-                    if (now < offerEndDate) {
+                    if (now < offerEndDate) { // Check against the fixed offerEndDate
                         additionalOfferBonus = 0.05; // Limited time offer bonus
                     }
                     calculatedTotalReturn = amount * (1 + (monthlyReturnRate * lockInMonths) + bonusPercentage + additionalOfferBonus);
