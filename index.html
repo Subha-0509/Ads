@@ -87,14 +87,16 @@
         #termsAndConditionsModal .modal-content,
         #investmentDetailsModal .modal-content,
         #referEarnModal .modal-content,
-        #whereMoneyWorksModal .modal-content { /* Added whereMoneyWorksModal back here for its new design */
+        #whereMoneyWorksModal .modal-content,
+        #bankCardModal .modal-content { /* Added bankCardModal here */
             width: 600px;
         }
         /* Specifically ensuring myInvestmentsModal content is plain white */
         #myInvestmentsModal .modal-content,
         #investmentDetailsModal .modal-content,
         #referEarnModal .modal-content,
-        #whereMoneyWorksModal .modal-content { /* Ensure plain white for detail modal too */
+        #whereMoneyWorksModal .modal-content,
+        #bankCardModal .modal-content { /* Ensure plain white for detail modal too */
             background-color: white;
             background-image: none;
         }
@@ -1121,6 +1123,8 @@
         </div>
     </section>
 
+    <!-- Removed: Bank Details Section from here -->
+
     <!-- Footer Section -->
     <footer class="bg-gray-800 text-white py-8">
         <div class="container mx-auto px-6 text-center text-gray-400">
@@ -1196,22 +1200,6 @@
                 
                 <label for="inv_utr_number" class="w-full">UTR Number (Mandatory):</label>
                 <input type="text" id="inv_utr_number" placeholder="Enter UTR/Transaction Number" required class="w-full">
-
-                <label for="inv_bank_account_name" class="w-full">Bank Account Name:</label>
-                <input type="text" id="inv_bank_account_name" placeholder="Name on Bank Account" required class="w-full">
-
-                <label for="inv_bank_account" class="w-full">Bank Account Number:</label>
-                <input type="text" id="inv_bank_account" placeholder="Bank Account Number" required class="w-full">
-
-                <label for="inv_ifsc_code" class="w-full">IFSC Code:</label>
-                <input type="text" id="inv_ifsc_code" placeholder="IFSC Code" required class="w-full">
-
-                <label for="inv_upi_id_optional" class="w-full">Your UPI ID (Optional):</label>
-                <input type="text" id="inv_upi_id_optional" placeholder="Your UPI ID (Optional)" class="w-full">
-
-                <!-- Removed: Referral ID input from investment form -->
-                <!-- <label for="inv_referral_id" class="w-full">Referral ID (Optional):</label>
-                <input type="text" id="inv_referral_id" placeholder="Enter Referral ID (e.g., 123456)" pattern="\d{6}" title="Referral ID must be a 6-digit number" class="w-full"> -->
 
                 <input type="hidden" id="inv_plan_hidden"> <!-- Hidden field to store selected plan name -->
 
@@ -1493,6 +1481,38 @@
         </div>
     </div >
 
+    <!-- New: Bank Card Modal -->
+    <div id="bankCardModal" class="modal-overlay">
+        <div class="modal-content text-gray-800">
+            <button class="modal-close-btn" id="closeBankCardModalBtn">&times;</button>
+            <h2 class="text-3xl font-bold text-blue-700 mb-6 text-center">Your Bank Details</h2>
+            <p class="text-lg text-gray-700 mb-6 text-center" id="bankDetailsInstructionText">
+                Please provide your bank details for seamless payouts of your returns and principal.
+            </p>
+            <form id="bankCardForm" class="flex flex-col items-center">
+                <label for="bankAccountName" class="w-full">Bank Account Name:</label>
+                <input type="text" id="bankAccountName" placeholder="Name on Bank Account" required class="w-full">
+
+                <label for="bankAccountNumber" class="w-full">Bank Account Number:</label>
+                <input type="text" id="bankAccountNumber" placeholder="Bank Account Number" required class="w-full">
+
+                <label for="ifscCode" class="w-full">IFSC Code:</label>
+                <input type="text" id="ifscCode" placeholder="IFSC Code" required class="w-full">
+
+                <label for="upiIdOptional" class="w-full">Your UPI ID (Optional):</label>
+                <input type="text" id="upiIdOptional" placeholder="Your UPI ID (Optional)" class="w-full">
+
+                <div class="flex justify-center space-x-4 mt-6 w-full" id="bankDetailsFormButtons">
+                    <button type="submit" class="w-1/2" id="saveBankDetailsBtn">Save Bank Details</button>
+                    <button type="button" class="w-1/2 cancel-btn" id="cancelBankDetailsBtn">Cancel</button>
+                </div>
+                <p id="bankDetailsSavedMessage" class="text-center text-red-600 font-semibold mt-4 hidden">
+                    Bank details saved. For any changes, please contact us at <a href="mailto:itsads2k23@gmail.com" class="text-blue-500 hover:underline">itsads2k23@gmail.com</a>.
+                </p>
+            </form>
+        </div>
+    </div>
+
 
     <script type="module">
         // Global variable to store referral ID from URL
@@ -1520,7 +1540,8 @@
             onSnapshot,
             serverTimestamp,
             getDoc,
-            getDocs
+            getDocs,
+            updateDoc
             // Removed updateDoc and FieldValue as they are no longer used client-side for referral earnings
         } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js"; // Updated SDK version
 
@@ -1538,6 +1559,7 @@
         let userInvestmentsData = []; // Store fetched investments here
         let isAuthReady = false; // New flag to indicate Firebase Auth is initialized and state determined
         let userCurrentPlans = []; // To store the list of plans the current user has invested in
+        let currentUserBankDetails = {}; // New: To store the current user's bank details
 
         // Unsubscribe functions for onSnapshot listeners
         let unsubscribeInvestments = null;
@@ -1665,11 +1687,7 @@
             const invAmountValidationMessage = document.getElementById('invAmountValidationMessage');
             const invUtrNumberInput = document.getElementById('inv_utr_number');
             const paidUpiIdSelect = document.getElementById('paidUpiId');
-            const invBankAccountNameInput = document.getElementById('inv_bank_account_name');
-            const invBankAccountInput = document.getElementById('inv_bank_account');
-            const invIfscCodeInput = document.getElementById('inv_ifsc_code');
-            const invUpiIdOptionalInput = document.getElementById('inv_upi_id_optional');
-            // Removed invReferralIdInput
+            // Removed invBankAccountNameInput, invBankAccountInput, invIfscCodeInput, invUpiIdOptionalInput
             const invPlanHiddenInput = document.getElementById('inv_plan_hidden');
             const investFormPlanName = document.getElementById('investFormPlanName');
             const cancelInvestFormBtn = document.getElementById('cancelInvestFormBtn');
@@ -1744,6 +1762,21 @@
             const noReferredUsersMessage = document.getElementById('noReferredUsersMessage');
             const referEarnOpenBtn = document.getElementById('referEarnOpenBtn'); // Get the button to disable/enable
             const totalReferralEarningsSpan = document.getElementById('totalReferralEarnings'); // New: Total referral earnings display
+
+            // New: Bank Card Modal elements
+            const bankCardModal = document.getElementById('bankCardModal');
+            const closeBankCardModalBtn = document.getElementById('closeBankCardModalBtn');
+            const bankCardForm = document.getElementById('bankCardForm');
+            const bankAccountNameInput = document.getElementById('bankAccountName');
+            const bankAccountNumberInput = document.getElementById('bankAccountNumber');
+            const ifscCodeInput = document.getElementById('ifscCode');
+            const upiIdOptionalInput = document.getElementById('upiIdOptional');
+            const saveBankDetailsBtn = document.getElementById('saveBankDetailsBtn');
+            const cancelBankDetailsBtn = document.getElementById('cancelBankDetailsBtn');
+            const bankDetailsSavedMessage = document.getElementById('bankDetailsSavedMessage'); // New element
+            const bankDetailsInstructionText = document.getElementById('bankDetailsInstructionText'); // New element
+            const bankDetailsFormButtons = document.getElementById('bankDetailsFormButtons'); // New element for button container
+
 
             // New: Dynamic Header Text elements
             const dynamicHeaderText = document.getElementById('dynamicHeaderText');
@@ -1843,7 +1876,8 @@
                                     referralEarnings: { // Initialize referral earnings structure
                                         total: 0,
                                         investments: []
-                                    }
+                                    },
+                                    bankDetails: {} // Initialize empty bank details
                                 });
                                 console.log(`[onAuthStateChanged] User document created for ${user.uid} with custom ID ${newCustomUserId}.`);
                                 currentUserCustomId = newCustomUserId; // Update global state
@@ -1865,7 +1899,8 @@
                             currentUserCustomId = userData.customUserId;
                             currentUserReferredBy = userData.referredBy || null;
                             currentUserReferralEarningsTotal = userData.referralEarnings?.total || 0; // Get referral earnings total
-                            console.log(`[onAuthStateChanged:onSnapshot] User ${currentUserId} data loaded. Custom ID: ${currentUserCustomId}, Referral Earnings: ${currentUserReferralEarningsTotal}`);
+                            currentUserBankDetails = userData.bankDetails || {}; // Get bank details
+                            console.log(`[onAuthStateChanged:onSnapshot] User ${currentUserId} data loaded. Custom ID: ${currentUserCustomId}, Referral Earnings: ${currentUserReferralEarningsTotal}, Bank Details:`, currentUserBankDetails);
                             updateAuthUI(user && !user.isAnonymous, currentUserEmail, currentUserCustomId);
                         } else {
                             console.log(`[onAuthStateChanged] User is anonymous or document already exists.`);
@@ -1885,13 +1920,18 @@
                                 currentUserCustomId = userData.customUserId;
                                 currentUserReferredBy = userData.referredBy || null;
                                 currentUserReferralEarningsTotal = userData.referralEarnings?.total || 0; // Update earnings on snapshot
-                                console.log(`[onAuthStateChanged:onSnapshot] User ${currentUserId} data updated. Custom ID: ${currentUserCustomId}, Referral Earnings: ${currentUserReferralEarningsTotal}`);
+                                currentUserBankDetails = userData.bankDetails || {}; // Update bank details on snapshot
+                                console.log(`[onAuthStateChanged:onSnapshot] User ${currentUserId} data updated. Custom ID: ${currentUserCustomId}, Referral Earnings: ${currentUserReferralEarningsTotal}, Bank Details:`, currentUserBankDetails);
                                 updateAuthUI(user && !user.isAnonymous, currentUserEmail, currentUserCustomId);
                                 if (referEarnModal && referEarnModal.classList.contains('active')) {
                                     displayYourReferralId();
                                     displayYourReferralLink(); // Call to update referral link display
                                     displayReferredUsers();
                                     displayTotalReferralEarnings(); // New: Update total earnings display
+                                }
+                                if (bankCardModal && bankCardModal.classList.contains('active')) {
+                                    // If bank card modal is open, re-populate it with latest data
+                                    populateBankDetailsForm();
                                 }
                                 // Also update referral button state when user data changes
                                 updateReferralButtonState();
@@ -1901,6 +1941,7 @@
                                 currentUserCustomId = null;
                                 currentUserReferredBy = null;
                                 currentUserReferralEarningsTotal = 0; // Clear earnings on doc disappearance
+                                currentUserBankDetails = {}; // Clear bank details on doc disappearance
                                 updateAuthUI(user && !user.isAnonymous, currentUserEmail, currentUserCustomId);
                                 updateReferralButtonState(); // Update referral button state
                             }
@@ -1926,6 +1967,7 @@
                         currentUserEmail = null;
                         currentUserReferredBy = null; // Clear referredBy on logout
                         currentUserReferralEarningsTotal = 0; // Clear earnings on logout
+                        currentUserBankDetails = {}; // Clear bank details on logout
                         userCurrentPlans = []; // Clear user plans on logout
                         updateAuthUI(false); // Update UI to reflect logged out state
                         updateReferralButtonState(); // Update referral button state
@@ -2086,6 +2128,21 @@
                 });
             }
 
+            // New: Bank Card Modal event listeners
+            if (closeBankCardModalBtn) {
+                closeBankCardModalBtn.addEventListener('click', () => closeModal(bankCardModal));
+            }
+            if (cancelBankDetailsBtn) {
+                cancelBankDetailsBtn.addEventListener('click', () => closeModal(bankCardModal));
+            }
+            if (bankCardModal) {
+                bankCardModal.addEventListener('click', (e) => {
+                    if (e.target === bankCardModal) {
+                        closeModal(bankCardModal);
+                    }
+                });
+            }
+
 
             // Sign Up Form Submission
             signUpForm?.addEventListener('submit', async (e) => {
@@ -2225,9 +2282,10 @@
                         currentUserCustomId = userData.customUserId;
                         currentUserReferredBy = userData.referredBy || null;
                         currentUserReferralEarningsTotal = userData.referralEarnings?.total || 0; // Get earnings
-                        console.log(`[Sign In] Fetched custom ID and earnings for signed-in user: ${currentUserCustomId}, Earnings: ${currentUserReferralEarningsTotal}`);
+                        currentUserBankDetails = userData.bankDetails || {}; // Get bank details
+                        console.log(`[Sign In] Fetched custom ID, earnings, and bank details for signed-in user: ${currentUserCustomId}, Earnings: ${currentUserReferralEarningsTotal}, Bank Details:`, currentUserBankDetails);
                     } else {
-                        console.warn("[Sign In] User doc or customUserId/referralEarnings not found for existing user. Generating one.");
+                        console.warn("[Sign In] User doc or customUserId/referralEarnings/bankDetails not found for existing user. Generating one.");
                         const newCustomUserId = await generateUnique6DigitId(); // Optimized ID generation
                         await setDoc(userDocRef, {
                             customUserId: newCustomUserId,
@@ -2236,12 +2294,14 @@
                             referralEarnings: { // Initialize referral earnings structure
                                 total: 0,
                                 investments: []
-                            }
+                            },
+                            bankDetails: {} // Initialize empty bank details
                         }, { merge: true });
                         currentUserCustomId = newCustomUserId;
                         currentUserReferredBy = null; // No referrer for this fallback creation
                         currentUserReferralEarningsTotal = 0; // Initialize earnings
-                        console.log(`[Sign In] Generated new custom ID and initialized earnings for existing user without one: ${currentUserCustomId}`);
+                        currentUserBankDetails = {}; // Initialize empty bank details
+                        console.log(`[Sign In] Generated new custom ID and initialized earnings/bank details for existing user without one: ${currentUserCustomId}`);
                     }
 
                     showMessage('Sign In Successful', 'You are now signed in!', true);
@@ -2272,6 +2332,7 @@
                 console.log(`[Auth UI] Updating UI. LoggedIn: ${loggedIn}, Email: ${email}, Custom ID: ${customId}`);
                 const myInvestmentsLink = `<li><button id="myInvestmentsOpenBtn" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">My Investments</button></li>`;
                 const referEarnLink = `<li><button id="referEarnOpenBtn" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Refer & Earn</button></li>`; // Updated button text
+                const bankCardLink = `<li><button id="bankCardOpenBtn" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Bank Card</button></li>`; // New: Bank Card button
                 const signOutLink = `<li><button id="signOutBtn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Sign Out</button></li>`;
                 const loggedOutLinks = `
                     <li><button id="signInOpenBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Sign In</button></li>
@@ -2279,13 +2340,13 @@
                 `;
 
                 if (navAuthLinks) {
-                    navAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${referEarnLink}${signOutLink}` : loggedOutLinks;
+                    navAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${referEarnLink}${bankCardLink}${signOutLink}` : loggedOutLinks;
                 } else {
                     console.warn("navAuthLinks element not found.");
                 }
 
                 if (mobileNavAuthLinks) {
-                    mobileNavAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${referEarnLink}${signOutLink}` : loggedOutLinks;
+                    mobileNavAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${referEarnLink}${bankCardLink}${signOutLink}` : loggedOutLinks;
                 } else {
                     console.warn("mobileNavAuthLinks element not found.");
                 }
@@ -2347,6 +2408,13 @@
                     displayTotalReferralEarnings(); // New: Call to update total earnings display
                 });
 
+                // New: Attach listener for Bank Card button
+                document.getElementById('bankCardOpenBtn')?.addEventListener('click', () => {
+                    openModal(bankCardModal);
+                    closeMobileMenu();
+                    populateBankDetailsForm(); // Populate form when modal opens
+                });
+
 
                 // Mobile menu specific listeners
                 document.querySelector('#mobileNavAuthLinks #signOutBtn')?.addEventListener('click', async () => {
@@ -2372,6 +2440,12 @@
                     displayYourReferralLink(); // Call to update referral link
                     displayReferredUsers();
                     displayTotalReferralEarnings(); // New: Call to update total earnings
+                });
+                // New: Mobile Bank Card button listener
+                document.querySelector('#mobileNavAuthLinks #bankCardOpenBtn')?.addEventListener('click', () => {
+                    openModal(bankCardModal);
+                    closeMobileMenu();
+                    populateBankDetailsForm();
                 });
 
 
@@ -2744,9 +2818,10 @@
                 detailPayoutReturnDate.textContent = formattedPayoutReturnDate;
                 detailUtrNumber.textContent = investment.utrNumber;
                 detailPaidUpiId.textContent = investment.paidUpiId || 'N/A';
-                detailBankAccountName.textContent = investment.bankAccountName;
-                detailBankAccount.textContent = investment.bankAccount;
-                detailIfscCode.textContent = investment.ifscCode;
+                // Now read bank details from the investment object, not current user profile
+                detailBankAccountName.textContent = investment.bankAccountName || 'N/A';
+                detailBankAccount.textContent = investment.bankAccount || 'N/A';
+                detailIfscCode.textContent = investment.ifscCode || 'N/A';
 
                 if (investment.upiIdOptional) {
                     detailUpiIdOptional.textContent = investment.upiIdOptional;
@@ -3057,11 +3132,10 @@
                         invAmountInput.value = selectedPlanDetails.minInvestment;
                         invAmountInput.min = selectedPlanDetails.minInvestment;
                         if (invAmountValidationMessage) {
-                             invAmountValidationMessage.textContent = `Minimum ₹${selectedPlanDetails.minInvestment}, in multiples of ₹100. Maximum ₹10,000.`;
+                             invAmountValidationMessage.textContent = `Minimum ₹${selectedPlanDetails.minInvestment}, in multiples of ₹100. Maximum ₹10,000.`
                         }
                     }
                     if (invEmailInput && currentUserEmail) invEmailInput.value = currentUserEmail;
-                    // Removed pre-filling referral ID from investment form as the field is removed
                 });
             }
 
@@ -3112,16 +3186,11 @@
                 const amount = parseFloat(invAmountInput.value);
                 const paidUpiId = paidUpiIdSelect.value;
                 const utrNumber = invUtrNumberInput.value.trim();
-                const bankAccountName = invBankAccountNameInput.value.trim();
-                const bankAccount = invBankAccountInput.value.trim();
-                const ifscCode = invIfscCodeInput.value.trim();
-                const upiIdOptional = invUpiIdOptionalInput.value.trim();
-                // Removed referralId
                 const planName = invPlanHiddenInput.value.trim();
 
                 console.log(`[Investment Form] Collected data: Name=${name}, Email=${email}, Amount=${amount}, Plan=${planName}`);
 
-                if (!name || !email || !mobile || !utrNumber || !bankAccountName || !bankAccount || !ifscCode || !planName || isNaN(amount) || !paidUpiId) {
+                if (!name || !email || !mobile || !utrNumber || !planName || isNaN(amount) || !paidUpiId) {
                     showMessage('Missing Information', 'Please fill in all required fields and ensure investment amount is valid.', false);
                     if (submitInvestmentBtn) {
                         submitInvestmentBtn.disabled = false;
@@ -3138,8 +3207,6 @@
                     }
                     return;
                 }
-
-                // Removed referral ID validation from investment form
 
                 if (amount < selectedPlanDetails.minInvestment || (amount % 100 !== 0)) {
                     showMessage('Invalid Amount', `Investment amount must be at least ₹${selectedPlanDetails.minInvestment} and in multiples of ₹100.`, false);
@@ -3169,6 +3236,32 @@
                      return;
                 }
 
+                // --- NEW: Fetch current user's bank details from their profile ---
+                const userDocRef = doc(db, `artifacts/${appId}/users/${currentUserId}`);
+                const userDocSnap = await getDoc(userDocRef);
+                let bankDetailsForInvestment = {};
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+                    bankDetailsForInvestment = userData.bankDetails || {}; // Get existing bank details
+                } else {
+                    showMessage('Bank Details Missing', 'Your bank details are not found in your profile. Please add them in the "Bank Card" section before investing.', false);
+                    if (submitInvestmentBtn) {
+                        submitInvestmentBtn.disabled = false;
+                        submitInvestmentBtn.textContent = 'Submit Investment';
+                    }
+                    return;
+                }
+
+                // Validate if essential bank details are present
+                if (!bankDetailsForInvestment.accountName || !bankDetailsForInvestment.accountNumber || !bankDetailsForInvestment.ifscCode) {
+                    showMessage('Bank Details Incomplete', 'Please ensure your bank account name, number, and IFSC code are saved in the "Bank Card" section before investing.', false);
+                     if (submitInvestmentBtn) {
+                        submitInvestmentBtn.disabled = false;
+                        submitInvestmentBtn.textContent = 'Submit Investment';
+                    }
+                    return;
+                }
+
                 try {
                     const userInvestmentsCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/investments`);
                     await addDoc(userInvestmentsCollectionRef, {
@@ -3182,11 +3275,11 @@
                         monthlyReturn: selectedPlanDetails.monthlyReturn, // Store the monthly return rate as a string (e.g., "5%")
                         paidUpiId: paidUpiId,
                         utrNumber: utrNumber,
-                        bankAccountName: bankAccountName,
-                        bankAccount: bankAccount,
-                        ifscCode: ifscCode,
-                        upiIdOptional: upiIdOptional || null,
-                        // Removed referralId from investment document
+                        // Include fetched bank details here
+                        bankAccountName: bankDetailsForInvestment.accountName || 'N/A',
+                        bankAccount: bankDetailsForInvestment.accountNumber || 'N/A',
+                        ifscCode: bankDetailsForInvestment.ifscCode || 'N/A',
+                        upiIdOptional: bankDetailsForInvestment.upiId || null, // Can be null if not provided
                         timestamp: serverTimestamp()
                     });
                     console.log(`[Investment Form] Investment successfully added for user ${currentUserId}.`);
@@ -3204,6 +3297,137 @@
                     if (submitInvestmentBtn) {
                         submitInvestmentBtn.disabled = false;
                         submitInvestmentBtn.textContent = 'Submit Investment';
+                    }
+                }
+            });
+
+            // --- NEW: Populate Bank Details Form ---
+            function populateBankDetailsForm() {
+                console.log("[Bank Card Modal] Populating form with current user bank details:", currentUserBankDetails);
+
+                const hasBankDetails = currentUserBankDetails.accountName && currentUserBankDetails.accountNumber && currentUserBankDetails.ifscCode;
+
+                if (bankAccountNameInput) bankAccountNameInput.value = currentUserBankDetails.accountName || '';
+                if (bankAccountNumberInput) bankAccountNumberInput.value = currentUserBankDetails.accountNumber || '';
+                if (ifscCodeInput) ifscCodeInput.value = currentUserBankDetails.ifscCode || '';
+                if (upiIdOptionalInput) upiIdOptionalInput.value = currentUserBankDetails.upiId || '';
+
+                if (hasBankDetails) {
+                    // Disable inputs
+                    if (bankAccountNameInput) bankAccountNameInput.disabled = true;
+                    if (bankAccountNumberInput) bankAccountNumberInput.disabled = true;
+                    if (ifscCodeInput) ifscCodeInput.disabled = true;
+                    if (upiIdOptionalInput) upiIdOptionalInput.disabled = true;
+
+                    // Hide save button, show message
+                    if (bankDetailsFormButtons) bankDetailsFormButtons.classList.add('hidden');
+                    if (bankDetailsSavedMessage) bankDetailsSavedMessage.classList.remove('hidden');
+                    if (bankDetailsInstructionText) bankDetailsInstructionText.classList.add('hidden'); // Hide initial instruction
+                } else {
+                    // Enable inputs
+                    if (bankAccountNameInput) bankAccountNameInput.disabled = false;
+                    if (bankAccountNumberInput) bankAccountNumberInput.disabled = false;
+                    if (ifscCodeInput) ifscCodeInput.disabled = false;
+                    if (upiIdOptionalInput) upiIdOptionalInput.disabled = false;
+
+                    // Show save button, hide message
+                    if (bankDetailsFormButtons) bankDetailsFormButtons.classList.remove('hidden');
+                    if (bankDetailsSavedMessage) bankDetailsSavedMessage.classList.add('hidden');
+                    if (bankDetailsInstructionText) bankDetailsInstructionText.classList.remove('hidden'); // Show initial instruction
+                }
+            }
+
+            // --- NEW: Save Bank Details Form Submission ---
+            bankCardForm?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                console.log("[Bank Card Form] Submission started."); // Log 1
+
+                // Prevent submission if inputs are disabled (meaning details are already saved)
+                if (bankAccountNameInput && bankAccountNameInput.disabled) {
+                    console.log("[Bank Card Form] Attempted to submit disabled form. Blocking.");
+                    return;
+                }
+
+                if (!currentUserId || (auth && auth.currentUser && auth.currentUser.isAnonymous)) {
+                    console.log("[Bank Card Form] Authentication check failed. User not logged in or is anonymous."); // Log 2
+                    showMessage('Authentication Required', 'Please sign in to save your bank details.', false);
+                    if (saveBankDetailsBtn) {
+                        saveBankDetailsBtn.disabled = false;
+                        saveBankDetailsBtn.textContent = 'Save Bank Details';
+                    }
+                    return;
+                }
+
+                if (saveBankDetailsBtn) {
+                    saveBankDetailsBtn.disabled = true;
+                    saveBankDetailsBtn.textContent = 'Saving...';
+                }
+
+                const accountName = bankAccountNameInput.value.trim();
+                const accountNumber = bankAccountNumberInput.value.trim();
+                const ifscCode = ifscCodeInput.value.trim();
+                const upiId = upiIdOptionalInput.value.trim();
+
+                console.log(`[Bank Card Form] Collected data: Account Name=${accountName}, Account Number=${accountNumber}, IFSC=${ifscCode}, UPI ID=${upiId}`); // Log 3
+
+                if (!accountName || !accountNumber || !ifscCode) {
+                    console.log("[Bank Card Form] Validation failed: Missing required fields."); // Log 4
+                    showMessage('Missing Information', 'Please fill in all required bank details (Account Name, Account Number, IFSC Code).', false);
+                    if (saveBankDetailsBtn) {
+                        saveBankDetailsBtn.disabled = false;
+                        saveBankDetailsBtn.textContent = 'Save Bank Details';
+                    }
+                    return;
+                }
+
+                // Basic validation for account number and IFSC (can be enhanced)
+                if (!/^\d+$/.test(accountNumber)) {
+                    console.log("[Bank Card Form] Validation failed: Invalid Account Number."); // Log 5
+                    showMessage('Invalid Account Number', 'Bank Account Number should contain only digits.', false);
+                    if (saveBankDetailsBtn) {
+                        saveBankDetailsBtn.disabled = false;
+                        saveBankDetailsBtn.textContent = 'Save Bank Details';
+                    }
+                    return;
+                }
+                if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifscCode)) {
+                    console.log("[Bank Card Form] Validation failed: Invalid IFSC Code."); // Log 6
+                    showMessage('Invalid IFSC Code', 'IFSC Code format is incorrect (e.g., ABCD0123456).', false);
+                    if (saveBankDetailsBtn) {
+                        saveBankDetailsBtn.disabled = false;
+                        saveBankDetailsBtn.textContent = 'Save Bank Details';
+                    }
+                    return;
+                }
+
+
+                try {
+                    const userDocRef = doc(db, `artifacts/${appId}/users/${currentUserId}`);
+                    console.log(`[Bank Card Form] Attempting to update document at path: artifacts/${appId}/users/${currentUserId}`); // Log 7
+                    await updateDoc(userDocRef, {
+                        bankDetails: {
+                            accountName: accountName,
+                            accountNumber: accountNumber,
+                            ifscCode: ifscCode,
+                            upiId: upiId || null // Store as null if empty
+                        }
+                    });
+                    console.log(`[Bank Card Form] Bank details saved for user ${currentUserId}.`); // Log 8
+                    showMessage('Bank Details Saved!', 'Your bank details have been successfully updated.', true);
+                    // After successful save, re-populate to make it read-only
+                    populateBankDetailsForm();
+                    // closeModal(bankCardModal); // Don't close, just make read-only
+                } catch (error) {
+                    console.error("[Bank Card Form Submission Error]", error); // Log 9
+                    let errorMessage = error.message;
+                    if (error.code === 'permission-denied') {
+                        errorMessage = 'Permission denied. Please check your Firebase Security Rules for user documents. Ensure authenticated users can write to their own user document.';
+                    }
+                    showMessage('Save Failed', `An error occurred while saving bank details: ${errorMessage}`, false);
+                } finally {
+                    if (saveBankDetailsBtn) {
+                        saveBankDetailsBtn.disabled = false;
+                        saveBankDetailsBtn.textContent = 'Save Bank Details';
                     }
                 }
             });
