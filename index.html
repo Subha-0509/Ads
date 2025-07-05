@@ -88,7 +88,8 @@
         #investmentDetailsModal .modal-content,
         #referEarnModal .modal-content,
         #whereMoneyWorksModal .modal-content,
-        #bankCardModal .modal-content { /* Added bankCardModal here */
+        #bankCardModal .modal-content,
+        #paymentHistoryModal .modal-content { /* Added paymentHistoryModal here */
             width: 600px;
         }
         /* Specifically ensuring myInvestmentsModal content is plain white */
@@ -96,7 +97,8 @@
         #investmentDetailsModal .modal-content,
         #referEarnModal .modal-content,
         #whereMoneyWorksModal .modal-content,
-        #bankCardModal .modal-content { /* Ensure plain white for detail modal too */
+        #bankCardModal .modal-content,
+        #paymentHistoryModal .modal-content { /* Ensure plain white for detail modal too */
             background-color: white;
             background-image: none;
         }
@@ -315,8 +317,8 @@
             border: 1px solid #e2e8f0; /* gray-200 */
             border-radius: 0.75rem; /* rounded-lg */
             box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05); /* subtle inset shadow */
-            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smoother transition */
             color: #2d3748;
+            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smoother transition */
         }
 
         .form-input-field:focus, .form-textarea-field:focus {
@@ -786,15 +788,7 @@
             line-height: 1.6;
         }
 
-        /* NEW: Styles for the enhanced Limited Time Offer section */
-        #limited-time-offer {
-            background-image: linear-gradient(to right, #ff007f, #ff8c00); /* Vibrant fuchsia to dark orange */
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Stronger shadow */
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Animation for glowing text */
+        /* NEW: Animation for glowing text */
         @keyframes text-glow {
             0% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.5), 0 0 10px rgba(255, 255, 255, 0.3); }
             50% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6), 0 0 30px rgba(255, 255, 255, 0.4); }
@@ -812,6 +806,159 @@
             text-shadow: 0 0 8px rgba(0, 255, 255, 0.8), 0 0 15px rgba(0, 255, 255, 0.6); /* Stronger blue glow */
             display: inline-block; /* Ensure text-shadow applies correctly */
         }
+
+        /* NEW: Styles for Payment History Modal */
+        #paymentHistoryModal .modal-content {
+            background-image: linear-gradient(to bottom right, #f8fafc, #e2e8f0); /* Light gray gradient */
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 90%;
+            text-align: center;
+        }
+
+        #paymentHistoryModal .modal-content h2 {
+            color: #1d4ed8;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        #paymentHistoryModal .payment-item {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+            text-align: left;
+            border-left: 6px solid #3b82f6; /* Blue accent */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        #paymentHistoryModal .payment-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        #paymentHistoryModal .payment-item p {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            color: #374151;
+        }
+
+        #paymentHistoryModal .payment-item p strong {
+            color: #1a202c;
+        }
+
+        #paymentHistoryModal .payment-item .amount {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #047857; /* Green for amount */
+        }
+
+        #paymentHistoryModal .payment-item .date-time {
+            font-size: 0.9rem;
+            color: #6b7280;
+            text-align: right;
+            margin-top: 0.5rem;
+        }
+
+        /* NEW: UPI App Buttons and QR Code Container */
+        .upi-payment-options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: #f0f8ff; /* Light blue background */
+            border-radius: 1rem;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .upi-app-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px; /* Full rounded */
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+
+        .upi-app-button img {
+            width: 24px;
+            height: 24px;
+            margin-right: 0.75rem;
+        }
+
+        .upi-app-button.gpay { background-color: #4285F4; } /* Google Blue */
+        .upi-app-button.gpay:hover { background-color: #3367D6; transform: translateY(-2px); box-shadow: 0 6px 10px rgba(0,0,0,0.15); }
+        .upi-app-button.phonepe { background-color: #6739B7; } /* PhonePe Purple */
+        .upi-app-button.phonepe:hover { background-color: #582DA0; transform: translateY(-2px); box-shadow: 0 6px 10px rgba(0,0,0,0.15); }
+        .upi-app-button.paytm { background-color: #00B9F1; } /* Paytm Blue */
+        .upi-app-button.paytm:hover { background-color: #0099CC; transform: translateY(-2px); box-shadow: 0 6px 10px rgba(0,0,0,0.15); }
+
+        .qr-code-container {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .qr-code-container img {
+            width: 180px;
+            height: 180px;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+        }
+        .qr-code-container p {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+        /* Specific styling for the manual UPI ID display in the invest modal */
+        .manual-upi-display {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            color: #2d3748;
+            word-break: break-all; /* Ensure long UPI IDs wrap */
+        }
+        .manual-upi-display .upi-id-text {
+            font-family: monospace;
+            font-weight: 600;
+            color: #1d4ed8;
+            flex-grow: 1;
+            text-align: center;
+            padding-right: 0.5rem;
+        }
+        .manual-upi-display .copy-btn-small {
+            background-color: #28a745;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.3rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            flex-shrink: 0;
+        }
+        .manual-upi-display .copy-btn-small:hover {
+            background-color: #218838;
+        }
+
     </style>
 </head>
 <body>
@@ -839,6 +986,9 @@
             <div id="dynamicHeaderText" class="flex-grow text-xl md:text-2xl font-semibold text-yellow-300 text-center">
                 <!-- Text will be inserted by JavaScript -->
             </div>
+            <!-- New: User Membership Status -->
+            <span id="userMembershipStatus" class="hidden md:block text-lg font-semibold text-green-300 ml-4"></span>
+
             <nav class="hidden md:block">
                 <ul class="flex space-x-8 text-lg font-medium">
                     <!-- Conditional Navigation based on Auth status -->
@@ -1164,20 +1314,6 @@
             <button class="modal-close-btn" id="closeInvestModalBtn">&times;</button>
             <h2 class="text-3xl font-bold text-blue-700 mb-6 text-center">Invest in <span id="investFormPlanName"></span></h2>
             <form id="investmentForm" class="flex flex-col items-center">
-                <!-- UPI IDs Section -->
-                <div class="w-full mb-6 text-center bg-gray-100 p-4 rounded-lg shadow-inner">
-                    <p class="text-lg font-semibold text-gray-800 mb-3">Please make your payment to one of the UPI IDs below:</p>
-                    
-                    <div class="flex items-center justify-center mb-3">
-                        <span id="upiId1" class="font-mono text-blue-700 text-lg break-all">chowdhurybarnadip98-1@okicici</span>
-                        <button type="button" class="copy-upi-btn" data-upi="chowdhurybarnadip98-1@okicici">Copy</button>
-                    </div>
-                    <div class="flex items-center justify-center">
-                        <span id="upiId2" class="font-mono text-blue-700 text-lg break-all">subhabubai1234-5@okicici</span>
-                        <button type="button" class="copy-upi-btn" data-upi="subhabubai1234-5@okicici">Copy</button>
-                    </div>
-                </div>
-
                 <label for="inv_name" class="w-full">Your Name:</label>
                 <input type="text" id="inv_name" placeholder="Your Name" required class="w-full">
 
@@ -1191,6 +1327,39 @@
                 <input type="number" id="inv_amount" placeholder="Investment Amount (₹)" min="500" step="100" required class="w-full">
                 <p class="text-sm text-gray-700 text-left w-full mt-1" id="invAmountValidationMessage">Minimum ₹500, in multiples of ₹100. Maximum ₹10,000.</p>
 
+                <!-- NEW: UPI Payment Options Section -->
+                <div class="upi-payment-options w-full">
+                    <p class="text-lg font-semibold text-gray-800 mb-2">Choose your payment method:</p>
+                    <div class="flex flex-col md:flex-row gap-4 w-full justify-center">
+                        <button type="button" class="upi-app-button gpay" data-upi-app="gpay">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/1200px-Google_Pay_Logo.svg.png" alt="GPay Logo"> Pay with GPay
+                        </button>
+                        <button type="button" class="upi-app-button phonepe" data-upi-app="phonepe">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/PhonePe_Logo.svg/1200px-PhonePe_Logo.svg.png" alt="PhonePe Logo"> Pay with PhonePe
+                        </button>
+                        <button type="button" class="upi-app-button paytm" data-upi-app="paytm">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo.png/1200px-Paytm_Logo.png" alt="Paytm Logo"> Pay with Paytm
+                        </button>
+                    </div>
+
+                    <div class="qr-code-container w-full mt-4">
+                        <p class="font-semibold text-gray-700 mb-2">Scan to Pay:</p>
+                        <img id="upiQrCode" src="" alt="UPI QR Code">
+                        <p>Or manually copy one of our UPI IDs:</p>
+                        <div class="manual-upi-display">
+                            <span class="upi-id-text" id="displayUpiId1">chowdhurybarnadip98-1@okicici</span>
+                            <button type="button" class="copy-btn-small" data-copy-target="displayUpiId1">Copy</button>
+                        </div>
+                        <div class="manual-upi-display mt-2">
+                            <span class="upi-id-text" id="displayUpiId2">subhabubai1234-5@okicici</span>
+                            <button type="button" class="copy-btn-small" data-copy-target="displayUpiId2">Copy</button>
+                        </div>
+                    </div>
+                </div>
+
+                <label for="inv_utr_number" class="w-full">UTR Number (Mandatory, after payment):</label>
+                <input type="text" id="inv_utr_number" placeholder="Enter UTR/Transaction Number" required class="w-full">
+
                 <label for="paidUpiId" class="w-full">Which UPI ID did you pay to?</label>
                 <select id="paidUpiId" required class="w-full">
                     <option value="">Select UPI ID</option>
@@ -1198,9 +1367,6 @@
                     <option value="subhabubai1234-5@okicici">subhabubai1234-5@okicici</option>
                 </select>
                 
-                <label for="inv_utr_number" class="w-full">UTR Number (Mandatory):</label>
-                <input type="text" id="inv_utr_number" placeholder="Enter UTR/Transaction Number" required class="w-full">
-
                 <input type="hidden" id="inv_plan_hidden"> <!-- Hidden field to store selected plan name -->
 
                 <!-- Terms & Conditions Checkbox -->
@@ -1326,16 +1492,7 @@
                     <span class="flex items-center"><span class="mr-2 text-red-500">🗓️</span>You will get your investment back:</span> <strong id="detailPayoutReturnDate" class="text-gray-800"></strong>
                 </p>
             </div>
-            <div class="financial-details-group mt-4 pt-4 text-sm space-y-1">
-                <p><span>UTR Number:</span> <strong id="detailUtrNumber" class="text-gray-800"></strong></p>
-                <p><span>Paid To UPI ID:</span> <strong id="detailPaidUpiId" class="text-gray-800"></strong></p>
-                <p><span>Bank Account Name:</span> <strong id="detailBankAccountName" class="text-gray-800"></strong></p>
-                <p><span>Bank A/C:</span> <strong id="detailBankAccount" class="text-gray-800"></strong></p>
-                <p><span>IFSC:</span> <strong id="detailIfscCode" class="text-gray-800"></strong></p>
-                <p id="detailOptionalUpiRow" class="hidden"><span>Your UPI ID:</span> <strong id="detailUpiIdOptional" class="text-gray-800"></strong></p>
-                <!-- Removed: Referral ID row from investment details -->
-                <!-- <p id="detailReferralIdRow" class="hidden"><span>Referral ID:</span> <strong id="detailReferralId" class="text-gray-800"></strong></p> -->
-            </div>
+            <!-- Removed the financial-details-group as requested -->
         </div>
     </div>
 
@@ -1513,6 +1670,20 @@
         </div>
     </div>
 
+    <!-- NEW: Payment History Modal -->
+    <div id="paymentHistoryModal" class="modal-overlay">
+        <div class="modal-content text-gray-800">
+            <button class="modal-close-btn" id="closePaymentHistoryModalBtn">&times;</button>
+            <h2 class="text-3xl font-bold text-blue-700 mb-6 text-center">Payment History</h2>
+            <div id="payment-history-container" class="space-y-4">
+                <!-- Payment items will be dynamically loaded here -->
+                <p id="no-payment-history-message" class="text-center text-lg text-gray-600">
+                    No payment history found.
+                </p>
+            </div>
+        </div>
+    </div>
+
 
     <script type="module">
         // Global variable to store referral ID from URL
@@ -1560,10 +1731,12 @@
         let isAuthReady = false; // New flag to indicate Firebase Auth is initialized and state determined
         let userCurrentPlans = []; // To store the list of plans the current user has invested in
         let currentUserBankDetails = {}; // New: To store the current user's bank details
+        let userPaymentHistoryData = []; // New: To store fetched payment history
 
         // Unsubscribe functions for onSnapshot listeners
         let unsubscribeInvestments = null;
         let unsubscribeCurrentUserDoc = null; // New unsubscribe for the current user's document
+        let unsubscribePaymentHistory = null; // New unsubscribe for payment history
 
 
         // --- Custom Message Modal Functions ---
@@ -1739,14 +1912,7 @@
             const detailInvestDate = document.getElementById('detailInvestDate');
             const detailPlanEndDate = document.getElementById('detailPlanEndDate');
             const detailPayoutReturnDate = document.getElementById('detailPayoutReturnDate');
-            const detailUtrNumber = document.getElementById('detailUtrNumber');
-            const detailPaidUpiId = document.getElementById('detailPaidUpiId');
-            const detailBankAccountName = document.getElementById('detailBankAccountName');
-            const detailBankAccount = document.getElementById('detailBankAccount');
-            const detailIfscCode = document.getElementById('detailIfscCode');
-            const detailUpiIdOptional = document.getElementById('detailUpiIdOptional');
-            const detailOptionalUpiRow = document.getElementById('detailOptionalUpiRow');
-            // Removed detailReferralId and detailReferralIdRow
+            // Removed elements for UTR, UPI, Bank Account details
 
             // Where Your Money Works specific elements (now a modal)
             const whereMoneyWorksModal = document.getElementById('whereMoneyWorksModal');
@@ -1777,6 +1943,15 @@
             const bankDetailsInstructionText = document.getElementById('bankDetailsInstructionText'); // New element
             const bankDetailsFormButtons = document.getElementById('bankDetailsFormButtons'); // New element for button container
 
+            // NEW: Payment History Modal elements
+            const paymentHistoryModal = document.getElementById('paymentHistoryModal');
+            const closePaymentHistoryModalBtn = document.getElementById('closePaymentHistoryModalBtn');
+            const paymentHistoryContainer = document.getElementById('payment-history-container');
+            const noPaymentHistoryMessage = document.getElementById('no-payment-history-message');
+
+            // NEW: UPI Payment elements in Invest Modal
+            const upiQrCodeImg = document.getElementById('upiQrCode');
+            const upiAppButtons = document.querySelectorAll('.upi-app-button');
 
             // New: Dynamic Header Text elements
             const dynamicHeaderText = document.getElementById('dynamicHeaderText');
@@ -1787,6 +1962,16 @@
                 "Invest Smart, Live Better"
             ];
             let currentPhraseIndex = 0;
+
+            // New: User Membership Status element
+            const userMembershipStatusSpan = document.getElementById('userMembershipStatus');
+
+            // Your company's UPI IDs
+            const companyUpiIds = [
+                { id: "chowdhurybarnadip98-1@okicici", name: "Barnadip Chowdhury" },
+                { id: "subhabubai1234-5@okicici", name: "Subha Bubai" }
+            ];
+            // Removed `selectedCompanyUpi` from global scope as it will be selected inside the function.
 
 
             // --- Helper to generate a unique 6-digit number (optimized) ---
@@ -1851,7 +2036,7 @@
                     // Set isAuthReady to true early within onAuthStateChanged, as soon as we know auth state is determined
                     isAuthReady = true;
                     console.log(`[onAuthStateChanged] isAuthReady set to: ${isAuthReady}`);
-                    updateAuthUI(user && !user.isAnonymous, currentUserEmail, currentUserCustomId);
+                    // updateAuthUI will be called after fetching user data, so it has the most up-to-date info
 
 
                     if (user) {
@@ -1885,7 +2070,7 @@
                                 referredByDuringSignUp = null; // Clear the temporary variable after use
                                 // MODIFIED: Changed the message to remove "in Firestore"
                                 showMessage('Profile Created!', 'Your user profile has been successfully created.', true);
-                                updateAuthUI(true, user.email, newCustomUserId); // Re-update UI with new custom ID
+                                // updateAuthUI will be called after fetching investments
                             } catch (error) {
                                 console.error("[onAuthStateChanged: User Doc Creation Error]", error);
                                 let errorMessage = error.message;
@@ -1901,7 +2086,7 @@
                             currentUserReferralEarningsTotal = userData.referralEarnings?.total || 0; // Get referral earnings total
                             currentUserBankDetails = userData.bankDetails || {}; // Get bank details
                             console.log(`[onAuthStateChanged:onSnapshot] User ${currentUserId} data loaded. Custom ID: ${currentUserCustomId}, Referral Earnings: ${currentUserReferralEarningsTotal}, Bank Details:`, currentUserBankDetails);
-                            updateAuthUI(user && !user.isAnonymous, currentUserEmail, currentUserCustomId);
+                            // updateAuthUI will be called after fetching investments
                         } else {
                             console.log(`[onAuthStateChanged] User is anonymous or document already exists.`);
                         }
@@ -1922,7 +2107,7 @@
                                 currentUserReferralEarningsTotal = userData.referralEarnings?.total || 0; // Update earnings on snapshot
                                 currentUserBankDetails = userData.bankDetails || {}; // Update bank details on snapshot
                                 console.log(`[onAuthStateChanged:onSnapshot] User ${currentUserId} data updated. Custom ID: ${currentUserCustomId}, Referral Earnings: ${currentUserReferralEarningsTotal}, Bank Details:`, currentUserBankDetails);
-                                updateAuthUI(user && !user.isAnonymous, currentUserEmail, currentUserCustomId);
+                                // updateAuthUI will be called after fetching investments, which is done right after this block
                                 if (referEarnModal && referEarnModal.classList.contains('active')) {
                                     displayYourReferralId();
                                     displayYourReferralLink(); // Call to update referral link display
@@ -1935,6 +2120,7 @@
                                 }
                                 // Also update referral button state when user data changes
                                 updateReferralButtonState();
+                                updateUserMembershipDisplay(); // Update membership display on data change
                             } else {
                                 // If doc disappears after creation, or was never created for some reason
                                 console.warn(`[onAuthStateChanged:onSnapshot] User document for ${currentUserId} does not exist after initial check.`);
@@ -1942,8 +2128,9 @@
                                 currentUserReferredBy = null;
                                 currentUserReferralEarningsTotal = 0; // Clear earnings on doc disappearance
                                 currentUserBankDetails = {}; // Clear bank details on doc disappearance
-                                updateAuthUI(user && !user.isAnonymous, currentUserEmail, currentUserCustomId);
+                                // updateAuthUI will be called after fetching investments
                                 updateReferralButtonState(); // Update referral button state
+                                updateUserMembershipDisplay(); // Update membership display on data change
                             }
                         }, (error) => {
                             console.error("[onAuthStateChanged:onSnapshot Error]", error);
@@ -1954,7 +2141,10 @@
                         });
 
                         // Fetch investments for the current user to determine their active plans
-                        fetchInvestmentsForReferralCheck();
+                        // This call ensures userCurrentPlans is updated before updateAuthUI
+                        await fetchInvestmentsForReferralCheck();
+                        updateAuthUI(user && !user.isAnonymous, currentUserEmail, currentUserCustomId);
+
 
                         if (referralIdFromUrl && signUpReferrerIdInput) {
                             signUpReferrerIdInput.value = referralIdFromUrl;
@@ -1970,7 +2160,8 @@
                         currentUserBankDetails = {}; // Clear bank details on logout
                         userCurrentPlans = []; // Clear user plans on logout
                         updateAuthUI(false); // Update UI to reflect logged out state
-                        updateReferralButtonState(); // Update referral button state
+                        updateReferralButtonState();
+                        updateUserMembershipDisplay(); // Update membership display on logout
 
                         // Clear investments and referred users display upon logout
                         if (investmentsContainer) {
@@ -1991,6 +2182,16 @@
                         if (yourReferralLinkSpan) yourReferralLinkSpan.textContent = 'Sign in to get your link'; // Clear referral link
                         if (totalReferralEarningsSpan) totalReferralEarningsSpan.textContent = '₹0.00'; // Clear earnings display
 
+                        // NEW: Clear payment history display upon logout
+                        if (paymentHistoryContainer) {
+                            paymentHistoryContainer.innerHTML = '';
+                            if (noPaymentHistoryMessage.parentNode !== paymentHistoryContainer) {
+                                paymentHistoryContainer.appendChild(noPaymentHistoryMessage);
+                            }
+                            noPaymentHistoryMessage.textContent = 'Please sign in to view your payment history.';
+                            noPaymentHistoryMessage.style.display = 'block';
+                        }
+
                         // --- Crucial: Unsubscribe from listeners on logout ---
                         if (unsubscribeInvestments) {
                             unsubscribeInvestments();
@@ -2001,6 +2202,12 @@
                             unsubscribeCurrentUserDoc();
                             unsubscribeCurrentUserDoc = null;
                             console.log("[onAuthStateChanged] Unsubscribed from current user document listener.");
+                        }
+                        // NEW: Unsubscribe from payment history listener
+                        if (unsubscribePaymentHistory) {
+                            unsubscribePaymentHistory();
+                            unsubscribePaymentHistory = null;
+                            console.log("[onAuthStateChanged] Unsubscribed from payment history listener.");
                         }
 
                         if (referralIdFromUrl && signUpReferrerIdInput) {
@@ -2020,7 +2227,8 @@
                 showMessage('Initialization Error', `Failed to initialize Firebase services: ${error.message}. Please ensure your Firebase project's API Key and other configuration are correct, and that Email/Password and Anonymous sign-in methods are enabled in your Firebase Authentication settings.`, false);
                 isAuthReady = true; // Set to true even on error to unblock UI
                 updateAuthUI(false);
-                updateReferralButtonState(); // Update referral button state
+                updateReferralButtonState();
+                updateUserMembershipDisplay(); // Update membership display on error
             }
 
             // --- Dynamic Header Text Rotation ---
@@ -2139,6 +2347,18 @@
                 bankCardModal.addEventListener('click', (e) => {
                     if (e.target === bankCardModal) {
                         closeModal(bankCardModal);
+                    }
+                });
+            }
+
+            // NEW: Payment History Modal event listeners
+            if (closePaymentHistoryModalBtn) {
+                closePaymentHistoryModalBtn.addEventListener('click', () => closeModal(paymentHistoryModal));
+            }
+            if (paymentHistoryModal) {
+                paymentHistoryModal.addEventListener('click', (e) => {
+                    if (e.target === paymentHistoryModal) {
+                        closeModal(paymentHistoryModal);
                     }
                 });
             }
@@ -2331,6 +2551,9 @@
             function updateAuthUI(loggedIn, email = '', customId = null) {
                 console.log(`[Auth UI] Updating UI. LoggedIn: ${loggedIn}, Email: ${email}, Custom ID: ${customId}`);
                 const myInvestmentsLink = `<li><button id="myInvestmentsOpenBtn" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">My Investments</button></li>`;
+                // Conditional rendering for Payment History
+                const paymentHistoryLink = userCurrentPlans.length > 0 ?
+                    `<li><button id="paymentHistoryOpenBtn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Payment History</button></li>` : '';
                 const referEarnLink = `<li><button id="referEarnOpenBtn" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Refer & Earn</button></li>`; // Updated button text
                 const bankCardLink = `<li><button id="bankCardOpenBtn" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Bank Card</button></li>`; // New: Bank Card button
                 const signOutLink = `<li><button id="signOutBtn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Sign Out</button></li>`;
@@ -2340,13 +2563,13 @@
                 `;
 
                 if (navAuthLinks) {
-                    navAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${referEarnLink}${bankCardLink}${signOutLink}` : loggedOutLinks;
+                    navAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${paymentHistoryLink}${referEarnLink}${bankCardLink}${signOutLink}` : loggedOutLinks;
                 } else {
                     console.warn("navAuthLinks element not found.");
                 }
 
                 if (mobileNavAuthLinks) {
-                    mobileNavAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${referEarnLink}${bankCardLink}${signOutLink}` : loggedOutLinks;
+                    mobileNavAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${paymentHistoryLink}${referEarnLink}${bankCardLink}${signOutLink}` : loggedOutLinks;
                 } else {
                     console.warn("mobileNavAuthLinks element not found.");
                 }
@@ -2415,6 +2638,14 @@
                     populateBankDetailsForm(); // Populate form when modal opens
                 });
 
+                // NEW: Attach listener for Payment History button
+                // This button will only exist if userCurrentPlans.length > 0
+                document.getElementById('paymentHistoryOpenBtn')?.addEventListener('click', () => {
+                    openModal(paymentHistoryModal);
+                    closeMobileMenu();
+                    fetchPaymentHistory(); // Fetch and display payment history
+                });
+
 
                 // Mobile menu specific listeners
                 document.querySelector('#mobileNavAuthLinks #signOutBtn')?.addEventListener('click', async () => {
@@ -2447,6 +2678,13 @@
                     closeMobileMenu();
                     populateBankDetailsForm();
                 });
+                // NEW: Mobile Payment History button listener
+                // This button will only exist if userCurrentPlans.length > 0
+                document.querySelector('#mobileNavAuthLinks #paymentHistoryOpenBtn')?.addEventListener('click', () => {
+                    openModal(paymentHistoryModal);
+                    closeMobileMenu();
+                    fetchPaymentHistory();
+                });
 
 
                 if (loggedIn) {
@@ -2464,6 +2702,7 @@
                     if (totalReferralEarningsSpan) totalReferralEarningsSpan.textContent = '₹0.00'; // Clear earnings display
                 }
                 updateReferralButtonState(); // Call this after UI updates
+                updateUserMembershipDisplay(); // Call this after auth state changes
             }
 
             // --- Update Referral Button State ---
@@ -2495,12 +2734,40 @@
                 }
             }
 
+            // --- NEW: Update User Membership Display in Header ---
+            function updateUserMembershipDisplay() {
+                if (!userMembershipStatusSpan) {
+                    console.warn("[updateUserMembershipDisplay] userMembershipStatusSpan element not found.");
+                    return;
+                }
+
+                if (!currentUserId || (auth && auth.currentUser && auth.currentUser.isAnonymous) || !isAuthReady) {
+                    userMembershipStatusSpan.textContent = '';
+                    userMembershipStatusSpan.classList.add('hidden');
+                    return;
+                }
+
+                let membershipText = "Invest to Become a Member!"; // Default for logged-in but no active plan
+
+                if (userCurrentPlans.includes("Elite 12-Month Plan")) {
+                    membershipText = "Elite Member 👑";
+                } else if (userCurrentPlans.includes("Premium 6-Month Plan")) {
+                    membershipText = "Premium Member ⭐";
+                } else if (userCurrentPlans.includes("Standard Plan")) {
+                    membershipText = "Standard Member 🛡️";
+                }
+
+                userMembershipStatusSpan.textContent = membershipText;
+                userMembershipStatusSpan.classList.remove('hidden');
+            }
+
 
             // --- Fetch Investments for Referral Check (non-UI update version) ---
             async function fetchInvestmentsForReferralCheck() {
                 if (!currentUserId || !db) {
                     userCurrentPlans = [];
                     updateReferralButtonState();
+                    updateUserMembershipDisplay(); // Update membership display
                     return;
                 }
 
@@ -2516,11 +2783,13 @@
                     userCurrentPlans = Array.from(plans);
                     console.log("[fetchInvestmentsForReferralCheck] User's current plans:", userCurrentPlans);
                     updateReferralButtonState(); // Update button state after fetching plans
+                    updateUserMembershipDisplay(); // Update membership display after fetching plans
 
                 } catch (error) {
                     console.error("[fetchInvestmentsForReferralCheck Error]", error);
                     userCurrentPlans = []; // Reset on error
                     updateReferralButtonState();
+                    updateUserMembershipDisplay(); // Update membership display
                 }
             }
 
@@ -2816,20 +3085,8 @@
                 detailInvestDate.textContent = formattedInvestDate;
                 detailPlanEndDate.textContent = formattedPlanEndDate;
                 detailPayoutReturnDate.textContent = formattedPayoutReturnDate;
-                detailUtrNumber.textContent = investment.utrNumber;
-                detailPaidUpiId.textContent = investment.paidUpiId || 'N/A';
-                // Now read bank details from the investment object, not current user profile
-                detailBankAccountName.textContent = investment.bankAccountName || 'N/A';
-                detailBankAccount.textContent = investment.bankAccount || 'N/A';
-                detailIfscCode.textContent = investment.ifscCode || 'N/A';
-
-                if (investment.upiIdOptional) {
-                    detailUpiIdOptional.textContent = investment.upiIdOptional;
-                    detailOptionalUpiRow.classList.remove('hidden');
-                } else {
-                    detailUpiIdOptional.textContent = '';
-                    detailOptionalUpiRow.classList.add('hidden');
-                }
+                // Removed all lines that set text content for UTR, UPI, Bank Account details
+                // The financial-details-group div is now removed from HTML, so no need to hide/show its rows.
 
                 console.log("[Investment Detail] Modal populated and opened.");
 
@@ -3134,13 +3391,15 @@
                         if (invAmountValidationMessage) {
                              invAmountValidationMessage.textContent = `Minimum ₹${selectedPlanDetails.minInvestment}, in multiples of ₹100. Maximum ₹10,000.`
                         }
+                        // NEW: Generate QR and deep links when invest modal opens
+                        generateUpiPaymentOptions(selectedPlanDetails.minInvestment);
                     }
                     if (invEmailInput && currentUserEmail) invEmailInput.value = currentUserEmail;
                 });
             }
 
             // --- Copy UPI ID functionality ---
-            document.querySelectorAll('.copy-upi-btn').forEach(button => {
+            document.querySelectorAll('.copy-upi-btn, .copy-btn-small').forEach(button => { // Added .copy-btn-small
                 button.addEventListener('click', (e) => {
                     const upiIdToCopy = e.target.dataset.upi || document.getElementById(e.target.dataset.copyTarget)?.textContent;
                     if (!upiIdToCopy) {
@@ -3161,6 +3420,31 @@
                     document.body.removeChild(tempInput);
                 });
             });
+
+            // --- NEW: Generate UPI Deep Link and QR Code ---
+            function generateUpiPaymentOptions(amount) {
+                // Randomly pick one UPI ID for this specific payment instance
+                const selectedCompanyUpi = companyUpiIds[Math.floor(Math.random() * companyUpiIds.length)];
+
+                const payeeName = "ADS FUND";
+                const transactionNote = `Investment for ${selectedPlanDetails.planName}`;
+                const upiDeepLink = `upi://pay?pa=${selectedCompanyUpi.id}&pn=${encodeURIComponent(payeeName)}&am=${amount}&tn=${encodeURIComponent(transactionNote)}&cu=INR`;
+                
+                // Set QR code source
+                if (upiQrCodeImg) {
+                    upiQrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiDeepLink)}`;
+                }
+
+                // Attach deep link to UPI app buttons
+                upiAppButtons.forEach(button => {
+                    button.onclick = () => {
+                        // For demonstration, we'll use a generic deep link.
+                        // In a real scenario, you might construct app-specific deep links.
+                        // For now, just open the generic UPI deep link.
+                        window.location.href = upiDeepLink;
+                    };
+                });
+            }
 
             // --- Investment Form Modal Logic ---
             closeInvestModalBtn?.addEventListener('click', () => closeModal(investModal));
@@ -3188,7 +3472,7 @@
                 const utrNumber = invUtrNumberInput.value.trim();
                 const planName = invPlanHiddenInput.value.trim();
 
-                console.log(`[Investment Form] Collected data: Name=${name}, Email=${email}, Amount=${amount}, Plan=${planName}`);
+                console.log(`[Investment Form] Collected data: Name=${name}, Email=${email}, Amount=${amount}, Plan=${planName}, Paid UPI ID=${paidUpiId}, UTR=${utrNumber}`);
 
                 if (!name || !email || !mobile || !utrNumber || !planName || isNaN(amount) || !paidUpiId) {
                     showMessage('Missing Information', 'Please fill in all required fields and ensure investment amount is valid.', false);
@@ -3431,6 +3715,97 @@
                     }
                 }
             });
+
+            // --- NEW: Fetch and Display Payment History ---
+            function fetchPaymentHistory() {
+                if (!isAuthReady || !currentUserId || (auth && auth.currentUser && auth.currentUser.isAnonymous) || !db) {
+                    console.log("[Fetch Payment History] Auth not ready, not a registered user, anonymous, or Firestore is not ready. Cannot fetch payment history.");
+                    if (paymentHistoryContainer && noPaymentHistoryMessage) {
+                        paymentHistoryContainer.innerHTML = '';
+                        if (noPaymentHistoryMessage.parentNode !== paymentHistoryContainer) {
+                            paymentHistoryContainer.appendChild(noPaymentHistoryMessage);
+                        }
+                        noPaymentHistoryMessage.textContent = 'Please sign in to view your payment history.';
+                        noPaymentHistoryMessage.style.display = 'block';
+                    }
+                    return;
+                }
+
+                if (paymentHistoryContainer) {
+                    paymentHistoryContainer.innerHTML = '<p class="text-center text-lg text-gray-600">Loading payment history...</p>';
+                    noPaymentHistoryMessage.style.display = 'none';
+                }
+                console.log(`[Fetch Payment History] Attempting to fetch payments for user UID: ${currentUserId} in path: artifacts/${appId}/users/${currentUserId}/investments`);
+
+                const userInvestmentsRef = collection(db, `artifacts/${appId}/users/${currentUserId}/investments`);
+                const q = query(userInvestmentsRef); // No orderBy to avoid index issues
+
+                if (unsubscribePaymentHistory) {
+                    unsubscribePaymentHistory();
+                    console.log("[Fetch Payment History] Unsubscribed from previous payment history listener.");
+                }
+
+                unsubscribePaymentHistory = onSnapshot(q, (snapshot) => {
+                    userPaymentHistoryData = [];
+                    if (snapshot.empty) {
+                        console.log("[Fetch Payment History] No payment history found for this user.");
+                        if (paymentHistoryContainer && noPaymentHistoryMessage) {
+                            paymentHistoryContainer.innerHTML = '';
+                            if (noPaymentHistoryMessage.parentNode !== paymentHistoryContainer) {
+                                paymentHistoryContainer.appendChild(noPaymentHistoryMessage);
+                            }
+                            noPaymentHistoryMessage.textContent = 'No payment history found.';
+                            noPaymentHistoryMessage.style.display = 'block';
+                        }
+                    } else {
+                        if (paymentHistoryContainer) paymentHistoryContainer.innerHTML = '';
+                        noPaymentHistoryMessage.style.display = 'none';
+                        snapshot.forEach((doc) => {
+                            const payment = doc.data();
+                            payment.id = doc.id;
+                            userPaymentHistoryData.push(payment);
+                            console.log(`[Fetch Payment History] Fetched payment:`, payment);
+                        });
+
+                        // Sort by timestamp descending (most recent first)
+                        userPaymentHistoryData.sort((a, b) => {
+                            const dateA = a.timestamp && a.timestamp.toDate ? a.timestamp.toDate() : new Date(0);
+                            const dateB = b.timestamp && b.timestamp.toDate ? b.timestamp.toDate() : new Date(0);
+                            return dateB.getTime() - dateA.getTime();
+                        });
+
+                        userPaymentHistoryData.forEach((payment) => {
+                            const paymentDate = payment.timestamp && payment.timestamp.toDate ? new Date(payment.timestamp.toDate()) : new Date();
+                            const formattedDateTime = paymentDate.toLocaleString('en-IN', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                                hour12: true
+                            });
+
+                            const paymentItem = `
+                                <div class="payment-item">
+                                    <p><strong>Plan:</strong> ${payment.planName || 'N/A'}</p>
+                                    <p class="amount"><strong>Amount:</strong> ₹${parseFloat(payment.amount).toFixed(2) || 'N/A'}</p>
+                                    <p><strong>Paid To UPI ID:</strong> ${payment.paidUpiId || 'N/A'}</p>
+                                    <p><strong>UTR Number:</strong> ${payment.utrNumber || 'N/A'}</p>
+                                    <p class="date-time"><strong>Payment Time:</strong> ${formattedDateTime}</p>
+                                </div>
+                            `;
+                            if (paymentHistoryContainer) paymentHistoryContainer.insertAdjacentHTML('beforeend', paymentItem);
+                        });
+                        console.log("[Fetch Payment History] Payment history displayed.");
+                    }
+                }, (error) => {
+                    console.error("[Fetch Payment History Error]", error);
+                    if (currentUserId && (auth && auth.currentUser && !auth.currentUser.isAnonymous)) {
+                        if (paymentHistoryContainer) paymentHistoryContainer.innerHTML = '<p class="text-center text-red-500">Error loading payment history. Please try again later.</p>';
+                    }
+                });
+            }
 
 
             // --- Event listener for "Explore Our Plans" button ---
