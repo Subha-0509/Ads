@@ -89,7 +89,8 @@
         #referEarnModal .modal-content,
         #whereMoneyWorksModal .modal-content,
         #bankCardModal .modal-content,
-        #paymentHistoryModal .modal-content { /* Added paymentHistoryModal here */
+        #paymentHistoryModal .modal-content,
+        #whyChooseUsDetailModal .modal-content { /* Added paymentHistoryModal and whyChooseUsDetailModal here */
             width: 600px;
         }
         /* Specifically ensuring myInvestmentsModal content is plain white */
@@ -98,7 +99,8 @@
         #referEarnModal .modal-content,
         #whereMoneyWorksModal .modal-content,
         #bankCardModal .modal-content,
-        #paymentHistoryModal .modal-content { /* Ensure plain white for detail modal too */
+        #paymentHistoryModal .modal-content,
+        #whyChooseUsDetailModal .modal-content { /* Ensure plain white for detail modal too */
             background-color: white;
             background-image: none;
         }
@@ -959,6 +961,92 @@
             background-color: #218838;
         }
 
+        /* Styles for Why Choose Us Buttons */
+        .why-choose-us-button {
+            background-color: white;
+            border-radius: 2rem; /* More rounded */
+            padding: 2rem; /* Increased padding */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Deeper shadow */
+            transform: translateY(0);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+            border-bottom: 6px solid; /* For accent color */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-align: center;
+            width: 100%; /* Ensure they take full grid column width */
+            height: 100%; /* Ensure consistent height in grid */
+        }
+
+        .why-choose-us-button:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .why-choose-us-button.high-returns { border-color: #047857; /* green-700 */ }
+        .why-choose-us-button.special-offers { border-color: #d97706; /* orange-700 */ }
+        .why-choose-us-button.security-trust { border-color: #0d9488; /* teal-700 */ }
+
+        .why-choose-us-button .icon-wrapper {
+            font-size: 3.5rem; /* Larger icon */
+            margin-bottom: 1rem;
+        }
+
+        .why-choose-us-button h3 {
+            font-size: 2rem; /* Larger heading */
+            font-weight: 700; /* Bolder */
+            color: #1d4ed8; /* blue-700 */
+            margin-bottom: 0.75rem;
+        }
+
+        .why-choose-us-button p {
+            font-size: 1.1rem; /* Larger paragraph text */
+            color: #4a5568; /* gray-700 */
+            line-height: 1.6;
+        }
+
+        /* Why Choose Us Detail Modal Specific Styles */
+        #whyChooseUsDetailModal .modal-content {
+            background-image: linear-gradient(to bottom right, #f0f9ff, #e0f2fe); /* Light blue gradient */
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+        }
+
+        #whyChooseUsDetailModal .modal-content h2 {
+            color: #1d4ed8;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        #whyChooseUsDetailModal .modal-content p {
+            font-size: 1.15rem;
+            color: #374151;
+            line-height: 1.7;
+        }
+        /* Style for ul within whyChooseUsDetailModal */
+        #whyChooseUsDetailModal .modal-content ul {
+            list-style: disc;
+            list-style-position: inside;
+            padding-left: 1.25rem; /* Indent list items */
+            color: #4a5568;
+            font-size: 1.05rem; /* Slightly smaller than p for list items */
+            text-align: left; /* Align list items left */
+            margin-top: 1rem; /* Space above list */
+            margin-bottom: 1rem; /* Space below list */
+        }
+        #whyChooseUsDetailModal .modal-content ul li {
+            margin-bottom: 0.5rem;
+        }
+        #whyChooseUsDetailModal .modal-content ul li:last-child {
+            margin-bottom: 0;
+        }
+
     </style>
 </head>
 <body>
@@ -966,28 +1054,30 @@
     <!-- Header Section -->
     <header class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white shadow-lg py-4 fixed w-full z-10">
         <div class="container mx-auto px-6 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <!-- Original SVG Logo - using a custom icon for "ADS FUND" -->
-                <svg class="w-10 h-10 text-yellow-300" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <!-- A stylized 'A' for ADS with an upward arrow to represent growth -->
-                    <path d="M12 2L2 22H5.5L12 8.3L18.5 22H22L12 2ZM12 5.6L14.7 11.2H9.3L12 5.6Z" fill="#ffeb3b"/>
-                    <!-- A simple 'D' like shape for diversification/development -->
-                    <path d="M19 12C19 15.866 15.866 19 12 19C8.13401 19 5 15.866 5 12C5 8.13401 8.13401 5 12 5H19V12ZM12 7C9.23858 7 7 9.23858 7 12C7 14.7614 9.23858 17 12 17C14.7614 17 17 14.7614 17 12H12V7Z" fill="#81c784"/>
-                    <!-- A simple 'S' for security/stability -->
-                    <path d="M17 6C14.7909 6 13 7.79086 13 10C13 12.2091 14.7909 14 17 14C19.2091 14 21 12.2091 21 10H17V6Z" fill="#ffa726"/>
-                    <path d="M7 18C9.20914 18 11 16.2091 11 14C11 11.7909 9.20914 10 7 10C4.79086 10 3 11.7909 3 14H7V18Z" fill="#42a5f5"/>
-                </svg>
+            <!-- Left side: Logo and Membership Status (now stacked) -->
+            <div class="flex flex-col items-start space-y-1">
+                <div class="flex items-center space-x-3">
+                    <!-- Original SVG Logo -->
+                    <svg class="w-10 h-10 text-yellow-300" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <!-- A stylized 'A' for ADS with an upward arrow to represent growth -->
+                        <path d="M12 2L2 22H5.5L12 8.3L18.5 22H22L12 2ZM12 5.6L14.7 11.2H9.3L12 5.6Z" fill="#ffeb3b"/>
+                        <!-- A simple 'D' like shape for diversification/development -->
+                        <path d="M19 12C19 15.866 15.866 19 12 19C8.13401 19 5 15.866 5 12C5 8.13401 8.13401 5 12 5H19V12ZM12 7C9.23858 7 7 9.23858 7 12C7 14.7614 9.23858 17 12 17C14.7614 17 17 14.7614 17 12H12V7Z" fill="#81c784"/>
+                        <!-- A simple 'S' for security/stability -->
+                        <path d="M17 6C14.7909 6 13 7.79086 13 10C13 12.2091 14.7909 14 17 14C19.2091 14 21 12.2091 21 10H17V6Z" fill="#ffa726"/>
+                        <path d="M7 18C9.20914 18 11 16.2091 11 14C11 11.7909 9.20914 10 7 10C4.79086 10 3 11.7909 3 14H7V18Z" fill="#42a5f5"/>
+                    </svg>
 
-                <a href="#" class="text-3xl font-bold tracking-tight">ADS FUND</a>
+                    <a href="#" class="text-3xl font-bold tracking-tight">ADS FUND</a>
+                </div>
+                <!-- Membership Status - now always visible, stacked below logo/text -->
+                <span id="userMembershipStatus" class="text-sm font-semibold text-green-300 ml-1"></span>
             </div>
+
             <!-- Dynamic Motivational Text for Desktop & Mobile -->
-            <!-- Adjusted classes: removed `hidden md:block` to make it visible on all screens,
-                 and added `flex-grow` for proper spacing within the flex container. -->
             <div id="dynamicHeaderText" class="flex-grow text-xl md:text-2xl font-semibold text-yellow-300 text-center">
                 <!-- Text will be inserted by JavaScript -->
             </div>
-            <!-- New: User Membership Status -->
-            <span id="userMembershipStatus" class="hidden md:block text-lg font-semibold text-green-300 ml-4"></span>
 
             <nav class="hidden md:block">
                 <ul class="flex space-x-8 text-lg font-medium">
@@ -997,7 +1087,7 @@
                     </li>
                 </ul>
             </nav>
-            <div class="md:hidden">
+            <div class="md:hidden flex-shrink-0"> <!-- Added flex-shrink-0 for mobile menu button -->
                 <button id="mobileMenuButton" class="text-white focus:outline-none">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -1203,21 +1293,32 @@
         <div class="container mx-auto px-6">
             <h2 class="text-4xl font-extrabold text-center mb-12 gradient-text-blue">Why Choose ADS FUND?</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <div class="bg-white rounded-2xl p-8 shadow-xl transform transition duration-300 hover:scale-105 border-b-4 border-green-500 text-center">
-                    <div class="text-5xl text-green-600 mb-4 float-animation">📈</div>
-                    <h3 class="text-2xl font-bold text-blue-700 mb-3">High Returns</h3>
+                <!-- High Returns Button -->
+                <button class="why-choose-us-button high-returns"
+                        data-title="High Returns"
+                        data-content="We prioritize helping your money grow faster than traditional saving methods. Our investment plans offer industry-leading monthly returns that consistently outperform banks and fixed deposits.<ul><li>Monthly Payouts: Get regular income each month, not just at the end of your investment term.</li><li>Compounding Advantage: Reinvesting your returns amplifies your wealth over time.</li><li>Flexible Options: Choose from multiple plans (Standard, Premium, Elite) based on your goals and comfort level.</li><li>Example: ₹10,000 in the Elite plan (7% monthly) grows to ₹19,000 in just one year.</li></ul>✅ Why this matters: You're not waiting years to see results — your money works now and keeps growing with you.">
+                    <div class="icon-wrapper text-green-600 float-animation">📈</div>
+                    <h3>High Returns</h3>
                     <p class="text-lg text-gray-700">We offer industry-leading returns with guaranteed monthly payouts, maximizing your investment growth.</p>
-                </div>
-                <div class="bg-white rounded-2xl p-8 shadow-xl transform transition duration-300 hover:scale-105 border-b-4 border-orange-500 text-center">
-                    <div class="text-5xl text-orange-600 mb-4 float-animation">⭐</div>
-                    <h3 class="text-2xl font-bold text-blue-700 mb-3">Special Offers</h3>
+                </button>
+
+                <!-- Special Offers Button -->
+                <button class="why-choose-us-button special-offers"
+                        data-title="Special Offers"
+                        data-content="Maximize your profits with our exclusive 6-month and 12-month bonuses, rewarding your loyalty. These special offers are designed to give you even greater returns for longer-term commitments, enhancing your overall investment experience with additional benefits.<ul><li>6-Month Bonus: Premium investors get a 4% additional bonus on top of their monthly interest.</li><li>12-Month Bonus: Elite plan investors enjoy a 6% bonus, significantly boosting total returns.</li><li>Referral Rewards: Invite others and earn up to 7% referral bonuses, compounding your benefits.</li><li>Flexibility: Reinvest bonuses or withdraw them after lock-in — it’s your choice.</li></ul>🎁 Why this matters: Long-term investors get extra profit, and your trust earns tangible rewards.">
+                    <div class="icon-wrapper text-orange-600 float-animation">⭐</div>
+                    <h3>Special Offers</h3>
                     <p class="text-lg text-gray-700">Maximize your profits with our exclusive 6-month and 12-month bonuses, rewarding your loyalty.</p>
-                </div>
-                <div class="bg-white rounded-2xl p-8 shadow-xl transform transition duration-300 hover:scale-105 border-b-4 border-teal-500 text-center">
-                    <div class="text-5xl text-teal-600 mb-4 float-animation">🔒</div>
-                    <h3 class="text-2xl font-bold text-blue-700 mb-3">Security & Trust</h3>
+                </button>
+
+                <!-- Security & Trust Button -->
+                <button class="why-choose-us-button security-trust"
+                        data-title="Security & Trust"
+                        data-content="Your investment is protected with transparent terms and a dedicated support team, ensuring peace of mind. We prioritize the security of your funds and personal data, employing robust measures and maintaining clear communication to build and uphold your trust.<ul><li>Transparent Terms: No hidden clauses. Every detail about returns, lock-in periods, and withdrawals is clearly stated upfront.</li><li>Dedicated Support: Our investor support team is available to guide you at every step.</li><li>Trusted Platform: Built on Google Firebase — ensuring your data is secure, your identity is protected, and your records are safe.</li><li>Bank-Verified Details: We verify each transaction via UTR number and match bank details before processing.</li></ul>🛡️ Why this matters: You can invest confidently, knowing your funds are handled with care, clarity, and integrity.">
+                    <div class="icon-wrapper text-teal-600 float-animation">🔒</div>
+                    <h3>Security & Trust</h3>
                     <p class="text-lg text-gray-700">Your investment is protected with transparent terms and a dedicated support team, ensuring peace of mind.</p>
-                </div>
+                </button>
             </div>
             <p class="text-center text-xl text-gray-700 mt-12 max-w-3xl mx-auto">
                 This structure encourages longer-term investments by offering additional bonuses, while also giving flexibility to those interested in shorter-term gains.
@@ -1230,7 +1331,7 @@
         <div class="container mx-auto px-6">
             <h2 class="text-5xl font-extrabold mb-6">🔥 Limited Time Offer! 🔥</h2>
             <p class="text-2xl mb-8 max-w-2xl mx-auto offer-text-glow">
-                Invest in our Premium 6-Month Plan within the <span class="font-bold" id="offerTimePeriod">7 days</span> and receive an <span class="bonus-highlight">additional 5% bonus</span> at the end of your term!
+                Invest in our Premium 6-Month Plan within <span class="font-bold" id="offerTimePeriod">the time period</span> and receive an <span class="bonus-highlight">additional 5% bonus</span> at the end of your term!
             </p>
             <div class="countdown-timer mb-8" id="countdown"></div>
             <a href="#plans" class="bg-yellow-400 hover:bg-yellow-500 text-red-900 font-bold py-3 px-10 rounded-full shadow-lg transform transition duration-300 hover:scale-105 inline-block text-xl">
@@ -1523,6 +1624,11 @@
                 <p id="totalReferralEarnings" class="font-mono text-xl md:text-2xl font-bold text-green-700">₹0.00</p>
             </div>
 
+            <!-- NEW: Dynamic Referral Offers based on membership -->
+            <div id="referralOfferDetails" class="bg-blue-50 p-6 rounded-lg mb-6 text-center shadow-inner">
+                <!-- Content will be dynamically loaded here by JavaScript -->
+            </div>
+
             <h3 class="text-2xl font-bold text-blue-700 mb-4 text-center">Users You've Referred</h3>
             <p id="noReferredUsersMessage" class="text-center text-lg text-gray-600 mb-4">No users referred yet. Share your ID!</p>
             <div id="referredUsersList" class="space-y-4">
@@ -1684,6 +1790,18 @@
         </div>
     </div>
 
+    <!-- NEW: Why Choose Us Detail Modal -->
+    <div id="whyChooseUsDetailModal" class="modal-overlay">
+        <div class="modal-content text-gray-800">
+            <button class="modal-close-btn" id="closeWhyChooseUsDetailModalBtn">&times;</button>
+            <h2 id="whyChooseUsDetailModalTitle" class="text-3xl font-bold text-blue-700 mb-6 text-center"></h2>
+            <div id="whyChooseUsDetailModalContent" class="text-lg mb-6 text-center"></div>
+            <button id="closeWhyChooseUsDetailModalBtnBottom" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full shadow-md">
+                Got It!
+            </button>
+        </div>
+    </div>
+
 
     <script type="module">
         // Global variable to store referral ID from URL
@@ -1748,7 +1866,7 @@
         function showMessage(title, text, isSuccess = true) {
             console.log(`[Message Modal] Title: ${title}, Text: ${text}, Success: ${isSuccess}`); // Debugging
             if (messageModalTitle) messageModalTitle.textContent = title;
-            if (messageModalText) messageModalText.textContent = text;
+            if (messageModalText) messageModalText.innerHTML = text; // Use innerHTML for text that might contain HTML tags
             if (messageModal) {
                 if (isSuccess) {
                     messageModalTitle.style.color = '#065f46'; // green-800
@@ -1928,6 +2046,7 @@
             const noReferredUsersMessage = document.getElementById('noReferredUsersMessage');
             const referEarnOpenBtn = document.getElementById('referEarnOpenBtn'); // Get the button to disable/enable
             const totalReferralEarningsSpan = document.getElementById('totalReferralEarnings'); // New: Total referral earnings display
+            const referralOfferDetailsDiv = document.getElementById('referralOfferDetails'); // NEW: For dynamic referral offers
 
             // New: Bank Card Modal elements
             const bankCardModal = document.getElementById('bankCardModal');
@@ -1972,6 +2091,21 @@
                 { id: "mr.4989@superyes", name: "Mr. 4989" } // Changed UPI ID
             ];
             // Removed `selectedCompanyUpi` from global scope as it will be selected inside the function.
+
+            // NEW: Why Choose Us Detail Modal elements
+            const whyChooseUsDetailModal = document.getElementById('whyChooseUsDetailModal');
+            const closeWhyChooseUsDetailModalBtn = document.getElementById('closeWhyChooseUsDetailModalBtn');
+            const whyChooseUsDetailModalTitle = document.getElementById('whyChooseUsDetailModalTitle');
+            const whyChooseUsDetailModalContent = document.getElementById('whyChooseUsDetailModalContent');
+            const whyChooseUsButtons = document.querySelectorAll('.why-choose-us-button');
+            const closeWhyChooseUsDetailModalBtnBottom = document.getElementById('closeWhyChooseUsDetailModalBtnBottom');
+
+            // Define referral bonus structure for dynamic display
+            const referralBonusRates = {
+                "Standard Plan": { standard: "1%", premium: "1%", elite: "1%" },
+                "Premium 6-Month Plan": { standard: "1%", premium: "2%", elite: "5%" },
+                "Elite 12-Month Plan": { standard: "1%", premium: "3%", elite: "7%" }
+            };
 
 
             // --- Helper to generate a unique 6-digit number (optimized) ---
@@ -2113,6 +2247,7 @@
                                     displayYourReferralLink(); // Call to update referral link display
                                     displayReferredUsers();
                                     displayTotalReferralEarnings(); // New: Update total earnings display
+                                    displayDynamicReferralOffers(); // NEW: Update dynamic referral offers
                                 }
                                 if (bankCardModal && bankCardModal.classList.contains('active')) {
                                     // If bank card modal is open, re-populate it with latest data
@@ -2181,6 +2316,7 @@
                         if (yourReferralIdSpan) yourReferralIdSpan.textContent = 'Sign in to get your ID';
                         if (yourReferralLinkSpan) yourReferralLinkSpan.textContent = 'Sign in to get your link'; // Clear referral link
                         if (totalReferralEarningsSpan) totalReferralEarningsSpan.textContent = '₹0.00'; // Clear earnings display
+                        if (referralOfferDetailsDiv) referralOfferDetailsDiv.innerHTML = `<p class="text-lg text-gray-700">Invest in any plan to unlock referral bonuses!</p>`; // Clear dynamic offers
 
                         // NEW: Clear payment history display upon logout
                         if (paymentHistoryContainer) {
@@ -2359,6 +2495,21 @@
                 paymentHistoryModal.addEventListener('click', (e) => {
                     if (e.target === paymentHistoryModal) {
                         closeModal(paymentHistoryModal);
+                    }
+                });
+            }
+
+            // NEW: Why Choose Us Detail Modal event listeners
+            if (closeWhyChooseUsDetailModalBtn) {
+                closeWhyChooseUsDetailModalBtn.addEventListener('click', () => closeModal(whyChooseUsDetailModal));
+            }
+            if (closeWhyChooseUsDetailModalBtnBottom) {
+                closeWhyChooseUsDetailModalBtnBottom.addEventListener('click', () => closeModal(whyChooseUsDetailModal));
+            }
+            if (whyChooseUsDetailModal) {
+                whyChooseUsDetailModal.addEventListener('click', (e) => {
+                    if (e.target === whyChooseUsDetailModal) {
+                        closeModal(whyChooseUsDetailModal);
                     }
                 });
             }
@@ -2629,6 +2780,7 @@
                     displayYourReferralLink(); // Call to update referral link display
                     displayReferredUsers();
                     displayTotalReferralEarnings(); // New: Call to update total earnings display
+                    displayDynamicReferralOffers(); // NEW: Call to update dynamic referral offers
                 });
 
                 // New: Attach listener for Bank Card button
@@ -2671,6 +2823,7 @@
                     displayYourReferralLink(); // Call to update referral link
                     displayReferredUsers();
                     displayTotalReferralEarnings(); // New: Call to update total earnings
+                    displayDynamicReferralOffers(); // NEW: Call to update dynamic referral offers
                 });
                 // New: Mobile Bank Card button listener
                 document.querySelector('#mobileNavAuthLinks #bankCardOpenBtn')?.addEventListener('click', () => {
@@ -2821,6 +2974,43 @@
                 if (totalReferralEarningsSpan) {
                     totalReferralEarningsSpan.textContent = `₹${currentUserReferralEarningsTotal.toFixed(2)}`;
                 }
+            }
+
+            // --- NEW: Function to determine highest membership level ---
+            function getHighestMembershipLevel() {
+                if (userCurrentPlans.includes("Elite 12-Month Plan")) {
+                    return "Elite 12-Month Plan";
+                } else if (userCurrentPlans.includes("Premium 6-Month Plan")) {
+                    return "Premium 6-Month Plan";
+                } else if (userCurrentPlans.includes("Standard Plan")) {
+                    return "Standard Plan";
+                }
+                return "Not a Member";
+            }
+
+            // --- NEW: Function to display dynamic referral offers in the modal ---
+            function displayDynamicReferralOffers() {
+                if (!referralOfferDetailsDiv) {
+                    console.warn("[displayDynamicReferralOffers] referralOfferDetailsDiv element not found.");
+                    return;
+                }
+
+                const highestPlan = getHighestMembershipLevel();
+                let content = '';
+
+                if (highestPlan === "Not a Member") {
+                    content = `<p class="text-lg text-gray-700">Invest in any plan to unlock referral bonuses!</p>`;
+                } else {
+                    const rates = referralBonusRates[highestPlan];
+                    content = `<p class="text-lg font-semibold text-blue-700 mb-2">Your current membership level: <span class="text-green-600">${highestPlan}</span></p>`;
+                    content += `<p class="text-lg text-gray-700 mb-3">As a ${highestPlan.replace(' Plan', '')} Investor, you earn:</p>`;
+                    content += `<ul class="list-disc list-inside ml-4 text-gray-700 space-y-1">`;
+                    if (rates.standard) content += `<li>${rates.standard} of investment for Standard Plan referrals</li>`;
+                    if (rates.premium) content += `<li>${rates.premium} of investment for Premium 6-Month Plan referrals</li>`;
+                    if (rates.elite) content += `<li>${rates.elite} of investment for Elite 12-Month Plan referrals</li>`;
+                    content += `</ul>`;
+                }
+                referralOfferDetailsDiv.innerHTML = content;
             }
 
 
@@ -3316,6 +3506,7 @@
 
                             if (generalBenefits.length > 0) {
                                 const h4Benefits = document.createElement('h4');
+                                h4Benefits = document.createElement('h4');
                                 h4Benefits.className = 'text-xl font-semibold text-gray-700 mb-2';
                                 h4Benefits.textContent = 'Benefits:';
                                 benefitsList.appendChild(h4Benefits);
@@ -3702,7 +3893,7 @@
                     populateBankDetailsForm();
                     // closeModal(bankCardModal); // Don't close, just make read-only
                 } catch (error) {
-                    console.error("[Bank Card Form Submission Error]", error); // Log 9
+                    console.error("[Bank Card Form Submission Error]", error); //  Log 9
                     let errorMessage = error.message;
                     if (error.code === 'permission-denied') {
                         errorMessage = 'Permission denied. Please check your Firebase Security Rules for user documents. Ensure authenticated users can write to their own user document.';
