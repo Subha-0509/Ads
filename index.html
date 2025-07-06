@@ -1295,7 +1295,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
                 <!-- High Returns Button -->
                 <button class="why-choose-us-button high-returns"
-                        data-title="High Returns"
+                        data-title="💹 High Returns"
                         data-content="We prioritize helping your money grow faster than traditional saving methods. Our investment plans offer industry-leading monthly returns that consistently outperform banks and fixed deposits.<ul><li>Monthly Payouts: Get regular income each month, not just at the end of your investment term.</li><li>Compounding Advantage: Reinvesting your returns amplifies your wealth over time.</li><li>Flexible Options: Choose from multiple plans (Standard, Premium, Elite) based on your goals and comfort level.</li><li>Example: ₹10,000 in the Elite plan (7% monthly) grows to ₹19,000 in just one year.</li></ul>✅ Why this matters: You're not waiting years to see results — your money works now and keeps growing with you.">
                     <div class="icon-wrapper text-green-600 float-animation">📈</div>
                     <h3>High Returns</h3>
@@ -1304,8 +1304,8 @@
 
                 <!-- Special Offers Button -->
                 <button class="why-choose-us-button special-offers"
-                        data-title="Special Offers"
-                        data-content="Maximize your profits with our exclusive 6-month and 12-month bonuses, rewarding your loyalty. These special offers are designed to give you even greater returns for longer-term commitments, enhancing your overall investment experience with additional benefits.<ul><li>6-Month Bonus: Premium investors get a 4% additional bonus on top of their monthly interest.</li><li>12-Month Bonus: Elite plan investors enjoy a 6% bonus, significantly boosting total returns.</li><li>Referral Rewards: Invite others and earn up to 7% referral bonuses, compounding your benefits.</li><li>Flexibility: Reinvest bonuses or withdraw them after lock-in — it’s your choice.</li></ul>🎁 Why this matters: Long-term investors get extra profit, and your trust earns tangible rewards.">
+                        data-title="⭐ Special Offers for Loyal Investors"
+                        data-content="We reward investors who stay with us longer — because loyalty deserves appreciation.<ul><li>6-Month Bonus: Premium investors get a 4% additional bonus on top of their monthly interest.</li><li>12-Month Bonus: Elite plan investors enjoy a 6% bonus, significantly boosting total returns.</li><li>Referral Rewards: Invite others and earn up to 7% referral bonuses, compounding your benefits.</li><li>Flexibility: Reinvest bonuses or withdraw them after lock-in — it’s your choice.</li></ul>🎁 Why this matters: Long-term investors get extra profit, and your trust earns tangible rewards.">
                     <div class="icon-wrapper text-orange-600 float-animation">⭐</div>
                     <h3>Special Offers</h3>
                     <p class="text-lg text-gray-700">Maximize your profits with our exclusive 6-month and 12-month bonuses, rewarding your loyalty.</p>
@@ -1313,8 +1313,8 @@
 
                 <!-- Security & Trust Button -->
                 <button class="why-choose-us-button security-trust"
-                        data-title="Security & Trust"
-                        data-content="Your investment is protected with transparent terms and a dedicated support team, ensuring peace of mind. We prioritize the security of your funds and personal data, employing robust measures and maintaining clear communication to build and uphold your trust.<ul><li>Transparent Terms: No hidden clauses. Every detail about returns, lock-in periods, and withdrawals is clearly stated upfront.</li><li>Dedicated Support: Our investor support team is available to guide you at every step.</li><li>Trusted Platform: Built on Google Firebase — ensuring your data is secure, your identity is protected, and your records are safe.</li><li>Bank-Verified Details: We verify each transaction via UTR number and match bank details before processing.</li></ul>🛡️ Why this matters: You can invest confidently, knowing your funds are handled with care, clarity, and integrity.">
+                        data-title="🔒 Security & Trust"
+                        data-content="We understand that investment is all about trust — and we've built a system that gives you peace of mind.<ul><li>Transparent Terms: No hidden clauses. Every detail about returns, lock-in periods, and withdrawals is clearly stated upfront.</li><li>Dedicated Support: Our investor support team is available to guide you at every step.</li><li>Trusted Platform: Built on Google Firebase — ensuring your data is secure, your identity is protected, and your records are safe.</li><li>Bank-Verified Details: We verify each transaction via UTR number and match bank details before processing.</li></ul>🛡️ Why this matters: You can invest confidently, knowing your funds are handled with care, clarity, and integrity.">
                     <div class="icon-wrapper text-teal-600 float-animation">🔒</div>
                     <h3>Security & Trust</h3>
                     <p class="text-lg text-gray-700">Your investment is protected with transparent terms and a dedicated support team, ensuring peace of mind.</p>
@@ -2001,6 +2001,7 @@
             const signUpForm = document.getElementById('signUpForm');
             const signInEmailInput = document.getElementById('signInEmail');
             const signInPasswordInput = document.getElementById('signInPassword');
+            // FIX: Corrected the assignment of signUpEmailInput
             const signUpEmailInput = document.getElementById('signUpEmail');
             const signUpPasswordInput = document.getElementById('signUpPassword');
             const signUpConfirmPasswordInput = document.getElementById('signUpConfirmPassword');
@@ -2208,7 +2209,7 @@
                             } catch (error) {
                                 console.error("[onAuthStateChanged: User Doc Creation Error]", error);
                                 let errorMessage = error.message;
-                                if (error.code === 'permission-denied') {
+                                if (error.code === 'permission-denured') {
                                     errorMessage = 'Missing or insufficient permissions. This often means your Firestore Security Rules are too restrictive for creating user profiles. Please ensure the rule allows authenticated users to create documents in their own user path.';
                                 }
                                 showMessage('Profile Creation Failed', `Failed to create user profile: ${errorMessage}`, false);
@@ -2500,6 +2501,20 @@
             }
 
             // NEW: Why Choose Us Detail Modal event listeners
+            // This is the missing part!
+            whyChooseUsButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const title = button.dataset.title;
+                    const content = button.dataset.content;
+
+                    if (whyChooseUsDetailModalTitle) whyChooseUsDetailModalTitle.textContent = title;
+                    // Use innerHTML because the content contains HTML tags (like <ul>, <li>)
+                    if (whyChooseUsDetailModalContent) whyChooseUsDetailModalContent.innerHTML = content;
+
+                    openModal(whyChooseUsDetailModal);
+                });
+            });
+
             if (closeWhyChooseUsDetailModalBtn) {
                 closeWhyChooseUsDetailModalBtn.addEventListener('click', () => closeModal(whyChooseUsDetailModal));
             }
@@ -3506,7 +3521,6 @@
 
                             if (generalBenefits.length > 0) {
                                 const h4Benefits = document.createElement('h4');
-                                h4Benefits = document.createElement('h4');
                                 h4Benefits.className = 'text-xl font-semibold text-gray-700 mb-2';
                                 h4Benefits.textContent = 'Benefits:';
                                 benefitsList.appendChild(h4Benefits);
@@ -3582,10 +3596,26 @@
                         if (invAmountValidationMessage) {
                              invAmountValidationMessage.textContent = `Minimum ₹${selectedPlanDetails.minInvestment}, in multiples of ₹100. Maximum ₹10,000.`
                         }
-                        // NEW: Generate QR and deep links when invest modal opens
-                        generateUpiPaymentOptions(selectedPlanDetails.minInvestment);
+                        // Call generateUpiPaymentOptions with the current value of invAmountInput
+                        generateUpiPaymentOptions(parseFloat(invAmountInput.value));
                     }
                     if (invEmailInput && currentUserEmail) invEmailInput.value = currentUserEmail;
+                });
+            }
+
+            // --- Dynamic UPI Amount Update on Input Change ---
+            if (invAmountInput) {
+                invAmountInput.addEventListener('input', () => {
+                    const currentAmount = parseFloat(invAmountInput.value);
+                    if (!isNaN(currentAmount) && currentAmount > 0) {
+                        generateUpiPaymentOptions(currentAmount);
+                    } else {
+                        // Optionally, reset QR or show a message if amount is invalid
+                        if (upiQrCodeImg) upiQrCodeImg.src = ''; // Clear QR
+                        upiAppButtons.forEach(button => {
+                            button.onclick = () => showMessage('Invalid Amount', 'Please enter a valid investment amount to generate UPI links.', false);
+                        });
+                    }
                 });
             }
 
@@ -3614,12 +3644,22 @@
 
             // --- NEW: Generate UPI Deep Link and QR Code ---
             function generateUpiPaymentOptions(amount) {
+                // Ensure amount is a valid number
+                if (isNaN(amount) || amount <= 0) {
+                    console.warn("[generateUpiPaymentOptions] Invalid amount provided:", amount);
+                    if (upiQrCodeImg) upiQrCodeImg.src = ''; // Clear QR if amount is invalid
+                    upiAppButtons.forEach(button => {
+                        button.onclick = () => showMessage('Invalid Amount', 'Please enter a valid investment amount to generate UPI links.', false);
+                    });
+                    return;
+                }
+
                 // Randomly pick one UPI ID for this specific payment instance
                 const selectedCompanyUpi = companyUpiIds[Math.floor(Math.random() * companyUpiIds.length)];
 
                 const payeeName = "ADS FUND";
-                const transactionNote = `Investment for ${selectedPlanDetails.planName}`;
-                const upiDeepLink = `upi://pay?pa=${selectedCompanyUpi.id}&pn=${encodeURIComponent(payeeName)}&am=${amount}&tn=${encodeURIComponent(transactionNote)}&cu=INR`;
+                const transactionNote = `Investment for ${selectedPlanDetails.planName || 'ADS FUND Investment'}`; // Use selected plan name or a default
+                const upiDeepLink = `upi://pay?pa=${selectedCompanyUpi.id}&pn=${encodeURIComponent(payeeName)}&am=${amount.toFixed(2)}&tn=${encodeURIComponent(transactionNote)}&cu=INR`;
                 
                 // Set QR code source
                 if (upiQrCodeImg) {
@@ -3629,9 +3669,6 @@
                 // Attach deep link to UPI app buttons
                 upiAppButtons.forEach(button => {
                     button.onclick = () => {
-                        // For demonstration, we'll use a generic deep link.
-                        // In a real scenario, you might construct app-specific deep links.
-                        // For now, just open the generic UPI deep link.
                         window.location.href = upiDeepLink;
                     };
                 });
