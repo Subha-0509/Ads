@@ -1475,6 +1475,9 @@
                 <!-- NEW: UPI Payment Options Section -->
                 <div class="upi-payment-options w-full">
                     <p class="text-lg font-semibold text-gray-800 mb-2">Choose your payment method:</p>
+                    <p class="text-sm text-gray-600 mb-4 text-center">
+                        On mobile, clicking these buttons will attempt to open the respective UPI app. On desktop, please use the QR code or copy the UPI ID.
+                    </p>
                     <div class="flex flex-col md:flex-row gap-4 w-full justify-center">
                         <button type="button" class="upi-app-button gpay" data-upi-app="gpay">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/1200px-Google_Pay_Logo.svg.png" alt="GPay Logo"> Pay with GPay
@@ -1499,6 +1502,11 @@
                             <span class="upi-id-text" id="displayUpiId2">mr.4989@superyes</span>
                             <button type="button" class="copy-btn-small" data-copy-target="displayUpiId2">Copy</button>
                         </div>
+                        <!-- NEW UPI ID -->
+                        <div class="manual-upi-display mt-2">
+                            <span class="upi-id-text" id="displayUpiId3">mahapatra.8@superyes</span>
+                            <button type="button" class="copy-btn-small" data-copy-target="displayUpiId3">Copy</button>
+                        </div>
                     </div>
                 </div>
 
@@ -1510,6 +1518,7 @@
                     <option value="">Select UPI ID</option>
                     <option value="chowdhurybarnadip98-1@okicici">chowdhurybarnadip98-1@okicici</option>
                     <option value="mr.4989@superyes">mr.4989@superyes</option>
+                    <option value="mahapatra.8@superyes">mahapatra.8@superyes</option>
                 </select>
                 
                 <input type="hidden" id="inv_plan_hidden"> <!-- Hidden field to store selected plan name -->
@@ -2161,7 +2170,8 @@
             // Your company's UPI IDs
             const companyUpiIds = [
                 { id: "chowdhurybarnadip98-1@okicici", name: "Barnadip Chowdhury" },
-                { id: "mr.4989@superyes", name: "Mr. 4989" } // Changed UPI ID
+                { id: "mr.4989@superyes", name: "Mr. 4989" },
+                { id: "mahapatra.8@superyes", name: "Mahapatra" } // NEW UPI ID
             ];
             // Removed `selectedCompanyUpi` from global scope as it will be selected inside the function.
 
@@ -2295,7 +2305,7 @@
                             currentUserTotalPayoutsReceived = userData.totalPayoutsReceived || 0; // NEW: Get total payouts received
                             currentUserBankDetails = userData.bankDetails || {}; // Get bank details
                             console.log(`[onAuthStateChanged:onSnapshot] User ${currentUserId} data loaded. Custom ID: ${currentUserCustomId}, Referral Earnings: ${currentUserReferralEarningsTotal}, Total Payouts: ${currentUserTotalPayoutsReceived}, Bank Details:`, currentUserBankDetails);
-                            // updateAuthUI will be called after fetching investments
+                            // updateAuthUI will be called after fetching investments, which is done right after this block
                         } else {
                             console.log(`[onAuthStateChanged] User is anonymous or document already exists.`);
                         }
@@ -3025,7 +3035,7 @@
                 if (!currentUserId || !db) {
                     userCurrentPlans = [];
                     updateReferralButtonState();
-                    updateUserMembershipDisplay(); // Update membership display
+                    updateUserMembershipDisplay();
                     return;
                 }
 
@@ -3047,7 +3057,7 @@
                     console.error("[fetchInvestmentsForReferralCheck Error]", error);
                     userCurrentPlans = []; // Reset on error
                     updateReferralButtonState();
-                    updateUserMembershipDisplay(); // Update membership display
+                    updateUserMembershipDisplay();
                 }
             }
 
@@ -3413,21 +3423,22 @@
             revealSections();
             window.addEventListener('scroll', revealSections);
 
-            // --- Countdown Timer Logic (7 days from 12 AM today) ---
-            // Define offerEndDate ONCE when the script loads
-            const now = new Date();
-            // Set the current date to 12 AM
-            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-            // Calculate the offer end date as 7 days from today's 12 AM
-            const offerEndDate = new Date(todayStart.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days from 12 AM today
+            // --- Countdown Timer Logic (Fixed 7-day period from 11-07-25 12:00 AM) ---
+            // Define the fixed start date for the offer
+            const offerStartDate = new Date('2025-07-11T00:00:00'); // July 11, 2025, 12:00 AM
+            // Calculate the fixed end date (7 days from the start date)
+            const offerEndDate = new Date(offerStartDate.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days from offerStartDate
 
             const updateCountdown = () => {
                 const currentTime = new Date();
-                const totalSeconds = (offerEndDate.getTime() - currentTime.getTime()) / 1000; // Use getTime() for consistency
+                const totalSeconds = (offerEndDate.getTime() - currentTime.getTime()) / 1000;
 
                 if (totalSeconds < 0) {
-                    if (countdownElement) countdownElement.textContent = "Offer Expired!";
-                    if (offerTimePeriodSpan) offerTimePeriodSpan.textContent = "the offer period"; // Update text when expired
+                    // Offer has expired
+                    if (countdownElement) countdownElement.textContent = "Offer Expired. New Offer Coming Soon!";
+                    if (offerTimePeriodSpan) offerTimePeriodSpan.textContent = "the offer period"; // Keep this as "the offer period"
+                    // Optionally hide the "Seize This Opportunity!" button
+                    document.querySelector('#limited-time-offer a')?.classList.add('hidden');
                     return;
                 }
 
@@ -3437,6 +3448,7 @@
                 const seconds = Math.floor(totalSeconds % 60);
 
                 if (countdownElement) countdownElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                if (offerTimePeriodSpan) offerTimePeriodSpan.textContent = "the next 7 days"; // Show "the next 7 days" if offer is active
             };
 
             setInterval(updateCountdown, 1000);
