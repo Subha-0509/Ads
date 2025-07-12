@@ -2305,7 +2305,7 @@
                             currentUserTotalPayoutsReceived = userData.totalPayoutsReceived || 0; // NEW: Get total payouts received
                             currentUserBankDetails = userData.bankDetails || {}; // Get bank details
                             console.log(`[onAuthStateChanged:onSnapshot] User ${currentUserId} data loaded. Custom ID: ${currentUserCustomId}, Referral Earnings: ${currentUserReferralEarningsTotal}, Total Payouts: ${currentUserTotalPayoutsReceived}, Bank Details:`, currentUserBankDetails);
-                            // updateAuthUI will be called after fetching investments, which is done right after this block
+                            // updateAuthUI will be called after fetching user data, which is done right after this block
                         } else {
                             console.log(`[onAuthStateChanged] User is anonymous or document already exists.`);
                         }
@@ -3818,8 +3818,6 @@
                     return;
                 }
 
-                // Removed the check: if (utrNumber && !paidUpiId) to make paidUpiId optional
-
                 if (amount < selectedPlanDetails.minInvestment || (amount % 100 !== 0)) {
                     showMessage('Invalid Amount', `Investment amount must be at least ₹${selectedPlanDetails.minInvestment} and in multiples of ₹100.`, false);
                     if (submitInvestmentBtn) {
@@ -3848,31 +3846,17 @@
                      return;
                 }
 
-                // --- NEW: Fetch current user's bank details from their profile ---
+                // Fetch current user's bank details from their profile.
+                // NOTE: The check for mandatory bank details has been removed here.
+                // Users can now invest even if bank details are not yet provided.
                 const userDocRef = doc(db, `artifacts/${appId}/users/${currentUserId}`);
                 const userDocSnap = await getDoc(userDocRef);
                 let bankDetailsForInvestment = {};
                 if (userDocSnap.exists()) {
                     const userData = userDocSnap.data();
                     bankDetailsForInvestment = userData.bankDetails || {}; // Get existing bank details
-                } else {
-                    showMessage('Bank Details Missing', 'Your bank details are not found in your profile. Please add them in the "Bank Card" section before investing.', false);
-                    if (submitInvestmentBtn) {
-                        submitInvestmentBtn.disabled = false;
-                        submitInvestmentBtn.textContent = 'Submit Investment';
-                    }
-                    return;
                 }
-
-                // Validate if essential bank details are present
-                if (!bankDetailsForInvestment.accountName || !bankDetailsForInvestment.accountNumber || !bankDetailsForInvestment.ifscCode) {
-                    showMessage('Bank Details Incomplete', 'Please ensure your bank account name, number, and IFSC code are saved in the "Bank Card" section before investing.', false);
-                     if (submitInvestmentBtn) {
-                        submitInvestmentBtn.disabled = false;
-                        submitInvestmentBtn.textContent = 'Submit Investment';
-                    }
-                    return;
-                }
+                // No 'else' block here to prevent submission if bank details are missing.
 
                 try {
                     const userInvestmentsCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/investments`);
@@ -3887,7 +3871,7 @@
                         monthlyReturn: selectedPlanDetails.monthlyReturn, // Store the monthly return rate as a string (e.g., "5%")
                         paidUpiId: paidUpiId || null, // Store as null if not selected
                         utrNumber: utrNumber,
-                        // Include fetched bank details here
+                        // Include fetched bank details here (will be 'N/A' if not provided by user)
                         bankAccountName: bankDetailsForInvestment.accountName || 'N/A',
                         bankAccount: bankDetailsForInvestment.accountNumber || 'N/A',
                         ifscCode: bankDetailsForInvestment.ifscCode || 'N/A',
@@ -3897,6 +3881,14 @@
                     console.log(`[Investment Form] Investment successfully added for user ${currentUserId}.`);
 
                     showMessage('Investment Submitted!', `Your investment in the ${planName} of ₹${amount.toFixed(2)} has been recorded. We will verify the UTR number shortly.`, true);
+                    
+                    // NEW: Remind user to add bank details if they are missing
+                    if (!bankDetailsForInvestment.accountName || !bankDetailsForInvestment.accountNumber || !bankDetailsForInvestment.ifscCode) {
+                        setTimeout(() => {
+                            showMessage('Action Required for Payouts', 'Your bank details are missing. Please add them in the "Bank Card" section to receive your payouts.', false);
+                        }, 2000); // Show this message 2 seconds after the investment success message
+                    }
+
                     closeModal(investModal);
                     investmentForm.reset();
                     if (acceptTermsCheckbox) acceptTermsCheckbox.checked = false;
