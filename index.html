@@ -746,7 +746,7 @@
             border-color: #3b82f6; /* Blue for lending */
         }
 
-        #whereMoneyWorksModal .modal-content .info-card .icon {
+        #whereMoneyWorksModal .modal-content .icon {
             font-size: 3.5rem;
             margin-bottom: 1rem;
             color: #1e3a8a;
@@ -1495,7 +1495,7 @@
                         <img id="upiQrCode" src="" alt="UPI QR Code">
                         <p>Or manually copy one of our UPI IDs:</p>
                         <div class="manual-upi-display">
-                            <span class="upi-id-text" id="displayUpiId1">chowdhurybarnadip98-1@okicici</span>
+                            <span class="upi-id-text" id="displayUpiId1">8207004948@axl</span>
                             <button type="button" class="copy-btn-small" data-copy-target="displayUpiId1">Copy</button>
                         </div>
                         <div class="manual-upi-display mt-2">
@@ -1513,10 +1513,10 @@
                 <label for="inv_utr_number" class="w-full">UTR Number (Mandatory, after payment):</label>
                 <input type="text" id="inv_utr_number" placeholder="Enter UTR/Transaction Number" required class="w-full">
 
-                <label for="paidUpiId" class="w-full">Which UPI ID did you pay to?</label>
-                <select id="paidUpiId" required class="w-full">
-                    <option value="">Select UPI ID</option>
-                    <option value="chowdhurybarnadip98-1@okicici">chowdhurybarnadip98-1@okicici</option>
+                <label for="paidUpiId" class="w-full">Which UPI ID did you pay to? (Optional)</label>
+                <select id="paidUpiId" class="w-full"> <!-- 'required' attribute removed here -->
+                    <option value="">Select UPI ID (Optional)</option>
+                    <option value="8207004948@axl">8207004948@axl</option>
                     <option value="mr.4989@superyes">mr.4989@superyes</option>
                     <option value="mahapatra.8@superyes">mahapatra.8@superyes</option>
                 </select>
@@ -2169,9 +2169,9 @@
 
             // Your company's UPI IDs
             const companyUpiIds = [
-                { id: "chowdhurybarnadip98-1@okicici", name: "Barnadip Chowdhury" },
+                { id: "8207004948@axl", name: "ADS FUND UPI" }, // Updated UPI ID
                 { id: "mr.4989@superyes", name: "Mr. 4989" },
-                { id: "mahapatra.8@superyes", name: "Mahapatra" } // NEW UPI ID
+                { id: "mahapatra.8@superyes", name: "Mahapatra" }
             ];
             // Removed `selectedCompanyUpi` from global scope as it will be selected inside the function.
 
@@ -3354,7 +3354,7 @@
                     // The actual bonus earning for the limited time offer is handled by the Cloud Function
                     const now = new Date();
                     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0); // 12 AM today
-                    const offerEndDateForCalculation = new Date(todayStart.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days from 12 AM today
+                    const offerEndDateForCalculation = new Date(todayStart.getTime() + (9 * 24 * 60 * 60 * 1000)); // 9 days from 12 AM today (extended by 2 days)
 
                     if (now < offerEndDateForCalculation) { // Check against the fixed offerEndDate
                         // This part is for display only, the actual bonus calculation is on the server
@@ -3426,8 +3426,8 @@
             // --- Countdown Timer Logic (Fixed 7-day period from 11-07-25 12:00 AM) ---
             // Define the fixed start date for the offer
             const offerStartDate = new Date('2025-07-11T00:00:00'); // July 11, 2025, 12:00 AM
-            // Calculate the fixed end date (7 days from the start date)
-            const offerEndDate = new Date(offerStartDate.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days from offerStartDate
+            // Calculate the fixed end date (9 days from the start date)
+            const offerEndDate = new Date(offerStartDate.getTime() + (9 * 24 * 60 * 60 * 1000)); // 9 days from offerStartDate (extended by 2 days)
 
             const updateCountdown = () => {
                 const currentTime = new Date();
@@ -3448,7 +3448,7 @@
                 const seconds = Math.floor(totalSeconds % 60);
 
                 if (countdownElement) countdownElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-                if (offerTimePeriodSpan) offerTimePeriodSpan.textContent = "the next 7 days"; // Show "the next 7 days" if offer is active
+                if (offerTimePeriodSpan) offerTimePeriodSpan.textContent = "the time period"; // Show "the time period" if offer is active
             };
 
             setInterval(updateCountdown, 1000);
@@ -3794,13 +3794,13 @@
                 const email = invEmailInput.value.trim();
                 const mobile = invMobileInput.value.trim();
                 const amount = parseFloat(invAmountInput.value);
-                const paidUpiId = paidUpiIdSelect.value;
+                const paidUpiId = paidUpiIdSelect.value; // This can now be empty
                 const utrNumber = invUtrNumberInput.value.trim();
                 const planName = invPlanHiddenInput.value.trim();
 
                 console.log(`[Investment Form] Collected data: Name=${name}, Email=${email}, Amount=${amount}, Plan=${planName}, Paid UPI ID=${paidUpiId}, UTR=${utrNumber}`);
 
-                if (!name || !email || !mobile || !utrNumber || !planName || isNaN(amount) || !paidUpiId) {
+                if (!name || !email || !mobile || !utrNumber || !planName || isNaN(amount)) {
                     showMessage('Missing Information', 'Please fill in all required fields and ensure investment amount is valid.', false);
                     if (submitInvestmentBtn) {
                         submitInvestmentBtn.disabled = false;
@@ -3817,6 +3817,8 @@
                     }
                     return;
                 }
+
+                // Removed the check: if (utrNumber && !paidUpiId) to make paidUpiId optional
 
                 if (amount < selectedPlanDetails.minInvestment || (amount % 100 !== 0)) {
                     showMessage('Invalid Amount', `Investment amount must be at least ₹${selectedPlanDetails.minInvestment} and in multiples of ₹100.`, false);
@@ -3883,7 +3885,7 @@
                         amount: amount,
                         planName: planName,
                         monthlyReturn: selectedPlanDetails.monthlyReturn, // Store the monthly return rate as a string (e.g., "5%")
-                        paidUpiId: paidUpiId,
+                        paidUpiId: paidUpiId || null, // Store as null if not selected
                         utrNumber: utrNumber,
                         // Include fetched bank details here
                         bankAccountName: bankDetailsForInvestment.accountName || 'N/A',
