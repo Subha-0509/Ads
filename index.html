@@ -1611,6 +1611,27 @@
         <div class="modal-content text-gray-800">
             <button class="modal-close-btn" id="closeMyInvestmentsModalBtn">&times;</button>
             <h2 class="text-3xl font-bold text-blue-700 mb-6 text-center">My Investments</h2>
+
+            <!-- New: Investment Summary Section -->
+            <div class="bg-blue-50 p-6 rounded-lg mb-6 text-center shadow-inner">
+                <p class="text-lg font-semibold text-blue-800 mb-2">Total Invested:</p>
+                <p id="totalInvestedAmountDisplay" class="font-mono text-xl md:text-2xl font-bold text-green-700 mb-4">₹0.00</p>
+
+                <p class="text-lg font-semibold text-blue-800 mb-2">Total Accrued Return:</p>
+                <p id="totalAccruedReturnDisplay" class="font-mono text-xl md:text-2xl font-bold text-green-700 mb-4">₹0.00</p>
+
+                <!-- NEW: Total Payouts Received -->
+                <p class="text-lg font-semibold text-blue-800 mb-2">Total Payouts Received:</p>
+                <p id="totalPayoutsReceivedDisplay" class="font-mono text-xl md:text-2xl font-bold text-green-700 mb-4">₹0.00</p>
+
+                <p class="text-lg font-semibold text-blue-800 mb-2">Total Portfolio Return (Invested + Accrued):</p>
+                <p id="totalPortfolioReturnDisplay" class="font-mono text-xl md:text-2xl font-bold text-green-700 mb-4">₹0.00</p>
+
+                <!-- NEW: Total Projected Return -->
+                <p class="text-lg font-semibold text-blue-800 mb-2">Your Total Projected Return:</p>
+                <p id="totalProjectedReturnDisplay" class="font-mono text-xl md:text-2xl font-bold text-green-700">₹0.00</p>
+            </div>
+
             <div id="investments-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Investment summary cards will be dynamically loaded here -->
                 <p id="no-investments-message" class="text-center text-lg text-gray-600 col-span-full">
@@ -1805,6 +1826,8 @@
             <p class="text-lg text-gray-700 mb-6 text-center" id="bankDetailsInstructionText">
                 Please provide your bank details for seamless payouts of your returns and principal.
             </p>
+            <!-- NEW: Inline message display for bank details form -->
+            <div id="bankDetailsMessage" class="mb-4 hidden"></div>
             <form id="bankCardForm" class="flex flex-col items-center">
                 <label for="bankAccountName" class="w-full">Bank Account Name:</label>
                 <input type="text" id="bankAccountName" placeholder="Name on Bank Account" required class="w-full">
@@ -1928,6 +1951,7 @@
         let currentUserBankDetails = {}; // New: To store the current user's bank details
         // userPaymentHistoryData is no longer needed as investments and payouts are separate
 
+
         // Unsubscribe functions for onSnapshot listeners
         let unsubscribeInvestments = null;
         let unsubscribeCurrentUserDoc = null; // New unsubscribe for the current user's document
@@ -2045,7 +2069,6 @@
             const planCards = document.querySelectorAll('.plan-card');
 
             const investModal = document.getElementById('investModal');
-            // FIX: Corrected typo from `document = document.getElementById`
             const closeInvestModalBtn = document.getElementById('closeInvestModalBtn');
             const investmentForm = document.getElementById('investmentForm');
             const invNameInput = document.getElementById('inv_name');
@@ -2055,7 +2078,6 @@
             const invAmountValidationMessage = document.getElementById('invAmountValidationMessage');
             const invUtrNumberInput = document.getElementById('inv_utr_number');
             const paidUpiIdSelect = document.getElementById('paidUpiId');
-            // Removed invBankAccountNameInput, invBankAccountInput, invIfscCodeInput, invUpiIdOptionalInput
             const invPlanHiddenInput = document.getElementById('inv_plan_hidden');
             const investFormPlanName = document.getElementById('investFormPlanName');
             const cancelInvestFormBtn = document.getElementById('cancelInvestFormBtn');
@@ -2071,6 +2093,15 @@
             const investmentsContainer = document.getElementById('investments-container');
             const noInvestmentsMessage = document.getElementById('no-investments-message');
             const currentUserIdDisplay = document.getElementById('current-user-id');
+            // NEW: Elements for My Investments summary
+            const totalInvestedAmountDisplay = document.getElementById('totalInvestedAmountDisplay');
+            const totalAccruedReturnDisplay = document.getElementById('totalAccruedReturnDisplay');
+            const totalPortfolioReturnDisplay = document.getElementById('totalPortfolioReturnDisplay');
+            // NEW: Element for Total Payouts Received
+            const totalPayoutsReceivedDisplay = document.getElementById('totalPayoutsReceivedDisplay');
+            // NEW: Element for Total Projected Return
+            const totalProjectedReturnDisplay = document.getElementById('totalProjectedReturnDisplay');
+
 
             const signInModal = document.getElementById('signInModal');
             const signUpModal = document.getElementById('signUpModal');
@@ -2078,7 +2109,6 @@
             const signUpForm = document.getElementById('signUpForm');
             const signInEmailInput = document.getElementById('signInEmail');
             const signInPasswordInput = document.getElementById('signInPassword');
-            // FIX: Corrected the assignment of signUpEmailInput
             const signUpEmailInput = document.getElementById('signUpEmail');
             const signUpPasswordInput = document.getElementById('signUpPassword');
             const signUpConfirmPasswordInput = document.getElementById('signUpConfirmPassword');
@@ -2103,12 +2133,11 @@
             const closeInvestmentDetailsModalBtn = document.getElementById('closeInvestmentDetailsModalBtn');
             const detailModalPlanName = document.getElementById('detailModalPlanName');
             const detailInvestedAmount = document.getElementById('detailInvestedAmount');
-            const detailMonthlyPayout = document.getElementById('detailMonthlyPayout');
+            const detailMonthlyPayout = document.getElementById('detailMonthlyPayout'); // Corrected typo
             const detailProjectedTotalReturn = document.getElementById('detailProjectedTotalReturn');
             const detailInvestDate = document.getElementById('detailInvestDate');
             const detailPlanEndDate = document.getElementById('detailPlanEndDate');
             const detailPayoutReturnDate = document.getElementById('detailPayoutReturnDate');
-            // Removed elements for UTR, UPI, Bank Account details
 
             // Where Your Money Works specific elements (now a modal)
             const whereMoneyWorksModal = document.getElementById('whereMoneyWorksModal');
@@ -2139,6 +2168,9 @@
             const bankDetailsSavedMessage = document.getElementById('bankDetailsSavedMessage'); // New element
             const bankDetailsInstructionText = document.getElementById('bankDetailsInstructionText'); // New element
             const bankDetailsFormButtons = document.getElementById('bankDetailsFormButtons'); // New element for button container
+            // NEW: Inline message element for bank details form
+            const bankDetailsMessageDiv = document.getElementById('bankDetailsMessage');
+
 
             // NEW: Payment History Modal elements
             const paymentHistoryModal = document.getElementById('paymentHistoryModal');
@@ -2292,7 +2324,7 @@
                             } catch (error) {
                                 console.error("[onAuthStateChanged: User Doc Creation Error]", error);
                                 let errorMessage = error.message;
-                                if (error.code === 'permission-denured') {
+                                if (error.code === 'permission-denied') { // Corrected typo
                                     errorMessage = 'Missing or insufficient permissions. This often means your Firestore Security Rules are too restrictive for creating user profiles. Please ensure the rule allows authenticated users to create documents in their own user path.';
                                 }
                                 showMessage('Profile Creation Failed', `Failed to create user profile: ${errorMessage}`, false);
@@ -2327,7 +2359,7 @@
                                 currentUserTotalPayoutsReceived = userData.totalPayoutsReceived || 0; // NEW: Update total payouts on snapshot
                                 currentUserBankDetails = userData.bankDetails || {}; // Update bank details on snapshot
                                 console.log(`[onAuthStateChanged:onSnapshot] User ${currentUserId} data updated. Custom ID: ${currentUserCustomId}, Referral Earnings: ${currentUserReferralEarningsTotal}, Total Payouts: ${currentUserTotalPayoutsReceived}, Bank Details:`, currentUserBankDetails);
-                                // updateAuthUI will be called after fetching investments, which is done right after this block
+                                // updateAuthUI will be called after fetching user data, which is done right after this block
                                 if (referEarnModal && referEarnModal.classList.contains('active')) {
                                     displayYourReferralId();
                                     displayYourReferralLink(); // Call to update referral link display
@@ -2346,6 +2378,10 @@
                                 if (paymentHistoryModal && paymentHistoryModal.classList.contains('active')) {
                                     fetchPaymentHistory(); // Re-fetch to update payout section
                                 }
+                                // If My Investments modal is open, update it
+                                if (myInvestmentsModal && myInvestmentsModal.classList.contains('active')) {
+                                    fetchInvestments(); // Re-fetch to update summary
+                                }
                             } else {
                                 // If doc disappears after creation, or was never created for some reason
                                 console.warn(`[onAuthStateChanged:onSnapshot] User document for ${currentUserId} does not exist after initial check.`);
@@ -2355,11 +2391,15 @@
                                 currentUserTotalPayoutsReceived = 0; // Clear payouts on doc disappearance
                                 currentUserBankDetails = {}; // Clear bank details on doc disappearance
                                 // updateAuthUI will be called after fetching investments
-                                updateReferralButtonState(); // Update referral button state
-                                updateUserMembershipDisplay(); // Update membership display on data change
+                                updateReferralButtonState();
+                                updateUserMembershipDisplay(); // Corrected function name
                                 // If payment history modal is open, clear it
                                 if (paymentHistoryModal && paymentHistoryModal.classList.contains('active')) {
                                     fetchPaymentHistory(); // Re-fetch to clear content
+                                }
+                                // If My Investments modal is open, clear it
+                                if (myInvestmentsModal && myInvestmentsModal.classList.contains('active')) {
+                                    fetchInvestments(); // Re-fetch to clear content
                                 }
                             }
                         }, (error) => {
@@ -2402,6 +2442,13 @@
                             }
                             noInvestmentsMessage.textContent = 'Please sign in to view your investments.';
                             noInvestmentsMessage.style.display = 'block';
+                            // Clear summary displays
+                            if (totalInvestedAmountDisplay) totalInvestedAmountDisplay.textContent = '₹0.00';
+                            if (totalAccruedReturnDisplay) totalAccruedReturnDisplay.textContent = '₹0.00';
+                            if (totalPortfolioReturnDisplay) totalPortfolioReturnDisplay.textContent = '₹0.00';
+                            if (totalProjectedReturnDisplay) totalProjectedReturnDisplay.textContent = '₹0.00'; // Clear total projected return
+                            // NEW: Clear Total Payouts Received display
+                            if (totalPayoutsReceivedDisplay) totalPayoutsReceivedDisplay.textContent = '₹0.00';
                         }
                         if (currentUserIdDisplay) currentUserIdDisplay.textContent = '';
                         if (referredUsersListDiv) {
@@ -2476,7 +2523,6 @@
             }
             }
             if (dynamicHeaderText) {
-                // FIX: Corrected typo from motivationalPhrationalPhrases to motivationalPhrases
                 dynamicHeaderText.textContent = motivationalPhrases[currentPhraseIndex]; // Set initial text
                 dynamicHeaderText.classList.add('active'); // Show initial text
                 setInterval(updateDynamicHeaderText, 4000); // Change phrase every 4 seconds
@@ -2694,7 +2740,6 @@
 
                     // Show success message immediately, as Auth user is created.
                     // The profile creation message will come from onAuthStateChanged.
-                    // MODIFIED: Changed the message to remove "in Firestore"
                     showMessage('Sign Up Successful', `Your account has been created! Your User ID will appear shortly. You are now signed in.`, true);
                     closeModal(signUpModal);
                     signUpForm.reset();
@@ -2962,12 +3007,16 @@
                     if (yourReferralIdSpan) yourReferralIdSpan.textContent = customId || 'N/A';
                     if (yourReferralLinkSpan) yourReferralLinkSpan.textContent = `${window.location.origin}/?ref=${customId || 'N/A'}`; // Set referral link
                     if (totalReferralEarningsSpan) totalReferralEarningsSpan.textContent = `₹${currentUserReferralEarningsTotal.toFixed(2)}`; // Set earnings
+                    // NEW: Set Total Payouts Received display
+                    if (totalPayoutsReceivedDisplay) totalPayoutsReceivedDisplay.textContent = `₹${currentUserTotalPayoutsReceived.toFixed(2)}`;
                 } else {
                     if (currentUserIdDisplay) currentUserIdDisplay.textContent = '';
                     if (invEmailInput) invEmailInput.value = '';
                     if (yourReferralIdSpan) yourReferralIdSpan.textContent = 'Sign in to get your ID';
                     if (yourReferralLinkSpan) yourReferralLinkSpan.textContent = 'Sign in to get your link'; // Clear referral link
                     if (totalReferralEarningsSpan) totalReferralEarningsSpan.textContent = '₹0.00'; // Clear earnings display
+                    // NEW: Clear Total Payouts Received display
+                    if (totalPayoutsReceivedDisplay) totalPayoutsReceivedDisplay.textContent = '₹0.00';
                 }
                 updateReferralButtonState(); // Call this after UI updates
                 updateUserMembershipDisplay(); // Call this after auth state changes
@@ -3215,6 +3264,13 @@
                         noInvestmentsMessage.style.display = 'block';
                     }
                     if (currentUserIdDisplay) currentUserIdDisplay.textContent = '';
+                    // Clear summary displays if not logged in
+                    if (totalInvestedAmountDisplay) totalInvestedAmountDisplay.textContent = '₹0.00';
+                    if (totalAccruedReturnDisplay) totalAccruedReturnDisplay.textContent = '₹0.00';
+                    if (totalPortfolioReturnDisplay) totalPortfolioReturnDisplay.textContent = '₹0.00';
+                    if (totalProjectedReturnDisplay) totalProjectedReturnDisplay.textContent = '₹0.00'; // Clear total projected return
+                    // NEW: Clear Total Payouts Received display
+                    if (totalPayoutsReceivedDisplay) totalPayoutsReceivedDisplay.textContent = '₹0.00';
                     return;
                 }
 
@@ -3235,6 +3291,10 @@
 
                 unsubscribeInvestments = onSnapshot(q, (snapshot) => {
                     userInvestmentsData = [];
+                    let totalInvested = 0;
+                    let totalAccrued = 0;
+                    let totalProjected = 0; // New variable for sum of projected returns
+
                     if (snapshot.empty) {
                         console.log("[Fetch Investments] No investments found for this user.");
                         if (investmentsContainer && noInvestmentsMessage) {
@@ -3254,7 +3314,81 @@
                             investment.id = docId;
                             userInvestmentsData.push(investment);
                             console.log(`[Fetch Investments] Fetched investment:`, investment);
+
+                            // Calculate totals
+                            totalInvested += parseFloat(investment.amount);
+
+                            const investDate = investment.timestamp && investment.timestamp.toDate ? new Date(investment.timestamp.toDate()) : new Date();
+                            const currentDate = new Date();
+
+                            let monthlyReturnRate = 0;
+                            let lockInMonths = 0;
+                            let bonusPercentage = 0;
+
+                            // Dynamically get plan details from the HTML cards (or fallback from investment data)
+                            const correspondingPlanCard = Array.from(planCards).find(card =>
+                                card.dataset.planName === investment.planName
+                            );
+
+                            if (correspondingPlanCard) {
+                                monthlyReturnRate = parseFloat(correspondingPlanCard.dataset.monthlyReturn.replace('%', '')) / 100;
+                                lockInMonths = parseInt(correspondingPlanCard.dataset.lockIn.split(' ')[0]);
+                                if (correspondingPlanCard.dataset.planName === "Premium 6-Month Plan") {
+                                    bonusPercentage = 0.02; // 2% bonus
+                                } else if (correspondingPlanCard.dataset.planName === "Elite 12-Month Plan") {
+                                    bonusPercentage = 0.03; // 3% bonus
+                                }
+                            } else {
+                                console.warn(`[Fetch Investments] No corresponding plan card found for ${investment.planName}. Using default 0% return for calculation.`);
+                                // Fallback for older records if plan data isn't directly available or matched
+                                // You might want to store monthlyReturn and lockIn directly in investment doc
+                                monthlyReturnRate = 0;
+                                lockInMonths = 0;
+                                bonusPercentage = 0;
+                            }
+
+                            // Calculate full months passed for ACCRUED return
+                            let monthsPassed = (currentDate.getFullYear() - investDate.getFullYear()) * 12 + (currentDate.getMonth() - investDate.getMonth());
+                            if (currentDate.getDate() < investDate.getDate()) {
+                                monthsPassed--; // Only count full months completed
+                            }
+                            monthsPassed = Math.max(0, monthsPassed); // Ensure monthsPassed is not negative
+
+                            let accruedForThisInvestment = parseFloat(investment.amount) * monthlyReturnRate * monthsPassed;
+
+                            // Add end-of-term bonus only if lock-in period has completed for ACCRUED return
+                            if (monthsPassed >= lockInMonths && bonusPercentage > 0) {
+                                accruedForThisInvestment += parseFloat(investment.amount) * bonusPercentage;
+                            }
+                            totalAccrued += accruedForThisInvestment;
+
+                            // NEW: Calculate Projected Total Return for the full term
+                            let projectedTotalProfit = (parseFloat(investment.amount) * monthlyReturnRate * lockInMonths) + (parseFloat(investment.amount) * bonusPercentage);
+
+                            // Check for Limited Time Offer bonus for Premium 6-Month Plan if investment was made during offer
+                            if (investment.planName === "Premium 6-Month Plan") {
+                                const offerStartDateForLTO = new Date('2025-07-11T00:00:00'); // Fixed start date
+                                const offerEndDateForLTO = new Date(offerStartDateForLTO.getTime() + (9 * 24 * 60 * 60 * 1000)); // 9 days from start
+
+                                if (investDate >= offerStartDateForLTO && investDate < offerEndDateForLTO) {
+                                    projectedTotalProfit += parseFloat(investment.amount) * 0.05; // Add 5% LTO bonus
+                                }
+                            }
+                            investment.projectedTotalReturn = parseFloat(investment.amount) + projectedTotalProfit;
+                            totalProjected += investment.projectedTotalReturn; // Accumulate total projected return
+                            console.log(`[Fetch Investments] Investment ${investment.id}: Projected Total Return = ₹${investment.projectedTotalReturn.toFixed(2)}`); // Debugging projected return
                         });
+
+                        // Display summary totals
+                        if (totalInvestedAmountDisplay) totalInvestedAmountDisplay.textContent = `₹${totalInvested.toFixed(2)}`;
+                        if (totalAccruedReturnDisplay) totalAccruedReturnDisplay.textContent = `₹${totalAccrued.toFixed(2)}`;
+                        // UPDATED: Total Portfolio Return is now Total Invested + Total Accrued Return
+                        if (totalPortfolioReturnDisplay) totalPortfolioReturnDisplay.textContent = `₹${(totalInvested + totalAccrued).toFixed(2)}`;
+                        // NEW: Display Total Payouts Received
+                        if (totalPayoutsReceivedDisplay) totalPayoutsReceivedDisplay.textContent = `₹${currentUserTotalPayoutsReceived.toFixed(2)}`;
+                        // NEW: Display Total Projected Return
+                        if (totalProjectedReturnDisplay) totalProjectedReturnDisplay.textContent = `₹${totalProjected.toFixed(2)}`;
+
 
                         userInvestmentsData.sort((a, b) => {
                             const dateA = a.timestamp && a.timestamp.toDate ? a.timestamp.toDate() : new Date(0);
@@ -3274,6 +3408,7 @@
                                     <div>
                                         <div class="plan-name">${investment.planName}</div>
                                         <div class="invest-date">Invested on: ${formattedInvestDate}</div>
+                                        <div class="text-base font-bold text-blue-700 mt-1">Projected Return: ₹${investment.projectedTotalReturn.toFixed(2)}</div> <!-- NEW LINE -->
                                     </div>
                                     <div class="arrow-icon">▶</div>
                                 </div>
@@ -3293,6 +3428,13 @@
                     if (currentUserId && (auth && auth.currentUser && !auth.currentUser.isAnonymous)) {
                         if (investmentsContainer) investmentsContainer.innerHTML = '<p class="text-center text-red-500 col-span-full">Error loading investments. Please try again later.</p>';
                     }
+                    // Clear summary displays on error
+                    if (totalInvestedAmountDisplay) totalInvestedAmountDisplay.textContent = '₹0.00';
+                    if (totalAccruedReturnDisplay) totalAccruedReturnDisplay.textContent = '₹0.00';
+                    if (totalPortfolioReturnDisplay) totalPortfolioReturnDisplay.textContent = '₹0.00';
+                    if (totalProjectedReturnDisplay) totalProjectedReturnDisplay.textContent = '₹0.00'; // Clear total projected return
+                    // NEW: Clear Total Payouts Received display
+                    if (totalPayoutsReceivedDisplay) totalPayoutsReceivedDisplay.textContent = '₹0.00';
                 });
             }
 
@@ -3336,34 +3478,14 @@
                 }
 
                 let monthlyPayoutDisplay = "";
-                let totalProjectedReturn = 0;
 
                 if (investment.planName === "Standard Plan") {
                     // For Standard Plan, monthly returns accrue but payout is one-time
                     monthlyPayoutDisplay = `₹${(parseFloat(investment.amount) * monthlyReturnRate).toFixed(2)} (Accrued Monthly)`;
-                    totalProjectedReturn = parseFloat(investment.amount) * (1 + (monthlyReturnRate * lockInMonths));
                 } else {
                     // For Premium and Elite, monthly payouts occur
                     monthlyPayoutDisplay = `₹${(parseFloat(investment.amount) * monthlyReturnRate).toFixed(2)}`;
-                    totalProjectedReturn = parseFloat(investment.amount) * (1 + (monthlyReturnRate * lockInMonths) + bonusPercentage);
                 }
-
-                // Apply limited time offer bonus for Premium 6-Month Plan if applicable
-                if (investment.planName === "Premium 6-Month Plan") {
-                    // This calculation is for display only, not for actual bonus earning logic
-                    // The actual bonus earning for the limited time offer is handled by the Cloud Function
-                    const now = new Date();
-                    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0); // 12 AM today
-                    const offerEndDateForCalculation = new Date(todayStart.getTime() + (9 * 24 * 60 * 60 * 1000)); // 9 days from 12 AM today (extended by 2 days)
-
-                    if (now < offerEndDateForCalculation) { // Check against the fixed offerEndDate
-                        // This part is for display only, the actual bonus calculation is on the server
-                        // For the calculator, we'll reflect the potential bonus if the offer is active
-                        // This should ideally be handled by a server-side check for actual bonus application
-                        // but for client-side display, we simulate it.
-                    }
-                }
-
 
                 const investDate = investment.timestamp && investment.timestamp.toDate ? new Date(investment.timestamp.toDate()) : new Date();
                 const formattedInvestDate = investDate.toLocaleDateString();
@@ -3382,12 +3504,10 @@
                 detailModalPlanName.textContent = investment.planName;
                 detailInvestedAmount.textContent = `₹${parseFloat(investment.amount).toFixed(2)}`;
                 detailMonthlyPayout.textContent = monthlyPayoutDisplay; // Use the adjusted display text
-                detailProjectedTotalReturn.textContent = `₹${totalProjectedReturn.toFixed(2)}`;
+                detailProjectedTotalReturn.textContent = `₹${investment.projectedTotalReturn.toFixed(2)}`; // Use the pre-calculated projected total return
                 detailInvestDate.textContent = formattedInvestDate;
                 detailPlanEndDate.textContent = formattedPlanEndDate;
                 detailPayoutReturnDate.textContent = formattedPayoutReturnDate;
-                // Removed all lines that set text content for UTR, UPI, Bank Account details
-                // The financial-details-group div is now removed from HTML, so no need to hide/show its rows.
 
                 console.log("[Investment Detail] Modal populated and opened.");
 
@@ -3916,6 +4036,13 @@
                 if (ifscCodeInput) ifscCodeInput.value = currentUserBankDetails.ifscCode || '';
                 if (upiIdOptionalInput) upiIdOptionalInput.value = currentUserBankDetails.upiId || '';
 
+                // Clear any previous inline message
+                if (bankDetailsMessageDiv) {
+                    bankDetailsMessageDiv.innerHTML = '';
+                    bankDetailsMessageDiv.classList.add('hidden');
+                    bankDetailsMessageDiv.classList.remove('form-message-success', 'form-message-error');
+                }
+
                 if (hasBankDetails) {
                     // Disable inputs
                     if (bankAccountNameInput) bankAccountNameInput.disabled = true;
@@ -3941,6 +4068,26 @@
                 }
             }
 
+            // --- NEW: Function to display inline bank details messages ---
+            function showBankDetailsMessage(message, isSuccess = true) {
+                if (bankDetailsMessageDiv) {
+                    bankDetailsMessageDiv.textContent = message;
+                    bankDetailsMessageDiv.classList.remove('hidden', 'form-message-success', 'form-message-error', 'fade-out');
+                    bankDetailsMessageDiv.classList.add(isSuccess ? 'form-message-success' : 'form-message-error');
+                    bankDetailsMessageDiv.classList.add('fade-in'); // Apply fade-in animation
+
+                    setTimeout(() => {
+                        bankDetailsMessageDiv.classList.remove('fade-in');
+                        bankDetailsMessageDiv.classList.add('fade-out'); // Apply fade-out animation
+                        bankDetailsMessageDiv.addEventListener('animationend', () => {
+                            bankDetailsMessageDiv.classList.add('hidden');
+                            bankDetailsMessageDiv.classList.remove('fade-out');
+                        }, { once: true });
+                    }, 5000); // Message visible for 5 seconds
+                }
+            }
+
+
             // --- NEW: Save Bank Details Form Submission ---
             bankCardForm?.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -3954,7 +4101,7 @@
 
                 if (!currentUserId || (auth && auth.currentUser && auth.currentUser.isAnonymous)) {
                     console.log("[Bank Card Form] Authentication check failed. User not logged in or is anonymous."); // Log 2
-                    showMessage('Authentication Required', 'Please sign in to save your bank details.', false);
+                    showBankDetailsMessage('Please sign in to save your bank details.', false); // Use inline message
                     if (saveBankDetailsBtn) {
                         saveBankDetailsBtn.disabled = false;
                         saveBankDetailsBtn.textContent = 'Save Bank Details';
@@ -3976,7 +4123,7 @@
 
                 if (!accountName || !accountNumber || !ifscCode) {
                     console.log("[Bank Card Form] Validation failed: Missing required fields."); // Log 4
-                    showMessage('Missing Information', 'Please fill in all required bank details (Account Name, Account Number, IFSC Code).', false);
+                    showBankDetailsMessage('Please fill in all required bank details (Account Name, Account Number, IFSC Code).', false); // Use inline message
                     if (saveBankDetailsBtn) {
                         saveBankDetailsBtn.disabled = false;
                         saveBankDetailsBtn.textContent = 'Save Bank Details';
@@ -3987,7 +4134,7 @@
                 // Basic validation for account number and IFSC (can be enhanced)
                 if (!/^\d+$/.test(accountNumber)) {
                     console.log("[Bank Card Form] Validation failed: Invalid Account Number."); // Log 5
-                    showMessage('Invalid Account Number', 'Bank Account Number should contain only digits.', false);
+                    showBankDetailsMessage('Bank Account Number should contain only digits.', false); // Use inline message
                     if (saveBankDetailsBtn) {
                         saveBankDetailsBtn.disabled = false;
                         saveBankDetailsBtn.textContent = 'Save Bank Details';
@@ -3996,7 +4143,7 @@
                 }
                 if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifscCode)) {
                     console.log("[Bank Card Form] Validation failed: Invalid IFSC Code."); // Log 6
-                    showMessage('Invalid IFSC Code', 'IFSC Code format is incorrect (e.g., ABCD0123456).', false);
+                    showBankDetailsMessage('IFSC Code format is incorrect (e.g., ABCD0123456).', false); // Use inline message
                     if (saveBankDetailsBtn) {
                         saveBankDetailsBtn.disabled = false;
                         saveBankDetailsBtn.textContent = 'Save Bank Details';
@@ -4017,7 +4164,7 @@
                         }
                     });
                     console.log(`[Bank Card Form] Bank details saved for user ${currentUserId}.`); // Log 8
-                    showMessage('Bank Details Saved!', 'Your bank details have been successfully updated.', true);
+                    showBankDetailsMessage('Your bank details have been successfully updated.', true); // Use inline message
                     // After successful save, re-populate to make it read-only
                     populateBankDetailsForm();
                     // closeModal(bankCardModal); // Don't close, just make read-only
@@ -4027,7 +4174,7 @@
                     if (error.code === 'permission-denied') {
                         errorMessage = 'Permission denied. Please check your Firebase Security Rules for user documents. Ensure authenticated users can write to their own user document.';
                     }
-                    showMessage('Save Failed', `An error occurred while saving bank details: ${errorMessage}`, false);
+                    showBankDetailsMessage(`An error occurred while saving bank details: ${errorMessage}`, false); // Use inline message
                 } finally {
                     if (saveBankDetailsBtn) {
                         saveBankDetailsBtn.disabled = false;
