@@ -6,7 +6,7 @@
     <title>ADS FUND - Your Investment Partner</title>
     <!-- Tailwind CSS CDN - Consider compiling for production for better performance -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         /* Ensure html and body take at least full viewport height and allow scrolling */
         html, body {
@@ -90,6 +90,7 @@
         #whereMoneyWorksModal .modal-content,
         #bankCardModal .modal-content,
         #paymentHistoryModal .modal-content,
+        #offerZoneModal .modal-content, /* Offer Zone Modal is now wider */
         #whyChooseUsDetailModal .modal-content { /* Added paymentHistoryModal and whyChooseUsDetailModal here */
             width: 600px;
         }
@@ -100,7 +101,7 @@
         #whereMoneyWorksModal .modal-content,
         #bankCardModal .modal-content,
         #paymentHistoryModal .modal-content,
-        #whyChooseUsDetailModal .modal-content { /* Ensure plain white for detail modal too */
+        #whyChooseUsDetailModal .modal-content {
             background-color: white;
             background-image: none;
         }
@@ -809,7 +810,7 @@
             display: inline-block; /* Ensure text-shadow applies correctly */
         }
 
-        /* NEW: Styles for Payment History Modal */
+                /* NEW: Styles for Payment History Modal */
         #paymentHistoryModal .modal-content {
             background-image: linear-gradient(to bottom right, #f8fafc, #e2e8f0); /* Light gray gradient */
             padding: 2.5rem;
@@ -1091,6 +1092,86 @@
             margin-bottom: 0;
         }
 
+        /* NEW: Exclusive Offer Zone Section Styles (REMOVED - now a popup) */
+
+        /* NEW: Offer Zone Modal Styles */
+        #offerZoneModal .modal-content {
+            background: linear-gradient(to top right, #f3e7e9 0%, #e3eeff 100%);
+            max-width: 800px; /* Wider modal for offers */
+        }
+        #offerZoneModal .modal-close-btn {
+            color: #333; /* Darker close button for light background */
+        }
+        #offerZoneModal .modal-close-btn:hover {
+            color: #ef4444;
+        }
+        #offerZoneModal .offer-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease-in-out;
+        }
+        #offerZoneModal .offer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.2);
+        }
+        #offerZoneModal .offer-card h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+        #offerZoneModal .offer-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #offerZoneModal .offer-table th, #offerZoneModal .offer-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        #offerZoneModal .offer-table th {
+            background-color: rgba(243, 244, 246, 0.8);
+            font-weight: 600;
+            color: #374151;
+        }
+        #offerZoneModal .offer-table td .font-bold {
+            color: #16a34a; /* green-600 */
+        }
+        #offerZoneModal .modal-countdown-timer {
+            font-size: 2rem; /* Adjusted font size */
+            font-weight: 700; /* Adjusted font weight */
+            color: #4f46e5; /* indigo-600 */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            margin-bottom: 1rem; /* Added margin bottom */
+        }
+        
+        /* NEW: Community Stats Section Styles */
+        #community-stats {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease-in-out;
+        }
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
     </style>
 </head>
 <body>
@@ -1146,7 +1227,6 @@
                 <li><a href="#plans" class="hover:text-yellow-300 transition duration-300" data-close-menu>Investment Plans</a></li>
                 <li><a href="#how-it-works" class="hover:text-yellow-300 transition duration-300" data-close-menu>How It Works</a></li>
                 <li><a href="#why-choose-us" class="hover:text-yellow-300 transition duration-300" data-close-menu>Why Choose Us</a></li>
-                <!-- Removed direct link to Where Your Money Works from mobile menu -->
                 <li><a href="#limited-time-offer" class="hover:text-yellow-300 transition duration-300" data-close-menu>Special Offer</a></li>
                 <li><a href="#ai-calculator" class="hover:text-yellow-300 transition duration-300" data-close-menu>AI Calculator</a></li>
                 <!-- Conditional Mobile Nav Links -->
@@ -1369,13 +1449,15 @@
             </p>
         </div>
     </section>
+    
+    <!-- REMOVED: Exclusive Offer Zone Section from here -->
 
     <!-- Limited Time Offer Section -->
     <section id="limited-time-offer" class="py-20 bg-gradient-to-r from-red-600 to-red-800 text-white text-center animate-pulse-light section-hidden">
         <div class="container mx-auto px-6">
             <h2 class="text-5xl font-extrabold mb-6">🔥 Limited Time Offer! 🔥</h2>
             <p class="text-2xl mb-8 max-w-2xl mx-auto offer-text-glow">
-                Invest in our Premium 6-Month Plan within <span class="font-bold" id="offerTimePeriod">the time period</span> and receive an <span class="bonus-highlight">additional 5% bonus</span> at the end of your term!
+                Invest in our Premium 6-Month Plan within <span class="font-bold" id="offerTimePeriod">the next 31 days</span> and receive an <span class="bonus-highlight">additional 5% bonus</span> at the end of your term!
             </p>
             <div class="countdown-timer mb-8" id="countdown"></div>
             <a href="#plans" class="bg-yellow-400 hover:bg-yellow-500 text-red-900 font-bold py-3 px-10 rounded-full shadow-lg transform transition duration-300 hover:scale-105 inline-block text-xl">
@@ -1383,6 +1465,28 @@
             </a>
         </div>
     </section>
+
+    <!-- NEW: Community Stats Section -->
+    <section id="community-stats" class="py-20 text-white section-hidden">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-extrabold mb-12">Our Growing Community</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+                <!-- Active Users Card -->
+                <div class="stat-card p-8 rounded-2xl">
+                    <div class="text-yellow-300 text-5xl mb-4">👥</div>
+                    <div id="active-users-count" class="stat-number">0</div>
+                    <div class="stat-label">Active Investors</div>
+                </div>
+                <!-- Joined Users Card -->
+                <div class="stat-card p-8 rounded-2xl">
+                    <div class="text-green-300 text-5xl mb-4">🚀</div>
+                    <div id="joined-users-count" class="stat-number">0</div>
+                    <div class="stat-label">Joined Users</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 
     <!-- Investment Calculator Section -->
     <section id="ai-calculator" class="py-20 bg-gradient-to-br from-blue-700 to-indigo-800 text-white section-hidden">
@@ -1427,6 +1531,93 @@
             <p class="mt-2">For inquiries, please contact us at <a href="mailto:itsads2k23@gmail.com" class="text-blue-400 hover:underline">itsads2k23@gmail.com</a></p>
         </div>
     </footer>
+    
+    <!-- NEW: Offer Zone Modal (Redesigned) -->
+    <div id="offerZoneModal" class="modal-overlay">
+        <div class="modal-content text-gray-800">
+            <button class="modal-close-btn" id="closeOfferZoneModalBtn">&times;</button>
+            <div class="text-center">
+                <h2 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-2">🎁 Welcome to the Offer Zone! 🎁</h2>
+                <p class="text-lg text-gray-600 mb-4">These exclusive offers are valid for a limited time!</p>
+                <div id="offerZoneCountdown" class="modal-countdown-timer"></div>
+            </div>
+            
+            <div class="max-h-[60vh] overflow-y-auto pr-4 mt-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Investment Offers Card -->
+                    <div class="offer-card">
+                        <h3 class="text-blue-700">Investment Cashback</h3>
+                        <!-- Elite Member Offers -->
+                        <div class="mb-6">
+                            <h4 class="text-xl font-bold text-yellow-600 mb-4">For Elite Members 👑</h4>
+                            <table class="offer-table">
+                                <thead><tr><th>Investment (₹)</th><th>Cashback (₹)</th></tr></thead>
+                                <tbody>
+                                    <tr><td>500</td><td><span class="font-bold">15</span></td></tr>
+                                    <tr><td>1,000</td><td><span class="font-bold">30</span></td></tr>
+                                    <tr><td>2,000</td><td><span class="font-bold">70</span></td></tr>
+                                    <tr><td>2,500 - 5,000</td><td><span class="font-bold">150</span></td></tr>
+                                    <tr><td>5,001 - 7,500</td><td><span class="font-bold">350</span></td></tr>
+                                    <tr><td>7,501 - 10,000</td><td><span class="font-bold">800</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Premium Member Offers -->
+                        <div>
+                            <h4 class="text-xl font-bold text-purple-600 mb-4">For Premium Members ⭐</h4>
+                            <table class="offer-table">
+                               <thead><tr><th>Investment (₹)</th><th>Cashback (₹)</th></tr></thead>
+                                <tbody>
+                                    <tr><td>500</td><td><span class="font-bold">20</span></td></tr>
+                                    <tr><td>1,000</td><td><span class="font-bold">35</span></td></tr>
+                                    <tr><td>2,000</td><td><span class="font-bold">90</span></td></tr>
+                                    <tr><td>2,500 - 5,000</td><td><span class="font-bold">200</span></td></tr>
+                                    <tr><td>5,001 - 7,500</td><td><span class="font-bold">500</span></td></tr>
+                                    <tr><td>7,501 - 10,000</td><td><span class="font-bold">1000</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Referral Offers Card -->
+                    <div class="offer-card">
+                        <h3 class="text-green-700">Refer & Earn</h3>
+                         <!-- Refer an Elite Member -->
+                        <div class="mb-6">
+                            <h4 class="text-xl font-bold text-yellow-600 mb-4">Refer an Elite Member 👑</h4>
+                            <table class="offer-table">
+                               <thead><tr><th>Their Investment (₹)</th><th>Your Reward (₹)</th></tr></thead>
+                                <tbody>
+                                    <tr><td>500-999</td><td><span class="font-bold">5%</span></td></tr>
+                                    <tr><td>1,000-1999</td><td><span class="font-bold">6%</span></td></tr>
+                                    <tr><td>2,000-4999</td><td><span class="font-bold">7%</span></td></tr>
+                                    <tr><td>5,000-9999</td><td><span class="font-bold">8%</span></td></tr>
+                                    <tr><td>10,000</td><td><span class="font-bold">12%</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Refer a Premium Member -->
+                        <div>
+                            <h4 class="text-xl font-bold text-purple-600 mb-4">Refer a Premium Member ⭐</h4>
+                            <table class="offer-table">
+                                <thead><tr><th>Their Investment (₹)</th><th>Your Reward (₹)</th></tr></thead>
+                                <tbody>
+                                    <tr><td>500-999</td><td><span class="font-bold">7%</span></td></tr>
+                                    <tr><td>1,000-1999</td><td><span class="font-bold">8%</span></td></tr>
+                                    <tr><td>2,000-4999</td><td><span class="font-bold">9%</span></td></tr>
+                                    <tr><td>5,000-9999</td><td><span class="font-bold">10%</span></td></tr>
+                                    <tr><td>10,000</td><td><span class="font-bold">15%</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <button id="investFromOfferBtn" class="mt-6 w-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold py-3 px-6 rounded-full shadow-lg button-effect">
+                Invest Now & Claim Your Bonus!
+            </button>
+        </div>
+    </div>
+
 
     <!-- Investment Plan Detail Modal -->
     <div id="planDetailModal" class="modal-overlay">
@@ -1929,9 +2120,14 @@
             serverTimestamp,
             getDoc,
             getDocs,
-            updateDoc
+            updateDoc,
+            getCountFromServer,
+            collectionGroup // NEW: Import collectionGroup
             // Removed updateDoc and FieldValue as they are no longer used client-side for referral earnings
         } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js"; // Updated SDK version
+
+
+
 
         // Global Firebase variables - declared as `let` so they can be assigned later
         let app;
@@ -2203,7 +2399,7 @@
             const companyUpiIds = [
                 { id: "8207004948@axl", name: "ADS FUND UPI" }, // Updated UPI ID
                 { id: "mr.4989@superyes", name: "Mr. 4989" },
-                { id: "mahapatra.8@superyes", name: "Mahapatra" }
+                { id: "mahapatra.8@superyes", name: "ADS FUND " }
             ];
             // Removed `selectedCompanyUpi` from global scope as it will be selected inside the function.
 
@@ -2214,6 +2410,17 @@
             const whyChooseUsDetailModalContent = document.getElementById('whyChooseUsDetailModalContent');
             const whyChooseUsButtons = document.querySelectorAll('.why-choose-us-button');
             const closeWhyChooseUsDetailModalBtnBottom = document.getElementById('closeWhyChooseUsDetailModalBtnBottom');
+            
+            // NEW: Offer Zone Elements
+            const offerZoneModal = document.getElementById('offerZoneModal');
+            const closeOfferZoneModalBtn = document.getElementById('closeOfferZoneModalBtn');
+            const offerZoneCountdownElement = document.getElementById('offerZoneCountdown');
+            const investFromOfferBtn = document.getElementById('investFromOfferBtn');
+            
+            // NEW: Community Stats Elements
+            const activeUsersCountElement = document.getElementById('active-users-count');
+            const joinedUsersCountElement = document.getElementById('joined-users-count');
+
 
             // Define referral bonus structure for dynamic display
             const referralBonusRates = {
@@ -2251,7 +2458,7 @@
             try {
                 // HARDCODED Firebase config with the user-provided details
                 const firebaseConfig = {
-                    apiKey: "AIzaSyBFS4IF12Tr4ZN7n-xqHRwf5MM020zddvw",
+  apiKey: "AIzaSyBFS4IF12Tr4ZN7n-xqHRwf5MM020zddvw",
   authDomain: "ownads-07.firebaseapp.com",
   databaseURL: "https://ownads-07-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "ownads-07",
@@ -2259,7 +2466,7 @@
   messagingSenderId: "274286517816",
   appId: "1:274286517816:web:d83478fdd4119d183d10cd",
   measurementId: "G-D5K9HCL8KB"
-                };
+};
 
                 // CRITICAL: Set appId directly from the hardcoded firebaseConfig.projectId
                 appId = firebaseConfig.projectId;
@@ -2274,6 +2481,7 @@
                 auth = getAuth(app);
                 db = getFirestore(app);
 
+                initializeCommunityStats();
                 // --- Crucial: Attempt initial sign-in anonymously ---
                 await signInAnonymously(auth);
                 console.log("[Firebase Init] Signed in anonymously.");
@@ -2501,6 +2709,40 @@
                         }
                     }
                 });
+                
+                // NEW: Initialize community stats listeners
+              async function initializeCommunityStats() {
+  if (!db) return;
+
+  const joinedUsersCountElement = document.getElementById('joined-users-count');
+  const activeUsersCountElement = document.getElementById('active-users-count');
+  const usersCollection = collection(db, `artifacts/${appId}/users`);
+
+  try {
+    // Fast aggregate count for joined users
+    const usersCountSnap = await getCountFromServer(usersCollection);
+    if (joinedUsersCountElement)
+      joinedUsersCountElement.textContent = usersCountSnap.data().count;
+
+    // Count active investors by checking each user's investments
+    let activeCount = 0;
+    const usersSnapshot = await getDocs(usersCollection);
+    for (const userDoc of usersSnapshot.docs) {
+      const investmentsCollection = collection(db, `artifacts/${appId}/users/${userDoc.id}/investments`);
+      const investCountSnap = await getCountFromServer(investmentsCollection);
+      if (investCountSnap.data().count > 0) activeCount++;
+    }
+    if (activeUsersCountElement)
+      activeUsersCountElement.textContent = activeCount;
+  } catch (e) {
+    if (joinedUsersCountElement)
+      joinedUsersCountElement.textContent = "Error";
+    if (activeUsersCountElement)
+      activeUsersCountElement.textContent = "Error";
+    console.error("Error counting community stats:", e);
+  }
+}
+
 
             } catch (error) {
                 console.error("[Firebase Init Error]", error);
@@ -2508,7 +2750,13 @@
                 isAuthReady = true; // Set to true even on error to unblock UI
                 updateAuthUI(false);
                 updateReferralButtonState();
-                updateUserMembershipDisplay(); // Update membership display on error
+                updateUserMembershipDisplay(); // Update membership display on error---
+            }
+
+            // --- Show Offer Zone Modal on Page Load (Once per session) ---
+            if (sessionStorage.getItem('offerModalShown') !== 'true') {
+                openModal(offerZoneModal);
+                sessionStorage.setItem('offerModalShown', 'true');
             }
 
             // --- Dynamic Header Text Rotation ---
@@ -2644,14 +2892,12 @@
             }
 
             // NEW: Why Choose Us Detail Modal event listeners
-            // This is the missing part!
             whyChooseUsButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const title = button.dataset.title;
                     const content = button.dataset.content;
 
                     if (whyChooseUsDetailModalTitle) whyChooseUsDetailModalTitle.textContent = title;
-                    // Use innerHTML because the content contains HTML tags (like <ul>, <li>)
                     if (whyChooseUsDetailModalContent) whyChooseUsDetailModalContent.innerHTML = content;
 
                     openModal(whyChooseUsDetailModal);
@@ -2669,6 +2915,17 @@
                     if (e.target === whyChooseUsDetailModal) {
                         closeModal(whyChooseUsDetailModal);
                     }
+                });
+            }
+            
+            // NEW: Offer Zone Modal Listeners
+            if (closeOfferZoneModalBtn) {
+                closeOfferZoneModalBtn.addEventListener('click', () => closeModal(offerZoneModal));
+            }
+            if (investFromOfferBtn) {
+                investFromOfferBtn.addEventListener('click', () => {
+                    closeModal(offerZoneModal);
+                    document.getElementById('plans')?.scrollIntoView({ behavior: 'smooth' });
                 });
             }
 
@@ -2867,6 +3124,7 @@
                     `<li><button id="paymentHistoryOpenBtn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Payment History</button></li>` : '';
                 const referEarnLink = `<li><button id="referEarnOpenBtn" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Refer & Earn</button></li>`; // Updated button text
                 const bankCardLink = `<li><button id="bankCardOpenBtn" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Bank Card</button></li>`; // New: Bank Card button
+                const offerZoneLink = `<li><button id="offerZoneOpenBtn" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Offer Zone</button></li>`; // New: Offer Zone button
                 const signOutLink = `<li><button id="signOutBtn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Sign Out</button></li>`;
                 const loggedOutLinks = `
                     <li><button id="signInOpenBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 button-effect">Sign In</button></li>
@@ -2874,13 +3132,13 @@
                 `;
 
                 if (navAuthLinks) {
-                    navAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${paymentHistoryLink}${referEarnLink}${bankCardLink}${signOutLink}` : loggedOutLinks;
+                    navAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${paymentHistoryLink}${referEarnLink}${bankCardLink}${offerZoneLink}${signOutLink}` : loggedOutLinks;
                 } else {
                     console.warn("navAuthLinks element not found.");
                 }
 
                 if (mobileNavAuthLinks) {
-                    mobileNavAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${paymentHistoryLink}${referEarnLink}${bankCardLink}${signOutLink}` : loggedOutLinks;
+                    mobileNavAuthLinks.innerHTML = loggedIn ? `${myInvestmentsLink}${paymentHistoryLink}${referEarnLink}${bankCardLink}${offerZoneLink}${signOutLink}` : loggedOutLinks;
                 } else {
                     console.warn("mobileNavAuthLinks element not found.");
                 }
@@ -2949,6 +3207,12 @@
                     closeMobileMenu();
                     populateBankDetailsForm(); // Populate form when modal opens
                 });
+                
+                // New: Attach listener for Offer Zone button (in header)
+                document.getElementById('offerZoneOpenBtn')?.addEventListener('click', () => {
+                    openModal(offerZoneModal);
+                    closeMobileMenu();
+                });
 
                 // NEW: Attach listener for Payment History button
                 // This button will only exist if userCurrentPlans.length > 0
@@ -2997,6 +3261,11 @@
                     openModal(paymentHistoryModal);
                     closeMobileMenu();
                     fetchPaymentHistory();
+                });
+                // NEW: Mobile Offer Zone button listener
+                document.querySelector('#mobileNavAuthLinks #offerZoneOpenBtn')?.addEventListener('click', () => {
+                    openModal(offerZoneModal);
+                    closeMobileMenu();
                 });
 
 
@@ -3366,9 +3635,9 @@
                             let projectedTotalProfit = (parseFloat(investment.amount) * monthlyReturnRate * lockInMonths) + (parseFloat(investment.amount) * bonusPercentage);
 
                             // Check for Limited Time Offer bonus for Premium 6-Month Plan if investment was made during offer
+                            const offerStartDateForLTO = new Date(new Date().getTime());
+                            const offerEndDateForLTO = new Date(offerStartDateForLTO.getTime() + (31 * 24 * 60 * 60 * 1000));
                             if (investment.planName === "Premium 6-Month Plan") {
-                                const offerStartDateForLTO = new Date('2025-07-11T00:00:00'); // Fixed start date
-                                const offerEndDateForLTO = new Date(offerStartDateForLTO.getTime() + (9 * 24 * 60 * 60 * 1000)); // 9 days from start
 
                                 if (investDate >= offerStartDateForLTO && investDate < offerEndDateForLTO) {
                                     projectedTotalProfit += parseFloat(investment.amount) * 0.05; // Add 5% LTO bonus
@@ -3479,7 +3748,7 @@
 
                 let monthlyPayoutDisplay = "";
 
-                if (investment.planName === "Standard Plan") {
+                if (investment.planName  === "Standard Plan") {
                     // For Standard Plan, monthly returns accrue but payout is one-time
                     monthlyPayoutDisplay = `₹${(parseFloat(investment.amount) * monthlyReturnRate).toFixed(2)} (Accrued Monthly)`;
                 } else {
@@ -3495,7 +3764,7 @@
                 const formattedPlanEndDate = planEndDate.toLocaleDateString();
 
                 // For Standard plan, payout is at the end of the lock-in period
-                let payoutReturnDate;
+               let payoutReturnDate;
                 // For Premium and Elite, payout is every 2 months, so the "return date" means the end of the lock-in period
                 payoutReturnDate = new Date(planEndDate); // Principal + returns paid at lock-in end
                 const formattedPayoutReturnDate = payoutReturnDate.toLocaleDateString();
@@ -3543,11 +3812,11 @@
             revealSections();
             window.addEventListener('scroll', revealSections);
 
-            // --- Countdown Timer Logic (Fixed 7-day period from 11-07-25 12:00 AM) ---
+            // --- Countdown Timer Logic (Fixed 16-day period from 11-07-25 12:00 AM) ---
             // Define the fixed start date for the offer
-            const offerStartDate = new Date('2025-07-11T00:00:00'); // July 11, 2025, 12:00 AM
-            // Calculate the fixed end date (9 days from the start date)
-            const offerEndDate = new Date(offerStartDate.getTime() + (9 * 24 * 60 * 60 * 1000)); // 9 days from offerStartDate (extended by 2 days)
+            const offerStartDate = new Date('2025-07-25T00:00:00'); // July 11, 2025, 12:00 AM
+            // Calculate the fixed end date (16 days = 9 original + 7 extended)
+            const offerEndDate = new Date(offerStartDate.getTime() + (16 * 24 * 60 * 60 * 1000)); 
 
             const updateCountdown = () => {
                 const currentTime = new Date();
