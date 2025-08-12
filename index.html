@@ -1182,6 +1182,26 @@
         </div>
     </section>
 
+
+
+
+<div id="forgotPasswordModal" class="modal-overlay hidden">
+  <div class="modal-content text-center">
+    <button class="modal-close-btn" data-modal-id="forgotPasswordModal">&times;</button>
+    <h2 class="text-3xl font-bold mb-6 text-gray-800">Reset Your Password</h2>
+    <p class="text-gray-600 mb-6">Enter your email address to receive a password reset link.</p>
+    <form id="forgotPasswordForm">
+      <div class="form-group">
+        <label for="forgotPasswordEmail" class="form-label">Email Address</label>
+        <input type="email" id="forgotPasswordEmail" name="forgotPasswordEmail" class="form-input-field" placeholder="yourname@example.com" required>
+      </div>
+      <button type="submit" class="form-submit-btn">Send Reset Link</button>
+      <div id="forgotPasswordMessage" class="form-message hidden mt-4"></div>
+    </form>
+  </div>
+</div>
+
+
     <!-- Investment Plans Section -->
     <section id="plans" class="py-20 bg-gray-100 section-hidden">
         <div class="container mx-auto px-6">
@@ -1557,6 +1577,9 @@
                     <button type="submit" class="w-1/2" id="signInSubmitBtn">Sign In</button>
                     <button type="button" class="w-1/2 cancel-btn" id="cancelSignInBtn">Cancel</button>
                 </div>
+<div class="text-center mt-4">
+  <a href="#" id="forgotPasswordLink" class="text-sm font-medium text-blue-500 hover:text-blue-700 transition duration-300">Forgot Password?</a>
+</div>
                 <p class="text-center text-sm text-gray-600 mt-4">
                     Don't have an account? <a href="#" id="switchToSignUp" class="text-blue-500 hover:underline">Sign Up</a>
                 </p>
@@ -1915,7 +1938,8 @@
             onAuthStateChanged,
             createUserWithEmailAndPassword,
             signInWithEmailAndPassword,
-            signOut
+            signOut,
+sendPasswordResetEmail
         } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js"; // Updated SDK version
         import {
             getFirestore,
@@ -2047,6 +2071,75 @@
         document.querySelectorAll('#mobileMenu a[data-close-menu]').forEach(link => {
             link.addEventListener('click', closeMobileMenu);
         });
+
+
+
+// Function to show a modal
+function showModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.remove('hidden');
+    // Using a timeout to ensure the transition runs after the class is removed
+    setTimeout(() => modal.classList.add('active'), 10);
+  }
+}
+
+// Function to hide a modal
+function hideModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.remove('active');
+    // Using a timeout to ensure the transition runs completely before hiding
+    setTimeout(() => modal.classList.add('hidden'), 400); // Match CSS transition duration
+  }
+}
+
+// Add an event listener to the "Forgot Password?" link
+const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+forgotPasswordLink.addEventListener('click', (e) => {
+  e.preventDefault();
+  hideModal('signInModal'); // Hide the sign-in modal
+  showModal('forgotPasswordModal'); // Show the forgot password modal
+});
+
+// Add an event listener to the forgot password modal's close button
+const forgotPasswordModalCloseBtn = document.querySelector('#forgotPasswordModal .modal-close-btn');
+forgotPasswordModalCloseBtn.addEventListener('click', () => {
+  hideModal('forgotPasswordModal');
+  showModal('signInModal'); // Optional: show the sign-in modal again
+});
+
+// Add event listeners to close all modals when clicking the overlay
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal-overlay')) {
+      hideModal(e.target.id);
+    }
+  });
+});
+
+// Forgot Password form submission logic
+const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+forgotPasswordForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = forgotPasswordForm.forgotPasswordEmail.value;
+    const messageElement = document.getElementById('forgotPasswordMessage');
+    messageElement.classList.add('hidden'); // Hide previous messages
+
+    try {
+        // Assuming 'auth' is already defined from your Firebase initialization
+        await sendPasswordResetEmail(auth, email); 
+        messageElement.textContent = "A password reset link has been sent to your email address.";
+        messageElement.classList.remove('hidden');
+        messageElement.classList.remove('form-message-error');
+        messageElement.classList.add('form-message-success');
+    } catch (error) {
+        messageElement.textContent = "Error: " + error.message;
+        messageElement.classList.remove('hidden');
+        messageElement.classList.remove('form-message-success');
+        messageElement.classList.add('form-message-error');
+    }
+});
 
 
         // All main script logic moves inside DOMContentLoaded to ensure elements and Firebase are ready
